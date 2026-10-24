@@ -1,0 +1,10 @@
+.venv/
+.venv313/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+.env
+review-report.*
