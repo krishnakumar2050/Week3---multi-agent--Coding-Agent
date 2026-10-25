@@ -87,3 +87,11 @@ def test_only_quality_receives_enrichment(monkeypatch):
         assert result.status == "ok"
         assert ("EXTERNAL_GUIDANCE" in model.messages[1][1]) == (name == "quality")
     assert len(calls) == 1
+
+
+def test_swift_language_query(monkeypatch):
+    monkeypatch.setenv("KEENABLE_ENABLED", "true")
+    client = Search()
+    _, metadata = enrich_quality({"App.swift": "import UIKit"}, client)
+    assert metadata["status"] == "ok"
+    assert len(client.queries) == 1 and client.queries[0].startswith("Swift ")

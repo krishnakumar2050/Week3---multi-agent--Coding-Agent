@@ -7,6 +7,7 @@ from pathlib import Path
 
 EXTENSIONS = {
     ".py",
+    ".swift",
     ".js",
     ".jsx",
     ".ts",

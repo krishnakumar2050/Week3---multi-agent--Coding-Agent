@@ -1,0 +1,747 @@
+{
+  "status": "complete",
+  "files_reviewed": [
+    "Expense Tracker/Controllers/Forget Password/ForgetPasswordVC.swift",
+    "Expense Tracker/Controllers/Login SingUp/LoginVC.swift",
+    "Expense Tracker/Controllers/Login SingUp/LoginWithPinVC.swift",
+    "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+    "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+    "Expense Tracker/Controllers/Main/HomeVC.swift",
+    "Expense Tracker/Controllers/Main/ProfileVC.swift",
+    "Expense Tracker/Controllers/Main/TransectionsVC.swift",
+    "Expense Tracker/Controllers/OnBoarding/OnboardingViewController.swift",
+    "Expense Tracker/Controllers/ProfileViews/AboutUsVC.swift",
+    "Expense Tracker/Controllers/ProfileViews/ChangePasswordVC.swift",
+    "Expense Tracker/Controllers/ProfileViews/EditProfileVC.swift",
+    "Expense Tracker/Controllers/ProfileViews/UserStatementVC.swift",
+    "Expense Tracker/Custom Views/AlertView/AlertBody.swift",
+    "Expense Tracker/Custom Views/AlertView/AlertBtn.swift",
+    "Expense Tracker/Custom Views/AlertView/AlertContainer.swift",
+    "Expense Tracker/Custom Views/AlertView/AlertController.swift",
+    "Expense Tracker/Custom Views/AlertView/AlertTitle.swift",
+    "Expense Tracker/Custom Views/Button/EButton.swift",
+    "Expense Tracker/Custom Views/Button/GradientButton.swift",
+    "Expense Tracker/Custom Views/Cell/OnboardingCell.swift",
+    "Expense Tracker/Custom Views/Cell/TransectionTableViewCell.swift",
+    "Expense Tracker/Custom Views/Custom TableView/CustomTableView.swift",
+    "Expense Tracker/Custom Views/CustomPageController/ColorUtils.swift",
+    "Expense Tracker/Custom Views/CustomPageController/CustomPageController.swift",
+    "Expense Tracker/Custom Views/CustomPageController/DotDrawer.swift",
+    "Expense Tracker/Custom Views/CustomPageController/DrawerProtocol.swift",
+    "Expense Tracker/Custom Views/CustomPageController/InfiniteDrawer.swift",
+    "Expense Tracker/Custom Views/CustomPageController/InfiniteScrollingDrawer.swift",
+    "Expense Tracker/Custom Views/ImageView/AvatarImageView.swift",
+    "Expense Tracker/Custom Views/Label/CustomLabel.swift",
+    "Expense Tracker/Custom Views/SwiftUI CharView/CharView.swift",
+    "Expense Tracker/Custom Views/TabBar Controller/TabBarVC.swift",
+    "Expense Tracker/Custom Views/TextField/CustomTextFields.swift",
+    "Expense Tracker/Custom Views/TextField/ForgetPasswordTextFeild.swift",
+    "Expense Tracker/Custom Views/TextField/PasswordTextField.swift",
+    "Expense Tracker/Custom Views/TextField/UsernameTextField.swift",
+    "Expense Tracker/Custom Views/UIView/CardView.swift",
+    "Expense Tracker/Custom Views/UIView/CustomView.swift",
+    "Expense Tracker/Custom Views/UIView/ProfileHeaderView.swift",
+    "Expense Tracker/Custom Views/View Controllers/AllTransactions.swift",
+    "Expense Tracker/Custom Views/View Controllers/DataLoading.swift",
+    "Expense Tracker/Custom Views/View Controllers/HeaderVC.swift",
+    "Expense Tracker/Extentions/Color+Ext.swift",
+    "Expense Tracker/Extentions/Double+Ext.swift",
+    "Expense Tracker/Extentions/UITableView+Ext.swift",
+    "Expense Tracker/Extentions/UITextFeild+Ext.swift",
+    "Expense Tracker/Extentions/UIView+Ext.swift",
+    "Expense Tracker/Extentions/UIViewController+Ext.swift",
+    "Expense Tracker/Models/Login.swift",
+    "Expense Tracker/Models/OnBoardingModel.swift",
+    "Expense Tracker/Models/SignUp.swift",
+    "Expense Tracker/Models/Transection.swift",
+    "Expense Tracker/Models/User.swift",
+    "Expense Tracker/Network Manager/AuthManager.swift",
+    "Expense Tracker/Network Manager/NetworkManager.swift",
+    "Expense Tracker/Resources/AppDelegate.swift",
+    "Expense Tracker/Resources/SceneDelegate.swift",
+    "Expense Tracker/Utilits/AppError.swift",
+    "Expense Tracker/Utilits/BalanceFormater.swift",
+    "Expense Tracker/Utilits/Constants.swift",
+    "Expense Tracker/Utilits/DatePicker.swift",
+    "Expense Tracker/Utilits/HTTPMethod.swift",
+    "Expense Tracker/Utilits/ValidationTextField.swift"
+  ],
+  "counts": {
+    "critical": 0,
+    "high": 5,
+    "medium": 19,
+    "low": 0,
+    "info": 0
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Biometric authentication fails open",
+      "file": "Expense Tracker/Custom Views/TabBar Controller/TabBarVC.swift",
+      "line": 39,
+      "evidence": "                        if !success {\n                            // Handle authentication failure\n                            let alert = UIAlertController(title: \"Authentication Failed\", message: \"Please try again.\", preferredStyle: .alert)\n                            alert.addAction(UIAlertAction(title: \"OK\", style: .default, handler: nil))\n                            self?.present(alert, animated: true, completion: nil)\n                        }",
+      "explanation": "The tabs are already installed before authentication. Cancelling or failing biometrics only displays a dismissible alert, leaving financial data and transaction actions accessible. When biometrics cannot be evaluated, execution likewise leaves access open.",
+      "recommendation": "Gate installation or interaction of protected controllers behind successful authentication, and retain a locked screen on failure or biometric unavailability.",
+      "suggested_test": "Enable biometric authentication, launch with a stored session, then cancel authentication or simulate biometric lockout. Assert that dashboard data and transaction actions remain inaccessible.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Biometric authentication failure leaves protected screens accessible",
+      "file": "Expense Tracker/Custom Views/TabBar Controller/TabBarVC.swift",
+      "line": 39,
+      "evidence": "                        if !success {\n                            // Handle authentication failure\n                            let alert = UIAlertController(title: \"Authentication Failed\", message: \"Please try again.\", preferredStyle: .alert)\n                            alert.addAction(UIAlertAction(title: \"OK\", style: .default, handler: nil))\n                            self?.present(alert, animated: true, completion: nil)\n                        }",
+      "explanation": "The tabs are installed before authentication. Failure only displays a dismissible alert, and unavailable biometrics only logs a message. Users can therefore access financial data despite enabling biometric protection.",
+      "recommendation": "Gate protected content behind successful authentication and retain a locked screen on cancellation, failure, or unavailable biometrics.",
+      "suggested_test": "Enable biometric protection and simulate cancellation, authentication failure, and unavailable biometrics. Assert that dismissing any alert never exposes dashboard data or transaction controls; assert successful authentication unlocks them.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Biometric authentication failure leaves the app accessible",
+      "file": "Expense Tracker/Custom Views/TabBar Controller/TabBarVC.swift",
+      "line": 39,
+      "evidence": "                        if !success {\n                            // Handle authentication failure\n                            let alert = UIAlertController(title: \"Authentication Failed\", message: \"Please try again.\", preferredStyle: .alert)\n                            alert.addAction(UIAlertAction(title: \"OK\", style: .default, handler: nil))\n                            self?.present(alert, animated: true, completion: nil)\n                        }",
+      "explanation": "The protected tabs are installed before authentication. With an existing signed-in session and Face ID enabled, someone holding the unlocked device can cancel or fail authentication, dismiss this alert, and access financial data and transaction controls. Biometric unavailability also only prints a message and permits access.",
+      "recommendation": "Keep protected content inaccessible until authentication succeeds. On cancellation, failure, or biometric unavailability, retain a blocking authentication screen or require account authentication.",
+      "suggested_test": "With a saved session and Face ID enabled, cancel biometric authentication and dismiss the alert; assert that financial data and transaction controls remain inaccessible. Repeat with biometrics unavailable.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Network manager retains the previous session's user ID",
+      "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+      "line": 14,
+      "evidence": "    private let userID          = UserDefaults.standard.string(forKey: \"user_id\")",
+      "explanation": "The singleton snapshots the user ID once, while login updates UserDefaults. Signing up initializes this singleton before login, potentially retaining nil and later crashing at userID! when saving a transaction. Switching accounts retains the old account's ID in request paths and bodies.",
+      "recommendation": "Resolve the current user ID per request, require it with a throwing guard, and clear session identity on logout.",
+      "suggested_test": "Initialize NetworkManager before login, then authenticate and save a transaction; assert the authenticated ID is sent without a crash. Log out of account A and into B in the same process; assert every subsequent request uses B's ID.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Network singleton permanently caches the first user ID",
+      "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+      "line": 14,
+      "evidence": "    private let userID          = UserDefaults.standard.string(forKey: \"user_id\")",
+      "explanation": "This hidden session-state snapshot never changes after singleton initialization. Signing up initializes NetworkManager before login stores a user ID, so later dashboard requests use N/A and makeTransaction force-unwraps nil. Logging out and signing into another account in the same process instead keeps the previous account's ID.",
+      "recommendation": "Resolve the current user ID for each request through a session provider, reject missing IDs with a thrown error, and clear session identity on logout.",
+      "suggested_test": "Initialize NetworkManager before login, then log in and create a transaction; assert that the new ID is used without a crash. Repeat after switching between two accounts.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Nonnumeric signup PIN crashes instead of showing validation",
+      "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+      "line": 165,
+      "evidence": "                    let signUpResult = try await NetworkManager.shared.Signup(fullname: fullnameTextFeild.text!, email: emailTextFeild.text!, mobile: phoneTextFeild.text!, username: usernameTextFeild.text!, pin: Int(pinTextFeild.text!)!, passowrd: passwordTextFeild.text!)",
+      "explanation": "Signup validation only checks that the PIN is nonempty. Its text field accepts ordinary text, and the length delegate is never assigned. Entering abc or an integer outside Int's range passes validation and traps at the forced conversion; do/catch cannot recover from this trap.",
+      "recommendation": "Validate a four-digit PIN and safely unwrap its conversion before starting the request. Assign a PIN-specific input delegate rather than applying a four-character limit to all signup fields.",
+      "suggested_test": "Submit otherwise valid signup details with PIN abc, an oversized integer, and five digits. Assert that each produces a validation error without issuing a request or crashing.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Signup accepts PIN text that crashes integer conversion",
+      "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+      "line": 165,
+      "evidence": "                    let signUpResult = try await NetworkManager.shared.Signup(fullname: fullnameTextFeild.text!, email: emailTextFeild.text!, mobile: phoneTextFeild.text!, username: usernameTextFeild.text!, pin: Int(pinTextFeild.text!)!, passowrd: passwordTextFeild.text!)",
+      "explanation": "Signup validation only requires a nonempty PIN. The field has no assigned delegate enforcing its declared length restriction, and its initializer does not select a numeric keyboard. Non-numeric or overflowing input therefore reaches a forced Int conversion and crashes.",
+      "recommendation": "Validate the PIN's digit count and numeric conversion explicitly before submission, using a guarded conversion.",
+      "suggested_test": "Populate otherwise valid signup fields with matching passwords. Try PINs \"abcd\", \"12345\", and an integer-overflowing digit string. Assert validation rejects each without sending a request or crashing; assert a four-digit PIN is accepted.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Non-numeric transaction amounts crash during submission",
+      "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+      "line": 237,
+      "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+      "explanation": "Validation checks only whether the amount is empty. The initial \"$0\" value and pasted non-numeric text pass that check but fail Double conversion, causing a force-unwrap trap outside recoverable error handling.",
+      "recommendation": "Parse and validate a finite amount before starting the task, and present a validation error when parsing fails.",
+      "suggested_test": "Fill all other transaction fields and submit with the untouched \"$0\" amount, then with pasted \"abc\". Assert a validation alert appears, no network request occurs, and the app remains responsive.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Selected transaction date is never sent to the server",
+      "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+      "line": 237,
+      "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+      "explanation": "The form requires a date, but this call passes only type, title, description, and amount. The supplied makeTransaction implementation and TransactionBody also omit a date, so changing the date cannot affect the saved transaction.",
+      "recommendation": "Retain the selected Date and pass it through the network API into the encoded transaction body.",
+      "suggested_test": "Create otherwise identical transactions with two different selected dates and capture their request bodies. Assert each contains its selected date and that fetching the saved transactions preserves those dates.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Selected transaction date is omitted from the request",
+      "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+      "line": 237,
+      "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+      "explanation": "The form requires a selected date, but the request passes only type, title, description, and amount. TransactionBody also has no date property, so the selected date cannot affect the saved transaction.",
+      "recommendation": "Keep the selected Date as model state and pass it through makeTransaction and TransactionBody using the API's date representation.",
+      "suggested_test": "Select a date different from today and save. Assert that the outgoing request and subsequently retrieved transaction contain that selected date.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Transaction amount conversion can crash on accepted input",
+      "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+      "line": 237,
+      "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+      "explanation": "Validation checks only emptiness, while the initial amount is the nonempty string $0. Completing the other fields without editing that amount, or pasting nonnumeric text, reaches Double(...)! and crashes.",
+      "recommendation": "Parse and validate a finite monetary amount before starting the task, and display $0 as a placeholder or format it separately from the numeric input.",
+      "suggested_test": "Complete the form while leaving the initial $0 untouched, then repeat with pasted abc. Assert a validation message and no crash or network request.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Empty transaction refresh leaves previously displayed rows intact",
+      "file": "Expense Tracker/Controllers/Main/HomeVC.swift",
+      "line": 144,
+      "evidence": "            self.transaction = transactions.transaction\n            if !transaction.isEmpty {\n                configTableView()\n                self.tableView.reloadDataOnMainThread()\n            } else {\n                layoutLable(\"This user doesn't have any Transactions. Go and make Expenses or Income 😀.\")\n            }",
+      "explanation": "When a refresh changes a previously nonempty result to an empty array, the table is not reloaded or hidden. Its existing rows remain displayed despite the backing array being empty, and the empty-state label is behind the table in the configured view hierarchy.",
+      "recommendation": "Reload the table for every successful response and explicitly toggle visibility between the table and empty-state label.",
+      "suggested_test": "Load several transactions, then refresh with an empty response. Assert zero displayed rows and a visible empty-state message; refresh with data again and assert the message is hidden.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Stored settings handlers retain ProfileVC indefinitely",
+      "file": "Expense Tracker/Controllers/Main/ProfileVC.swift",
+      "line": 88,
+      "evidence": "        models.append(Sections(options: [\n            SettingOpetions(icon: Images.edityourProfile, title: \"Edit Profile\", handler: {\n                let editProfileVC = EditProfileVC()\n                editProfileVC.title = \"Edit Profile\"\n                return self.navigationController?.pushViewController(editProfileVC, animated: true)\n            }),",
+      "explanation": "This strong-reference-cycle anti-pattern forms ProfileVC → models → handler → ProfileVC. Multiple stored handlers capture self this way, so dismissing the profile does not release it or its transaction data. Repeated profile presentations accumulate retained controllers.",
+      "recommendation": "Use weak self captures in every handler stored in models, or store action identifiers and dispatch them from didSelectRowAt.",
+      "suggested_test": "Present and dismiss ProfileVC while retaining only a weak reference. Assert that the weak reference becomes nil after dismissal.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Change Password Save action performs no operation",
+      "file": "Expense Tracker/Controllers/ProfileViews/ChangePasswordVC.swift",
+      "line": 115,
+      "evidence": "    @objc func didTapSave() {\n        // this will check first current password the will change password by checking password\n        \n    }",
+      "explanation": "The visible Save button invokes this empty handler. Entering current and new passwords cannot change the account password or produce any feedback.",
+      "recommendation": "Implement password validation and the password-change request with success and failure feedback, or disable the unfinished action.",
+      "suggested_test": "Enter the correct current password and matching valid new passwords, then tap Save. Assert the change request is sent and success is reported. For mismatched confirmation or an incorrect current password, assert an error is shown and the password remains unchanged.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Change-password Save action performs no operation",
+      "file": "Expense Tracker/Controllers/ProfileViews/ChangePasswordVC.swift",
+      "line": 115,
+      "evidence": "    @objc func didTapSave() {\n        // this will check first current password the will change password by checking password\n        \n    }",
+      "explanation": "The visible Save button invokes this empty method. Users can enter current and replacement passwords and tap Save, but no validation, password update, or feedback occurs.",
+      "recommendation": "Implement validation and the password-change request with success and failure feedback, or disable access to the unfinished action.",
+      "suggested_test": "Enter valid matching replacement passwords and tap Save. Assert that a password-change request occurs and the result is presented.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Edit-profile Save button has no action",
+      "file": "Expense Tracker/Controllers/ProfileViews/EditProfileVC.swift",
+      "line": 302,
+      "evidence": "    func configSavebtn() {\n        saveBtn.setTitle(\"Save\", for: .normal)\n        contentView.addSubview(saveBtn)\n        NSLayoutConstraint.activate([",
+      "explanation": "The complete controller never attaches an action to saveBtn or submits profile changes. Edited fields and the selected avatar remain local UI state and are lost when the controller is dismissed.",
+      "recommendation": "Attach a save handler that validates and persists the profile and avatar, then updates the displayed profile after success.",
+      "suggested_test": "Change the name and avatar and tap Save. Assert that persistence is invoked and reopening the profile shows the saved values.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Profile header rebuilds its nib on every layout",
+      "file": "Expense Tracker/Custom Views/UIView/ProfileHeaderView.swift",
+      "line": 25,
+      "evidence": "    override func layoutSubviews() {\n        super.layoutSubviews()\n        commonInit()\n    }",
+      "explanation": "This repeated-initialization anti-pattern calls commonInit on every layout, loading and adding another nib-backed content view and activating new constraints. It also overwrites the supplied user's name with the hardcoded name at line 60. Layout therefore changes displayed identity and accumulates views.",
+      "recommendation": "Load the nib and install constraints once during initialization. Limit layoutSubviews to geometry-dependent updates, and remove the hardcoded name assignment.",
+      "suggested_test": "Construct a header with a distinct name and perform several layout passes. Assert that the name remains unchanged and the subview and constraint counts remain stable.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Profile header reloads its nib and overwrites the user's name on layout",
+      "file": "Expense Tracker/Custom Views/UIView/ProfileHeaderView.swift",
+      "line": 25,
+      "evidence": "    override func layoutSubviews() {\n        super.layoutSubviews()\n        commonInit()\n    }",
+      "explanation": "commonInit loads and adds another content view, activates constraints, and assigns the hardcoded name \"Abdorizak Abdalla Hassan\". Each layout therefore accumulates content views and replaces the name supplied by the initializer.",
+      "recommendation": "Load the nib and install constraints once during initialization. Restrict layoutSubviews to geometry updates and remove the hardcoded name assignment.",
+      "suggested_test": "Initialize the header with \"Alice Example\" and perform several layout passes. Assert the displayed name remains \"Alice Example\" and the number of content subviews and installed constraints stays constant.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Login credentials are written to console output",
+      "file": "Expense Tracker/Network Manager/AuthManager.swift",
+      "line": 38,
+      "evidence": "        let body = LoginBody(userCredential: usernameOrEmail, password: password)\n        print(\"DEBUG:\\(body)\")",
+      "explanation": "Printing LoginBody exposes its username/email and plaintext password. Anyone with access to captured application console output or diagnostic logs containing this output can recover credentials, including unsuccessful login attempts.",
+      "recommendation": "Remove credential-body logging. Log only non-sensitive authentication outcomes.",
+      "suggested_test": "Log in using distinctive test credentials while capturing console output; assert that neither the password nor the serialized credential body appears.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Login credentials are written to logs",
+      "file": "Expense Tracker/Network Manager/AuthManager.swift",
+      "line": 38,
+      "evidence": "        let body = LoginBody(userCredential: usernameOrEmail, password: password)\n        print(\"DEBUG:\\(body)\")",
+      "explanation": "Printing LoginBody includes its stored password and user credential. Every password login therefore exposes plaintext credentials to application logs, including builds where this unconditional print remains enabled.",
+      "recommendation": "Remove the body logging and log only nonsensitive request metadata.",
+      "suggested_test": "Log in with a distinctive test password while capturing application output. Assert that neither the password nor the serialized credential body appears.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Login writes plaintext credentials to logs",
+      "file": "Expense Tracker/Network Manager/AuthManager.swift",
+      "line": 38,
+      "evidence": "        let body = LoginBody(userCredential: usernameOrEmail, password: password)\n        print(\"DEBUG:\\(body)\")",
+      "explanation": "Printing LoginBody includes its stored password and user credential. Every password login therefore exposes credentials to console logs.",
+      "recommendation": "Remove the credential-body log and log only non-sensitive request metadata.",
+      "suggested_test": "Log in with distinctive username and password sentinel values while capturing application logs. Assert neither value appears in the logs.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Bearer access token is persisted in UserDefaults",
+      "file": "Expense Tracker/Network Manager/AuthManager.swift",
+      "line": 84,
+      "evidence": "    private func catchToken(result: LoginResponse) {\n        UserDefaults.standard.setValue(result.accessToken, forKey: \"access_token\")\n        UserDefaults.standard.setValue(result.userInfo, forKey: \"user_id\")\n    }",
+      "explanation": "The access token is stored in ordinary application preferences and later used as a bearer credential. An attacker who obtains readable app-container preferences or a backup containing them can extract and replay the token while it remains valid.",
+      "recommendation": "Store the token in Keychain with an appropriate device-only accessibility policy, migrate existing preference values, and delete the Keychain entry on logout.",
+      "suggested_test": "After login, assert that access_token is absent from UserDefaults and available only through Keychain; after logout, assert that the Keychain entry is removed.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Date picker ignores its selected day",
+      "file": "Expense Tracker/Utilits/DatePicker.swift",
+      "line": 91,
+      "evidence": "        guard days.indices.contains(dayIndex),\n              chooseTime.indices.contains(chooseTimeTimeIndex) else { return }\n        \n        let timeChoosed = chooseTime[chooseTimeTimeIndex]\n        \n        didSelectDates?(timeChoosed)",
+      "explanation": "The selected day is checked but never used. chooseTime is generated from today's date, so selecting tomorrow still sends a Date for today to the callback and displays the wrong day.",
+      "recommendation": "Combine calendar date components from days[dayIndex] with time components from the selected time before invoking didSelectDates.",
+      "suggested_test": "Select tomorrow and 10 AM. Assert that the callback date represents tomorrow at 10 AM in the current calendar and time zone.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Date picker ignores the selected day",
+      "file": "Expense Tracker/Utilits/DatePicker.swift",
+      "line": 94,
+      "evidence": "        let timeChoosed = chooseTime[chooseTimeTimeIndex]\n        \n        didSelectDates?(timeChoosed)",
+      "explanation": "The callback returns a time constructed using today's date. Although dayIndex is checked, days[dayIndex] is never used, so selecting another day still reports today.",
+      "recommendation": "Combine the selected day's calendar components with the selected time before invoking the callback.",
+      "suggested_test": "Select tomorrow in component 0 and 10:00 in component 1. Assert the callback's calendar day is tomorrow and its hour and minute are 10:00. Change only the day and assert the callback date changes.",
+      "agents": [
+        "tests"
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "agent": "quality",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Biometric authentication fails open",
+          "file": "Expense Tracker/Custom Views/TabBar Controller/TabBarVC.swift",
+          "line": 39,
+          "evidence": "                        if !success {\n                            // Handle authentication failure\n                            let alert = UIAlertController(title: \"Authentication Failed\", message: \"Please try again.\", preferredStyle: .alert)\n                            alert.addAction(UIAlertAction(title: \"OK\", style: .default, handler: nil))\n                            self?.present(alert, animated: true, completion: nil)\n                        }",
+          "explanation": "The tabs are already installed before authentication. Cancelling or failing biometrics only displays a dismissible alert, leaving financial data and transaction actions accessible. When biometrics cannot be evaluated, execution likewise leaves access open.",
+          "recommendation": "Gate installation or interaction of protected controllers behind successful authentication, and retain a locked screen on failure or biometric unavailability.",
+          "suggested_test": "Enable biometric authentication, launch with a stored session, then cancel authentication or simulate biometric lockout. Assert that dashboard data and transaction actions remain inaccessible."
+        },
+        {
+          "severity": "high",
+          "title": "Network singleton permanently caches the first user ID",
+          "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+          "line": 14,
+          "evidence": "    private let userID          = UserDefaults.standard.string(forKey: \"user_id\")",
+          "explanation": "This hidden session-state snapshot never changes after singleton initialization. Signing up initializes NetworkManager before login stores a user ID, so later dashboard requests use N/A and makeTransaction force-unwraps nil. Logging out and signing into another account in the same process instead keeps the previous account's ID.",
+          "recommendation": "Resolve the current user ID for each request through a session provider, reject missing IDs with a thrown error, and clear session identity on logout.",
+          "suggested_test": "Initialize NetworkManager before login, then log in and create a transaction; assert that the new ID is used without a crash. Repeat after switching between two accounts."
+        },
+        {
+          "severity": "medium",
+          "title": "Nonnumeric signup PIN crashes instead of showing validation",
+          "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+          "line": 165,
+          "evidence": "                    let signUpResult = try await NetworkManager.shared.Signup(fullname: fullnameTextFeild.text!, email: emailTextFeild.text!, mobile: phoneTextFeild.text!, username: usernameTextFeild.text!, pin: Int(pinTextFeild.text!)!, passowrd: passwordTextFeild.text!)",
+          "explanation": "Signup validation only checks that the PIN is nonempty. Its text field accepts ordinary text, and the length delegate is never assigned. Entering abc or an integer outside Int's range passes validation and traps at the forced conversion; do/catch cannot recover from this trap.",
+          "recommendation": "Validate a four-digit PIN and safely unwrap its conversion before starting the request. Assign a PIN-specific input delegate rather than applying a four-character limit to all signup fields.",
+          "suggested_test": "Submit otherwise valid signup details with PIN abc, an oversized integer, and five digits. Assert that each produces a validation error without issuing a request or crashing."
+        },
+        {
+          "severity": "medium",
+          "title": "Transaction amount conversion can crash on accepted input",
+          "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+          "line": 237,
+          "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+          "explanation": "Validation checks only emptiness, while the initial amount is the nonempty string $0. Completing the other fields without editing that amount, or pasting nonnumeric text, reaches Double(...)! and crashes.",
+          "recommendation": "Parse and validate a finite monetary amount before starting the task, and display $0 as a placeholder or format it separately from the numeric input.",
+          "suggested_test": "Complete the form while leaving the initial $0 untouched, then repeat with pasted abc. Assert a validation message and no crash or network request."
+        },
+        {
+          "severity": "medium",
+          "title": "Selected transaction date is omitted from the request",
+          "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+          "line": 237,
+          "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+          "explanation": "The form requires a selected date, but the request passes only type, title, description, and amount. TransactionBody also has no date property, so the selected date cannot affect the saved transaction.",
+          "recommendation": "Keep the selected Date as model state and pass it through makeTransaction and TransactionBody using the API's date representation.",
+          "suggested_test": "Select a date different from today and save. Assert that the outgoing request and subsequently retrieved transaction contain that selected date."
+        },
+        {
+          "severity": "medium",
+          "title": "Date picker ignores its selected day",
+          "file": "Expense Tracker/Utilits/DatePicker.swift",
+          "line": 91,
+          "evidence": "        guard days.indices.contains(dayIndex),\n              chooseTime.indices.contains(chooseTimeTimeIndex) else { return }\n        \n        let timeChoosed = chooseTime[chooseTimeTimeIndex]\n        \n        didSelectDates?(timeChoosed)",
+          "explanation": "The selected day is checked but never used. chooseTime is generated from today's date, so selecting tomorrow still sends a Date for today to the callback and displays the wrong day.",
+          "recommendation": "Combine calendar date components from days[dayIndex] with time components from the selected time before invoking didSelectDates.",
+          "suggested_test": "Select tomorrow and 10 AM. Assert that the callback date represents tomorrow at 10 AM in the current calendar and time zone."
+        },
+        {
+          "severity": "medium",
+          "title": "Profile header rebuilds its nib on every layout",
+          "file": "Expense Tracker/Custom Views/UIView/ProfileHeaderView.swift",
+          "line": 25,
+          "evidence": "    override func layoutSubviews() {\n        super.layoutSubviews()\n        commonInit()\n    }",
+          "explanation": "This repeated-initialization anti-pattern calls commonInit on every layout, loading and adding another nib-backed content view and activating new constraints. It also overwrites the supplied user's name with the hardcoded name at line 60. Layout therefore changes displayed identity and accumulates views.",
+          "recommendation": "Load the nib and install constraints once during initialization. Limit layoutSubviews to geometry-dependent updates, and remove the hardcoded name assignment.",
+          "suggested_test": "Construct a header with a distinct name and perform several layout passes. Assert that the name remains unchanged and the subview and constraint counts remain stable."
+        },
+        {
+          "severity": "medium",
+          "title": "Stored settings handlers retain ProfileVC indefinitely",
+          "file": "Expense Tracker/Controllers/Main/ProfileVC.swift",
+          "line": 88,
+          "evidence": "        models.append(Sections(options: [\n            SettingOpetions(icon: Images.edityourProfile, title: \"Edit Profile\", handler: {\n                let editProfileVC = EditProfileVC()\n                editProfileVC.title = \"Edit Profile\"\n                return self.navigationController?.pushViewController(editProfileVC, animated: true)\n            }),",
+          "explanation": "This strong-reference-cycle anti-pattern forms ProfileVC → models → handler → ProfileVC. Multiple stored handlers capture self this way, so dismissing the profile does not release it or its transaction data. Repeated profile presentations accumulate retained controllers.",
+          "recommendation": "Use weak self captures in every handler stored in models, or store action identifiers and dispatch them from didSelectRowAt.",
+          "suggested_test": "Present and dismiss ProfileVC while retaining only a weak reference. Assert that the weak reference becomes nil after dismissal."
+        },
+        {
+          "severity": "medium",
+          "title": "Change-password Save action performs no operation",
+          "file": "Expense Tracker/Controllers/ProfileViews/ChangePasswordVC.swift",
+          "line": 115,
+          "evidence": "    @objc func didTapSave() {\n        // this will check first current password the will change password by checking password\n        \n    }",
+          "explanation": "The visible Save button invokes this empty method. Users can enter current and replacement passwords and tap Save, but no validation, password update, or feedback occurs.",
+          "recommendation": "Implement validation and the password-change request with success and failure feedback, or disable access to the unfinished action.",
+          "suggested_test": "Enter valid matching replacement passwords and tap Save. Assert that a password-change request occurs and the result is presented."
+        },
+        {
+          "severity": "medium",
+          "title": "Edit-profile Save button has no action",
+          "file": "Expense Tracker/Controllers/ProfileViews/EditProfileVC.swift",
+          "line": 302,
+          "evidence": "    func configSavebtn() {\n        saveBtn.setTitle(\"Save\", for: .normal)\n        contentView.addSubview(saveBtn)\n        NSLayoutConstraint.activate([",
+          "explanation": "The complete controller never attaches an action to saveBtn or submits profile changes. Edited fields and the selected avatar remain local UI state and are lost when the controller is dismissed.",
+          "recommendation": "Attach a save handler that validates and persists the profile and avatar, then updates the displayed profile after success.",
+          "suggested_test": "Change the name and avatar and tap Save. Assert that persistence is invoked and reopening the profile shows the saved values."
+        },
+        {
+          "severity": "medium",
+          "title": "Empty transaction refresh leaves previously displayed rows intact",
+          "file": "Expense Tracker/Controllers/Main/HomeVC.swift",
+          "line": 144,
+          "evidence": "            self.transaction = transactions.transaction\n            if !transaction.isEmpty {\n                configTableView()\n                self.tableView.reloadDataOnMainThread()\n            } else {\n                layoutLable(\"This user doesn't have any Transactions. Go and make Expenses or Income 😀.\")\n            }",
+          "explanation": "When a refresh changes a previously nonempty result to an empty array, the table is not reloaded or hidden. Its existing rows remain displayed despite the backing array being empty, and the empty-state label is behind the table in the configured view hierarchy.",
+          "recommendation": "Reload the table for every successful response and explicitly toggle visibility between the table and empty-state label.",
+          "suggested_test": "Load several transactions, then refresh with an empty response. Assert zero displayed rows and a visible empty-state message; refresh with data again and assert the message is hidden."
+        },
+        {
+          "severity": "medium",
+          "title": "Login credentials are written to logs",
+          "file": "Expense Tracker/Network Manager/AuthManager.swift",
+          "line": 38,
+          "evidence": "        let body = LoginBody(userCredential: usernameOrEmail, password: password)\n        print(\"DEBUG:\\(body)\")",
+          "explanation": "Printing LoginBody includes its stored password and user credential. Every password login therefore exposes plaintext credentials to application logs, including builds where this unconditional print remains enabled.",
+          "recommendation": "Remove the body logging and log only nonsensitive request metadata.",
+          "suggested_test": "Log in with a distinctive test password while capturing application output. Assert that neither the password nor the serialized credential body appears."
+        }
+      ],
+      "limitations": [
+        "Review was limited to the supplied snapshot; no tools, execution, or delegation were used.",
+        "Server behavior, API contracts, nib contents, deployment targets, and build settings were not supplied, so runtime integration and platform coverage could not be verified."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "knowledge_enrichment": {
+          "provider": "keenable",
+          "status": "ok",
+          "sources": [
+            {
+              "title": "skills/skills/write-swift/SKILL.md at main · emilkowalski/skills",
+              "url": "https://github.com/emilkowalski/skills/blob/main/skills/write-swift/SKILL.md",
+              "snippet": "- **Default to `struct` and `enum`. Use `class` only for identity, shared mutable state, inheritance, or resource lifetime.** A window, a database connection, an entity stored in a rendering engine — those have identity. A `Point`, a `Drink`, a `Material` does not.\n- **`let` by default; `var` only when you mutate.** This is the same discipline as `some` before `any` and value before reference: start narrow, widen with cause.\n- **A struct with a mutable reference-type property is neither a value nor a reference.** Copies share the object; mutations leak across copies. Either keep the referenced type immutable, expose only computed properties that forward to it, or make it a `private` stored property behind copy-on-write.\n- **Copy-on-write is how you get out-of-line storage *and* value semantics.** Wrap a final class in a struct and check `isKnownUniquelyReferenced(&storage)` before mutating; copy first if it isn't. This is exactly how `Array`, `String`, and `Dictionary` work.\n- **Enums are the tool for \"a fixed set of things\" and for mutually exclusive state.** Replacing a pile of optional stored properties (`isSharing`, `selectedRows`, `shareTarget`) with one `enum State` makes inv"
+            },
+            {
+              "title": "code-review-skill/reference/swift.md at 4850184dfd7765ea7b3c5c4e9b6cf8e0815ee7cb · awesome-skills/code-review-skill",
+              "url": "https://github.com/awesome-skills/code-review-skill/blob/HEAD/reference/swift.md",
+              "snippet": "```\n// ✅ Use a struct for data/models with value semantics\nstruct Coordinate {\nvar latitude: Double\nvar longitude: Double\n}\n// Copies are independent; no shared mutable state, thread-friendly.\nvar a = Coordinate(latitude: 1, longitude: 2)\nvar b = a\nb.latitude = 99   // a is unchanged\n```\n\n```\n// ❌ Wrong: try! crashes on any thrown error\nlet data = try! Data(contentsOf: url)\n// ❌ Often wrong: try? silently discards the error and the cause\nlet data = try? Data(contentsOf: url)   // data is nil, you lose \"why\"\n// ✅ Correct: propagate or handle with do-catch\ndo {\nlet data = try Data(contentsOf: url)\nprocess(data)\n} catch {\nlog.error(\"failed to read \\(url): \\(error)\")\n}\n```\n\n```\n// ❌ Wrong: callback pyramid, error handling scattered\nfunc loadProfile(completion: @escaping (Result<Profile, Error>) -> Void) {\nfetchUser { userResult in\nswitch userResult {\ncase .success(let user):\nfetchAvatar(user) { avatarResult in /* ... */ }\ncase .failure(let error):\ncompletion(.failure(error))\n}\n}\n}\n// ✅ Correct: linear async/await\nfunc loadProfile() async throws -> Profile {\nlet user = try await fetchUser()\nlet avatar = try await fetchAvatar(user)\nreturn Profile(user: user, avatar: avatar)\n}\n```\n\n### 5."
+            },
+            {
+              "title": "claude-code-ios-plugin/skills/code-review-checklist/SKILL.md at main · arimunandar/claude-code-ios-plugin",
+              "url": "https://github.com/arimunandar/claude-code-ios-plugin/blob/main/skills/code-review-checklist/SKILL.md",
+              "snippet": "### VIP+W Pattern\n```\n✅ CORRECT                          ❌ INCORRECT\n─────────────────────────────────────────────────────────────\nViewController only displays        ViewController has business logic\nInteractor orchestrates logic       Interactor makes API calls directly\nWorker handles async operations     Worker knows about Presenter\nPresenter formats for display       Presenter has business logic\nRouter handles navigation           Navigation in ViewController\n```\n**Review Questions:**\n- Does ViewController only call `interactor?.methodName(request:)`?\n- Does Interactor delegate async work to Worker?\n- Does Presenter only format data, no business logic?\n- Is navigation handled by Router only?\n- Are all dependencies injected via Configurator?\n\n```\n// ❌ RETAIN CYCLE\nbutton.onTap = {\nself.handleTap()  // Strong capture\n}\n// ✅ FIXED\nbutton.onTap = { [weak self] in\nself?.handleTap()\n}\n```\n**Checklist:**\n- Closures use `[weak self]` or `[unowned self]`\n- Delegates are `weak`\n- Timers are invalidated in `deinit`\n- NotificationCenter observers removed\n- No circular references between objects\n\n```\n// ✅ GOOD - Actor for shared mutable state\nactor UserCache {\nprivate var cache: [String: Us"
+            },
+            {
+              "title": "Swift-6-Agent-Skill/swift-6-agent-skill/SKILL.md at 307e013374525ec75debb55d8936e7d40ef7709f · pchelnikov/Swift-6-Agent-Skill",
+              "url": "https://github.com/pchelnikov/Swift-6-Agent-Skill/blob/307e013374525ec75debb55d8936e7d40ef7709f/swift-6-agent-skill/SKILL.md",
+              "snippet": "- Check for deprecated or outdated patterns against the Quick Reference table below\n- Audit concurrency safety: global variables, actor isolation, Sendable conformance (see `references/SWIFT_6_0.md`)\n- Verify `@MainActor` annotations are explicit where needed post-SE-0401\n- Check import visibility: transitive imports should be explicit (SE-0444, see `references/SWIFT_6_1.md`)\n- Look for unnecessary `@unchecked Sendable` — compiler region analysis (SE-0414) may make them redundant\n- Verify test code uses Swift Testing patterns, not legacy XCTest (see Testing)\n\n- **Use `Mutex` for shared mutable state** — prefer `Mutex` from the Synchronization library over `NSLock` or `os_unfair_lock`. Use `Atomic` for simple lock-free flags and counters (SE-0433, SE-0410).\n\n### Error Handling\n- **Prefer typed throws for constrained domains** where the error set is fixed and known (internal modules, embedded Swift). Use untyped `throws` for public library APIs to preserve flexibility (SE-0413).\n- **Leverage typed throws in generic contexts** — `throws(E)` enables `throws(Never)` inference for non-throwing closures, eliminating unnecessary do/catch.\n\n### Concurrency Safety\n- No bare mutable global va"
+            },
+            {
+              "title": "ECC/agents/swift-reviewer.md at 1a2cd81ed34cbb6fc826eafeb23eea27234c664e · affaan-m/ECC",
+              "url": "https://github.com/affaan-m/ECC/blob/1a2cd81ed34cbb6fc826eafeb23eea27234c664e/agents/swift-reviewer.md",
+              "snippet": "### CRITICAL - Error Handling\n- **Silenced errors**: Empty `catch {}` blocks or `try?` discarding meaningful errors\n- **Missing error context**: Rethrowing without wrapping in a domain-specific error\n- **`fatalError()` for recoverable conditions**: Use `throw` for errors that callers can handle\n- **`assert` for required invariants**: `assert` is stripped in release builds (debug-only) - use `precondition` when the check must hold in release, or `throw` for public API boundaries\n- **`precondition` / `fatalError` in library code**: `precondition` crashes in both debug and release; `fatalError` crashes unconditionally in all builds - use `throw` for recoverable errors at public API boundaries\n### HIGH - Concurrency\n- **Data races**: Mutable shared state without actor isolation or synchronization\n- **`@Sendable` violations**: Non-`Sendable` types crossing isolation boundaries\n- **Blocking the main actor**: Synchronous I/O or `Thread.sleep` on `@MainActor` - use `Task.sleep` and async I/O\n- **Unstructured `Task {}` without cancellation**: Fire-and-forget tasks leaking - use structured concurrency (`async let`, `TaskGroup`)\n- **Actor reentrancy issues**: Assumptions about state consisten"
+            },
+            {
+              "title": "GitHub - Fueled/swift-style-guide: Official Swift language style guide used at Fueled (Swift 6, language rules only).",
+              "url": "https://github.com/fueled/swift-style-guide",
+              "snippet": "### Safety\nCode is written to **prevent incorrect behavior by construction** rather than relying on discipline or conventions.\n- Prefer language features that eliminate entire classes of bugs\n- Make invalid states unrepresentable\n- Avoid unsafe constructs even when they appear convenient\n- Fail early and explicitly when assumptions are violated\nSafety principles include:\n- Avoiding force unwraps and force casts\n- Favoring `guard` and explicit error handling\n- Using strong typing to prevent misuse\n- Treating concurrency and shared state as safety concerns\nSafety takes precedence over performance and brevity unless there is a clear, measured reason to trade it off.\n\n## Error Handling\nError handling must be **explicit, intentional, and type-driven**.\nErrors are part of the API contract and must be designed, documented, and propagated deliberately.\n---\n### Error Types\n- Define errors as concrete `enum` types conforming to `Error`\n- Error cases must be descriptive and domain-specific\n- Avoid throwing opaque or generic errors without context\n```\nenum NetworkError : Error { case offline case unauthorized case timeout }\n```\n```\n// AVOID: No defined error domain func fetchData ( ) throws ->"
+            }
+          ],
+          "queries": [
+            "Swift code review anti-patterns error handling mutable state resource management official documentation"
+          ]
+        },
+        "citation_corrections": [],
+        "duration_seconds": 46.051
+      }
+    },
+    {
+      "agent": "security",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Biometric authentication failure leaves the app accessible",
+          "file": "Expense Tracker/Custom Views/TabBar Controller/TabBarVC.swift",
+          "line": 39,
+          "evidence": "                        if !success {\n                            // Handle authentication failure\n                            let alert = UIAlertController(title: \"Authentication Failed\", message: \"Please try again.\", preferredStyle: .alert)\n                            alert.addAction(UIAlertAction(title: \"OK\", style: .default, handler: nil))\n                            self?.present(alert, animated: true, completion: nil)\n                        }",
+          "explanation": "The protected tabs are installed before authentication. With an existing signed-in session and Face ID enabled, someone holding the unlocked device can cancel or fail authentication, dismiss this alert, and access financial data and transaction controls. Biometric unavailability also only prints a message and permits access.",
+          "recommendation": "Keep protected content inaccessible until authentication succeeds. On cancellation, failure, or biometric unavailability, retain a blocking authentication screen or require account authentication.",
+          "suggested_test": "With a saved session and Face ID enabled, cancel biometric authentication and dismiss the alert; assert that financial data and transaction controls remain inaccessible. Repeat with biometrics unavailable."
+        },
+        {
+          "severity": "medium",
+          "title": "Login credentials are written to console output",
+          "file": "Expense Tracker/Network Manager/AuthManager.swift",
+          "line": 38,
+          "evidence": "        let body = LoginBody(userCredential: usernameOrEmail, password: password)\n        print(\"DEBUG:\\(body)\")",
+          "explanation": "Printing LoginBody exposes its username/email and plaintext password. Anyone with access to captured application console output or diagnostic logs containing this output can recover credentials, including unsuccessful login attempts.",
+          "recommendation": "Remove credential-body logging. Log only non-sensitive authentication outcomes.",
+          "suggested_test": "Log in using distinctive test credentials while capturing console output; assert that neither the password nor the serialized credential body appears."
+        },
+        {
+          "severity": "medium",
+          "title": "Bearer access token is persisted in UserDefaults",
+          "file": "Expense Tracker/Network Manager/AuthManager.swift",
+          "line": 84,
+          "evidence": "    private func catchToken(result: LoginResponse) {\n        UserDefaults.standard.setValue(result.accessToken, forKey: \"access_token\")\n        UserDefaults.standard.setValue(result.userInfo, forKey: \"user_id\")\n    }",
+          "explanation": "The access token is stored in ordinary application preferences and later used as a bearer credential. An attacker who obtains readable app-container preferences or a backup containing them can extract and replay the token while it remains valid.",
+          "recommendation": "Store the token in Keychain with an appropriate device-only accessibility policy, migrate existing preference values, and delete the Keychain entry on logout.",
+          "suggested_test": "After login, assert that access_token is absent from UserDefaults and available only through Keychain; after logout, assert that the Keychain entry is removed."
+        }
+      ],
+      "limitations": [
+        "Review was limited to the supplied snapshot; no tools or execution were used.",
+        "Server-side authorization, PIN rate limits, token expiration and revocation, dependency versions, and backup configuration are not supplied and could not be assessed."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "citation_corrections": [],
+        "duration_seconds": 20.571
+      }
+    },
+    {
+      "agent": "tests",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Biometric authentication failure leaves protected screens accessible",
+          "file": "Expense Tracker/Custom Views/TabBar Controller/TabBarVC.swift",
+          "line": 39,
+          "evidence": "                        if !success {\n                            // Handle authentication failure\n                            let alert = UIAlertController(title: \"Authentication Failed\", message: \"Please try again.\", preferredStyle: .alert)\n                            alert.addAction(UIAlertAction(title: \"OK\", style: .default, handler: nil))\n                            self?.present(alert, animated: true, completion: nil)\n                        }",
+          "explanation": "The tabs are installed before authentication. Failure only displays a dismissible alert, and unavailable biometrics only logs a message. Users can therefore access financial data despite enabling biometric protection.",
+          "recommendation": "Gate protected content behind successful authentication and retain a locked screen on cancellation, failure, or unavailable biometrics.",
+          "suggested_test": "Enable biometric protection and simulate cancellation, authentication failure, and unavailable biometrics. Assert that dismissing any alert never exposes dashboard data or transaction controls; assert successful authentication unlocks them."
+        },
+        {
+          "severity": "high",
+          "title": "Network manager retains the previous session's user ID",
+          "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+          "line": 14,
+          "evidence": "    private let userID          = UserDefaults.standard.string(forKey: \"user_id\")",
+          "explanation": "The singleton snapshots the user ID once, while login updates UserDefaults. Signing up initializes this singleton before login, potentially retaining nil and later crashing at userID! when saving a transaction. Switching accounts retains the old account's ID in request paths and bodies.",
+          "recommendation": "Resolve the current user ID per request, require it with a throwing guard, and clear session identity on logout.",
+          "suggested_test": "Initialize NetworkManager before login, then authenticate and save a transaction; assert the authenticated ID is sent without a crash. Log out of account A and into B in the same process; assert every subsequent request uses B's ID."
+        },
+        {
+          "severity": "medium",
+          "title": "Non-numeric transaction amounts crash during submission",
+          "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+          "line": 237,
+          "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+          "explanation": "Validation checks only whether the amount is empty. The initial \"$0\" value and pasted non-numeric text pass that check but fail Double conversion, causing a force-unwrap trap outside recoverable error handling.",
+          "recommendation": "Parse and validate a finite amount before starting the task, and present a validation error when parsing fails.",
+          "suggested_test": "Fill all other transaction fields and submit with the untouched \"$0\" amount, then with pasted \"abc\". Assert a validation alert appears, no network request occurs, and the app remains responsive."
+        },
+        {
+          "severity": "medium",
+          "title": "Signup accepts PIN text that crashes integer conversion",
+          "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+          "line": 165,
+          "evidence": "                    let signUpResult = try await NetworkManager.shared.Signup(fullname: fullnameTextFeild.text!, email: emailTextFeild.text!, mobile: phoneTextFeild.text!, username: usernameTextFeild.text!, pin: Int(pinTextFeild.text!)!, passowrd: passwordTextFeild.text!)",
+          "explanation": "Signup validation only requires a nonempty PIN. The field has no assigned delegate enforcing its declared length restriction, and its initializer does not select a numeric keyboard. Non-numeric or overflowing input therefore reaches a forced Int conversion and crashes.",
+          "recommendation": "Validate the PIN's digit count and numeric conversion explicitly before submission, using a guarded conversion.",
+          "suggested_test": "Populate otherwise valid signup fields with matching passwords. Try PINs \"abcd\", \"12345\", and an integer-overflowing digit string. Assert validation rejects each without sending a request or crashing; assert a four-digit PIN is accepted."
+        },
+        {
+          "severity": "medium",
+          "title": "Selected transaction date is never sent to the server",
+          "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+          "line": 237,
+          "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+          "explanation": "The form requires a date, but this call passes only type, title, description, and amount. The supplied makeTransaction implementation and TransactionBody also omit a date, so changing the date cannot affect the saved transaction.",
+          "recommendation": "Retain the selected Date and pass it through the network API into the encoded transaction body.",
+          "suggested_test": "Create otherwise identical transactions with two different selected dates and capture their request bodies. Assert each contains its selected date and that fetching the saved transactions preserves those dates."
+        },
+        {
+          "severity": "medium",
+          "title": "Date picker ignores the selected day",
+          "file": "Expense Tracker/Utilits/DatePicker.swift",
+          "line": 94,
+          "evidence": "        let timeChoosed = chooseTime[chooseTimeTimeIndex]\n        \n        didSelectDates?(timeChoosed)",
+          "explanation": "The callback returns a time constructed using today's date. Although dayIndex is checked, days[dayIndex] is never used, so selecting another day still reports today.",
+          "recommendation": "Combine the selected day's calendar components with the selected time before invoking the callback.",
+          "suggested_test": "Select tomorrow in component 0 and 10:00 in component 1. Assert the callback's calendar day is tomorrow and its hour and minute are 10:00. Change only the day and assert the callback date changes."
+        },
+        {
+          "severity": "medium",
+          "title": "Profile header reloads its nib and overwrites the user's name on layout",
+          "file": "Expense Tracker/Custom Views/UIView/ProfileHeaderView.swift",
+          "line": 25,
+          "evidence": "    override func layoutSubviews() {\n        super.layoutSubviews()\n        commonInit()\n    }",
+          "explanation": "commonInit loads and adds another content view, activates constraints, and assigns the hardcoded name \"Abdorizak Abdalla Hassan\". Each layout therefore accumulates content views and replaces the name supplied by the initializer.",
+          "recommendation": "Load the nib and install constraints once during initialization. Restrict layoutSubviews to geometry updates and remove the hardcoded name assignment.",
+          "suggested_test": "Initialize the header with \"Alice Example\" and perform several layout passes. Assert the displayed name remains \"Alice Example\" and the number of content subviews and installed constraints stays constant."
+        },
+        {
+          "severity": "medium",
+          "title": "Change Password Save action performs no operation",
+          "file": "Expense Tracker/Controllers/ProfileViews/ChangePasswordVC.swift",
+          "line": 115,
+          "evidence": "    @objc func didTapSave() {\n        // this will check first current password the will change password by checking password\n        \n    }",
+          "explanation": "The visible Save button invokes this empty handler. Entering current and new passwords cannot change the account password or produce any feedback.",
+          "recommendation": "Implement password validation and the password-change request with success and failure feedback, or disable the unfinished action.",
+          "suggested_test": "Enter the correct current password and matching valid new passwords, then tap Save. Assert the change request is sent and success is reported. For mismatched confirmation or an incorrect current password, assert an error is shown and the password remains unchanged."
+        },
+        {
+          "severity": "medium",
+          "title": "Login writes plaintext credentials to logs",
+          "file": "Expense Tracker/Network Manager/AuthManager.swift",
+          "line": 38,
+          "evidence": "        let body = LoginBody(userCredential: usernameOrEmail, password: password)\n        print(\"DEBUG:\\(body)\")",
+          "explanation": "Printing LoginBody includes its stored password and user credential. Every password login therefore exposes credentials to console logs.",
+          "recommendation": "Remove the credential-body log and log only non-sensitive request metadata.",
+          "suggested_test": "Log in with distinctive username and password sentinel values while capturing application logs. Assert neither value appears in the logs."
+        }
+      ],
+      "limitations": [
+        "No tests were supplied, so existing test coverage and assertions could not be evaluated.",
+        "Static review only; no tools were called and no code or tests were executed.",
+        "Server behavior, project configuration, assets, and nib contents were not supplied; related behavior could not be verified."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "citation_corrections": [],
+        "duration_seconds": 35.762
+      }
+    }
+  ],
+  "actual_models": [
+    "gpt-6.1-sol"
+  ],
+  "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+  "schema_version": "1.0",
+  "run_id": "f319884c-f806-4efa-8476-8d2d8edcd9f4",
+  "started_at": "2026-10-25T01:12:07.740259+00:00",
+  "completed_at": "2026-10-25T01:12:53.848129+00:00",
+  "duration_seconds": 46.108,
+  "backend": "codex",
+  "repository": "/Users/krishnakumar/Documents/github/Expense-Tracker-App",
+  "snapshot_sha256": "83ab6449ed7aab7c754f304211b83cc5e8bb9d96ec92f5933d5d63953883c24d",
+  "snapshot_bytes": 234057,
+  "requested_model": null,
+  "model": "gpt-6.1-sol",
+  "source_revision": "4dfa91809f9f9680c8d8c813b500ca1f8b996bb0",
+  "source_remote": "https://github.com/abdorizak/Expense-Tracker-App",
+  "scope_note": "All 64 Swift files; Xcode configuration, nibs, storyboards, dependency resolution and backend excluded from agent snapshot. No app build or tests executed."
+}
