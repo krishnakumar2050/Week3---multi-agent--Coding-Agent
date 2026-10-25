@@ -61,7 +61,8 @@ def test_request_schema_roles_endpoint_and_runtime_model():
         assert "JSON" in body["messages"][0]["content"]
         assert body["response_format"]["type"] == "json_schema"
         assert "Finding" in body["response_format"]["json_schema"]["schema"]["$defs"]
-        assert body["max_tokens"] == 8192
+        assert body["max_tokens"] == 32768
+        assert body["reasoning_effort"] == "low"
         return httpx.Response(200, json=completion())
 
     backend = backend_for(transport)

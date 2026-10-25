@@ -26,7 +26,7 @@ class FakeModel:
                     title="Unsafe operation",
                     file="app.py",
                     line=99 if self.invalid else 1,
-                    evidence="eval(user_input)",
+                    evidence="missing_call()" if self.invalid else "eval(user_input)",
                     explanation="Untrusted input can execute code.",
                     recommendation="Parse allowed values.",
                     suggested_test="Assert malicious input is rejected.",

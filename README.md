@@ -18,7 +18,7 @@ coding-review ./examples --format json --output review-report.json
 
 For this workspace, use `.venv313/bin/python -m coding_review` in place of `coding-review`. The previous `python -m coding_review.cli` entry point also works. The key must be exported in the same Terminal where you run the command; a `.env` file is not loaded automatically.
 
-The Fireworks adapter uses the documented `https://api.fireworks.ai/inference/v1` endpoint, JSON-schema responses, and the existing OpenAI-compatible SDK transport. It sends only `FIREWORKS_API_KEY` to Fireworks and does not use `OPENAI_API_KEY`, OpenAI endpoint settings, or Codex authentication. Requests have two provider retries. Truncated, empty, refused, invalid, or abnormal responses fail explicitly rather than becoming successful empty reviews. Output is limited to 8,192 tokens per specialist. Requested and provider-reported model names are retained separately in reports.
+The Fireworks adapter uses the documented `https://api.fireworks.ai/inference/v1` endpoint, JSON-schema responses, and the existing OpenAI-compatible SDK transport. It sends only `FIREWORKS_API_KEY` to Fireworks and does not use `OPENAI_API_KEY`, OpenAI endpoint settings, or Codex authentication. Requests have two provider retries. Truncated, empty, refused, invalid, or abnormal responses fail explicitly rather than becoming successful empty reviews. The completion budget is 32,768 tokens per specialist, including reasoning, with low reasoning effort to reserve room for the final JSON report. Requested and provider-reported model names are retained separately in reports.
 
 Override the model with `--model`, or set `FIREWORKS_MODEL` to a Fireworks model/deployment resource. Precedence is `--model`, then `FIREWORKS_MODEL`, then the MiniMax default. `REVIEW_MODEL` applies only to the OpenAI API backend.
 
@@ -48,6 +48,14 @@ coding-review ./examples --backend openai --output review-report-api.md
 
 Missing credentials cause a clear error; no backend silently falls back to another provider.
 
+## GitHub pull-request integration
+
+The installation template and activation guide are under `integrations/github/`. The `coding_review.integrations.github` entry point reads immutable GitHub source blobs, runs the three Fireworks reviewers, and publishes one updated bot comment plus complete report artifacts. It supports ready, same-repository pull requests; fork and Dependabot PRs are skipped. The workflow installs review code from the trusted default branch and never executes PR source.
+
+For `krishnakumar2050/Week1Project-GenAcademy`, installation files are on branch `codex/automated-multi-agent-pr-review`. Merge that branch through a PR and configure the repository Actions secret `FIREWORKS_API_KEY` to activate subsequent PR reviews. The installation is not an account-wide hook. The initial installation PR only performs its bootstrap check until the trusted default branch contains the engine.
+
+The full suite now has **113 passing tests**, including mock GitHub source retrieval, limits, fork/stale-commit guards, safe comment rendering, and bot-comment upserts. A live GitHub Actions/Fireworks run still requires repository activation and the secret. See [the integration guide](integrations/github/README.md).
+
 ## Modular architecture
 
 ```text
@@ -63,7 +71,8 @@ coding_review/
   agents/
     prompts.py               Three specialist responsibilities and shared policy
     reviewer.py              Specialist invocation, validation, timing
-    evidence.py              Exact path/line/excerpt verification
+    evidence.py              Strict verification and unambiguous citation repair
+    context.py               Line-addressed source snapshots for model prompts
   backends/
     base.py                  Backend/reviewer Protocol interfaces
     factory.py               Selection and authentication
@@ -122,7 +131,7 @@ Tests and integrations can inject any object implementing `ReviewBackend` into `
 
 Reports include schema version `1.0`, a unique run ID, UTC timestamps, timings, repository path, snapshot SHA-256/byte size, per-agent model provenance, findings, severity counts, and limitations. The hash covers the selected path-to-source mapping, so identical input yields the same hash. It does not include omitted repository files or guarantee deterministic model output.
 
-A finding must cite an exact source excerpt at a one-based line in a selected file. Bad citations are discarded and disclosed. This establishes citation location, not the correctness of the model's reasoning. Aggregation combines only matching file/line/normalized-title findings; semantic duplicates can remain. Completion requires one successful result from each expected specialist.
+Each model receives explicit one-based line coordinates and exact source strings. A finding must cite an exact source excerpt in a selected file. If its coordinates or common-margin indentation are wrong, a unique matching excerpt in that same file can be canonicalized to the real location and original source text. Duplicate matches, fabricated quotes, changed literal contents, and wrong-file citations are rejected. Corrections are audited in `agents[].execution.citation_corrections`, and discarded citations remain disclosed. This establishes citation location, not the correctness of the model's reasoning. Aggregation combines only matching file/line/normalized-title findings; semantic duplicates can remain. Completion requires one successful result from each expected specialist.
 
 Report files are written to a temporary file on the destination filesystem, flushed, then atomically replaced. Output directories must already exist. The CLI rejects source-file and symlink destinations. Exit code 0 means all reviewers completed, not that there were no findings. Exit code 2 means a configuration/write error or incomplete review; a partial report is written when specialist failures occur. Interruptions exit with 130.
 
@@ -157,3 +166,39 @@ Dependency scanning, manifest ingestion, large-repository chunking, measured cov
 - [ChatOpenAI integration](https://docs.langchain.com/oss/python/integrations/chat/openai)
 - [Codex non-interactive execution](https://learn.chatgpt.com/docs/non-interactive-mode)
 - [API errors](https://developers.openai.com/api/docs/guides/error-codes)
+
+Citation validation: **126 local tests pass**, including the intentional PR #2 eval fixture at line 6, line relocation, indentation recovery, ambiguous-match rejection, and preservation of literal whitespace.
+
+## Agent 1: Keenable-enriched anti-pattern review
+
+Agent 1 (quality) can optionally retrieve external anti-pattern guidance through the
+[Keenable Python SDK](https://pypi.org/project/keenable/). Agents 2 and 3 retain
+source-only context. Install and enable it in the same shell as your review:
+
+```bash
+.venv313/bin/python -m pip install -e '.[knowledge]'
+export KEENABLE_ENABLED=true
+# Optional: export KEENABLE_API_KEY='your-keenable-key'
+.venv313/bin/python -m coding_review ./examples --output review-report.md
+```
+
+The SDK supports keyless requests; an optional key changes service limits. No key
+is required by this adapter. Unset `KEENABLE_ENABLED` to disable retrieval.
+Enabling this feature sends generic language/anti-pattern queries to Keenable;
+repository text, filenames, paths, and identifiers are not included in queries.
+At most two language queries are issued, with six retained snippets capped at
+1,200 characters each. The SDK timeout is ten seconds. External content is marked
+untrusted and cannot replace exact repository evidence. Agent 1 is instructed to
+name each actionable pattern, explain its concrete failure, and suggest refactoring.
+
+Markdown reports show knowledge sources and status. JSON retains queries, snippets,
+and status in the quality agent's `execution.knowledge_enrichment`. Retrieval
+failures disclose a limitation and preserve ordinary source review; therefore a
+complete review does not necessarily mean enrichment succeeded. Provider exception
+messages are omitted from enrichment metadata. SDK installation and network access
+are needed for a live enriched run. Automated tests use a fake search client.
+
+The GitHub deployment is a separate vendored copy: deploy the updated package,
+install `.[knowledge]` in its trusted workflow, set `KEENABLE_ENABLED: 'true'` on
+the review step, and optionally map a `KEENABLE_API_KEY` Actions secret. Local
+changes do not automatically update the installed GitHub integration.
