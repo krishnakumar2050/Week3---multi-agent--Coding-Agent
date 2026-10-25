@@ -7,6 +7,12 @@ Three specialist reviewers examine one bounded source snapshot: correctness and 
 - [Project brief](docs/project-brief.md): objectives, architecture, Keenable enrichment, safeguards, and verified deployment.
 - [End-to-end execution flow](docs/execution-flow.md): pull-request trigger through specialist execution to the published report.
 
+## Review reports
+
+- [Expense Tracker mobile app — prioritized findings](reports/expense-tracker/review-report-expense-tracker.md)
+- [Expense Tracker — full three-agent report](reports/expense-tracker/review-report-expense-tracker-raw.md)
+- [Expense Tracker — JSON results and provenance](reports/expense-tracker/review-report-expense-tracker.json)
+
 ## Quick start
 
 Python 3.10+ is required. The default backend is **Fireworks AI**, using **MiniMax M3.1 Flash** (`accounts/fireworks/models/minimax-m3p1-flash`). Fireworks requires its own API key and billing; ChatGPT Pro does not fund this backend.
