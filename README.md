@@ -2,6 +2,11 @@
 
 Three specialist reviewers examine one bounded source snapshot: correctness and anti-patterns, security, and test gaps. LangGraph runs the specialists concurrently; a deterministic orchestrator waits for all three, checks source citations, merges exact duplicates, and ranks findings by severity.
 
+## Documentation
+
+- [Project brief](docs/project-brief.md): objectives, architecture, Keenable enrichment, safeguards, and verified deployment.
+- [End-to-end execution flow](docs/execution-flow.md): pull-request trigger through specialist execution to the published report.
+
 ## Quick start
 
 Python 3.10+ is required. The default backend is **Fireworks AI**, using **MiniMax M3.1 Flash** (`accounts/fireworks/models/minimax-m3p1-flash`). Fireworks requires its own API key and billing; ChatGPT Pro does not fund this backend.
