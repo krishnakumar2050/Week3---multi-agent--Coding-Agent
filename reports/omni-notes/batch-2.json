@@ -1,0 +1,577 @@
+{
+  "status": "complete",
+  "files_reviewed": [
+    "omniNotes/src/alpha/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/BackupHelperTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/NoRealDeviceTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/MrJingleLifecycleTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/NoteLifecycleTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/NoteLocationTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/IsEqualTrimmingAndIgnoringCase.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/ReminderHelperTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/StorageHelperTest.kt",
+    "omniNotes/src/beta/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/foss/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/main/AndroidManifest.xml",
+    "omniNotes/src/main/assets/sql/create.sql",
+    "omniNotes/src/main/assets/sql/upgrade-482.sql",
+    "omniNotes/src/main/java/it/feio/android/omninotes/CategoryActivity.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/TextWorkerTask.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/UpdateWidgetsTask.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/DynamicNavigationReadyEvent.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NavigationUpdatedEvent.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotificationRemovedEvent.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteLoaderTask.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessor.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/checked/ContentSecurityException.kt",
+    "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/checked/ExternalStorageProviderException.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BuildHelper.kt",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/LanguageHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/TagOpenerHelper.kt",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/CountFactory.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/WordCounter.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/NavigationItem.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/Tag.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/CategoryRecyclerViewAdapter.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/holders/ImageAndTextItem.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnViewTouchedListener.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/RecyclerViewItemClickSupport.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/views/RecyclerViewEmptySupport.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/receiver/BootCompleteReceiver.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/services/NotificationListener.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/AssetUtils.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/BitmapHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/FileHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/FileProviderHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/RandomUtils.kt",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+    "omniNotes/src/main/java/it/feio/android/omninotes/widget/ListWidgetProvider.java",
+    "omniNotes/src/main/res/xml/appwidget_list.xml",
+    "omniNotes/src/main/res/xml/settings_data.xml",
+    "omniNotes/src/main/res/xml/settings_interface.xml",
+    "omniNotes/src/main/res/xml/settings_notifications.xml",
+    "omniNotes/src/play/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/test/java/it/feio/android/omninotes/helpers/NotesHelperTest.java",
+    "omniNotes/src/test/java/it/feio/android/omninotes/helpers/count/IdeogramsWordCounterTest.java",
+    "omniNotes/src/test/java/it/feio/android/omninotes/utils/TagsHelperTest.java",
+    "omniNotes/src/test/java/it/feio/android/omninotes/utils/date/DateUtilsTest.java"
+  ],
+  "counts": {
+    "critical": 0,
+    "high": 3,
+    "medium": 13,
+    "low": 1,
+    "info": 0
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Duplicate-creation migration can preserve duplicates and update multiple notes",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessor.java",
+      "line": 171,
+      "evidence": "        ContentValues values = new ContentValues();\n        values.put(DbHelper.KEY_CREATION, note.getCreation() + (long) (Math.random() * 999));\n        DbHelper.getInstance().getDatabase()\n            .update(DbHelper.TABLE_NOTES, values, DbHelper.KEY_TITLE +\n                    \" = ? AND \" + DbHelper.KEY_CREATION + \" = ? AND \" + DbHelper.KEY_CONTENT + \" = ?\",\n                new String[]{note\n                    .getTitle(), String.valueOf(note.getCreation()), note.getContent()});",
+      "explanation": "Two notes sharing creation, title, and content both match this UPDATE and receive the same new creation value, so they remain duplicates. Even for distinct content, the random offset can be zero or collide with another creation. This fails the migration's uniqueness requirement before creation becomes the primary key, potentially preventing the transition.",
+      "recommendation": "Update each row by its existing unique ID and allocate a deterministic unused creation value, tracking newly assigned values.",
+      "suggested_test": "Migrate two identical notes with the same creation plus nearby occupied timestamps; assert that every row survives and all resulting creation values are unique.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Note encryption uses a truncated DES key",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 58,
+      "evidence": "                val keySpec = DESKeySpec(password.toByteArray(StandardCharsets.UTF_8))\n                val keyFactory = SecretKeyFactory.getInstance(\"DES\")\n                val key = keyFactory.generateSecret(keySpec)\n                val clearText = value.toByteArray(StandardCharsets.UTF_8)\n                // Cipher is not thread safe\n                val cipher = Cipher.getInstance(\"DES\")",
+      "explanation": "An attacker who obtains encrypted notes can attack them offline. DES uses only the first eight password bytes and has at most 56 effective key bits. The password flow demonstrated in BackupHelperTest passes hexadecimal MD5 text, limiting those eight bytes to at most 32 bits of entropy before DES parity removal. Longer passwords therefore do not provide corresponding encryption strength.",
+      "recommendation": "Use a salted password KDF with an appropriate work factor and authenticated encryption such as AES-GCM. Version the encrypted format and migrate existing DES ciphertext after successful authentication.",
+      "suggested_test": "Verify that passwords sharing their first eight bytes produce independently decryptable ciphertext only with their respective full passwords, and that modified ciphertext fails authentication.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Encryption failures return plaintext as a successful result",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 66,
+      "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+      "explanation": "This is fail-open exception handling. A password shorter than eight UTF-8 bytes makes DESKeySpec fail, but encrypt returns the original sensitive text. Callers cannot distinguish this from successful encryption and may store plaintext as protected content.",
+      "recommendation": "Propagate a specific encryption exception and prevent saving protected content when encryption fails.",
+      "suggested_test": "Encrypt sensitive text with a short password and assert that an explicit failure occurs and plaintext is never returned.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Create-note UI test never verifies that the note was saved",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/NoteLifecycleTest.java",
+      "line": 74,
+      "evidence": "    onView(withId(R.id.detail_content))\n        .perform(scrollTo(), replaceText(content), closeSoftKeyboard());\n\n    navigateUp();\n  }",
+      "explanation": "The test ends after navigation without asserting any saved state. A regression that silently discards the title, content, or entire note can pass as long as the editing controls and navigation still work.",
+      "recommendation": "Assert the resulting note appears in the list and retains its values when reopened.",
+      "suggested_test": "Create a note with title \"Note title\" and content \"Note content\", navigate up, assert exactly one saved note with those values, then reopen it and assert both editor fields.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "External extension services are inaccessible to their host apps",
+      "file": "omniNotes/src/main/AndroidManifest.xml",
+      "line": 308,
+      "evidence": "    <service\n      android:name=\"it.feio.android.omninotes.extensions.PushBulletExtension\"\n      android:permission=\"com.pushbullet.android.permission.READ_MESSAGING_EXTENSION_DATA\"\n      android:exported=\"false\">",
+      "explanation": "Pushbullet runs under another UID and cannot bind to a service declared exported=false, even with the specified permission. The DashClock extension has the same declaration, so both advertised integrations are blocked.",
+      "recommendation": "Export the extension services while retaining their host-specific binding permissions.",
+      "suggested_test": "Bind from a separate test app holding the required host permission and assert that binding succeeds; assert that a caller without that permission is denied.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Reminder migration compares milliseconds against seconds",
+      "file": "omniNotes/src/main/assets/sql/upgrade-482.sql",
+      "line": 31,
+      "evidence": "UPDATE notes\nSET reminder_fired = 1\nWHERE alarm < (SELECT strftime('%s', 'now') + 1000);",
+      "explanation": "The supplied reminder tests store alarm timestamps in milliseconds, whereas strftime('%s', 'now') returns seconds. Adding 1000 does not convert units. Ordinary past reminders therefore fail this predicate and are not marked fired during migration.",
+      "recommendation": "Multiply the Unix timestamp by 1000 before comparing it with alarm.",
+      "suggested_test": "Migrate notes with alarms one minute before and after the current time; assert that only the past alarm is marked fired.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Category color selection is lost on activity recreation",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/CategoryActivity.java",
+      "line": 82,
+      "evidence": "  @Override\n  public void onSaveInstanceState(Bundle outState) {\n    outState.putParcelable(\"category\", category);\n    super.onSaveInstanceState(outState);\n  }",
+      "explanation": "onColorSelection updates selectedColor but does not update category. Only category is saved, and onCreate restores selectedColor from category.getColor(). Rotating after choosing a color therefore discards that choice, and saving persists the old color.",
+      "recommendation": "Save and restore selectedColor explicitly or update the category's color when the selection changes.",
+      "suggested_test": "Choose a different category color, recreate the activity, and save; assert that the chosen color remains displayed and is persisted.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Temporary category navigation can crash new-note creation",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+      "line": 938,
+      "evidence": "        if (checkNavigation(Navigation.CATEGORY) || !isEmpty(mainActivity.navigationTmp)) {\n          String categoryId = ObjectUtils.defaultIfNull(mainActivity.navigationTmp,\n              Navigation.getCategory().toString());",
+      "explanation": "Java evaluates both arguments before calling defaultIfNull. When a widget supplies navigationTmp while the persistent navigation has no category, Navigation.getCategory().toString() can throw NullPointerException even though the temporary category is available. The surrounding catch handles only NumberFormatException.",
+      "recommendation": "Select the category ID with a conditional expression so Navigation.getCategory() is evaluated only when needed, and handle an absent category.",
+      "suggested_test": "Open a category widget while persistent navigation is Notes, then create a note; assert that creation succeeds with the widget category.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Note updates always skip the final list item",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+      "line": 1190,
+      "evidence": "    notesUpdatedEvent.getNotes().stream().forEach(updatedNote ->\n        IntStream.range(0, listAdapter.getNotes().size() - 1)\n            .filter(i -> listAdapter.getItem(i).get_id().equals(updatedNote.get_id()))",
+      "explanation": "IntStream.range excludes its upper bound, so the final note is never updated. With one note, no items are examined. NoteLocationTest posts a CategoriesUpdatedEvent after NotesUpdatedEvent, causing a full reload that masks this defect.",
+      "recommendation": "Use the list size as the exclusive upper bound and test NotesUpdatedEvent without a subsequent full reload.",
+      "suggested_test": "Load a single note, post only NotesUpdatedEvent with changed title and location, and assert the adapter and displayed row contain the new values. Repeat for the last item of a multi-note list.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Note updates always skip the last adapter item",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+      "line": 1190,
+      "evidence": "    notesUpdatedEvent.getNotes().stream().forEach(updatedNote ->\n        IntStream.range(0, listAdapter.getNotes().size() - 1)\n            .filter(i -> listAdapter.getItem(i).get_id().equals(updatedNote.get_id()))",
+      "explanation": "IntStream.range excludes its upper bound. Subtracting one skips the final note, and a list containing one note processes no updates at all. Its displayed content and adapter model remain stale.",
+      "recommendation": "Use the list size as the exclusive upper bound.",
+      "suggested_test": "Post an update for the only note and for the last note in a larger list; assert that each adapter item is replaced and notified.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Undoing trash does not restore the canceled reminder",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+      "line": 1304,
+      "evidence": "      trackModifiedNotes(getSelectedNotes());\n      for (Note note : getSelectedNotes()) {\n        listAdapter.remove(note);\n        ReminderHelper.removeReminder(OmniNotes.getAppContext(), note);\n      }",
+      "explanation": "Trashing cancels reminders before the operation is committed. onUndo restores adapter items and clears the pending state without rescheduling their reminders. Trashing a note with a future reminder and pressing Undo therefore leaves the note active but its alarm canceled.",
+      "recommendation": "Defer reminder cancellation until trash is committed, or explicitly reschedule reminders when undoing trash.",
+      "suggested_test": "Schedule a future reminder, trash the note, and undo; assert that the note remains active and its reminder is still scheduled.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Empty-state observer ignores granular insertions and removals",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/models/views/RecyclerViewEmptySupport.java",
+      "line": 32,
+      "evidence": "    @Override\n    public void onChanged() {\n      Adapter<?> adapter = getAdapter();",
+      "explanation": "The observer implements only onChanged. RecyclerView notifications such as notifyItemRemoved and notifyItemInserted invoke separate callbacks, so removing the last item or inserting the first item through these notifications leaves the empty-state visibility stale. Existing lifecycle tests largely exercise paths that explicitly call notifyDataSetChanged.",
+      "recommendation": "Recalculate empty-state visibility from range insertion and removal callbacks as well as onChanged.",
+      "suggested_test": "Attach an adapter containing one item, remove it and call only notifyItemRemoved(0); assert the empty view is visible and the list is gone. Insert the first item with only notifyItemInserted(0) and assert the inverse.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Empty-state visibility ignores item insertions and removals",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/models/views/RecyclerViewEmptySupport.java",
+      "line": 32,
+      "evidence": "    @Override\n    public void onChanged() {\n      Adapter<?> adapter = getAdapter();",
+      "explanation": "The observer only handles notifyDataSetChanged. RecyclerView dispatches notifyItemInserted and notifyItemRemoved to separate observer callbacks, so removing the final item or inserting the first item through granular notifications leaves the empty view and list visibility unchanged.",
+      "recommendation": "Extract the visibility update into a helper and invoke it from onChanged, onItemRangeInserted, and onItemRangeRemoved.",
+      "suggested_test": "Remove the only item using notifyItemRemoved and assert that the empty view appears; insert an item using notifyItemInserted and assert that the list reappears.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Downloads URI parsing assumes document IDs are numeric",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/FileHelper.java",
+      "line": 67,
+      "evidence": "        final Uri contentUri = ContentUris\n            .withAppendedId(Uri.parse(\"content://downloads/public_downloads\"),\n                parseLong(DocumentsContract.getDocumentId(uri)));",
+      "explanation": "Downloads document IDs can contain prefixes such as raw: or msf:. Passing such a valid document URI to getPath throws NumberFormatException before reaching getDataColumn's error handling, interrupting file selection.",
+      "recommendation": "Handle supported document-ID forms explicitly and use ContentResolver streams when a document has no usable filesystem path.",
+      "suggested_test": "Pass Downloads document URIs with numeric, raw:, and msf: IDs; assert that supported forms resolve and unsupported forms return a controlled result without throwing.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Encryption failures return the original plaintext",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 66,
+      "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+      "explanation": "An encryption error is represented as a successful string result containing the sensitive input. For example, a password shorter than eight UTF-8 bytes makes DESKeySpec fail. The supplied locked-note backup tests use valid long passwords and do not exercise this failure path.",
+      "recommendation": "Return an explicit failure or throw an exception, and require callers to abort saving encrypted content on failure.",
+      "suggested_test": "Call encrypt with plaintext \"private note\" and password \"short\"; assert an explicit failure is reported and plaintext cannot be accepted as encrypted output.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Encryption failures silently return plaintext",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 66,
+      "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+      "explanation": "Any encryption exception returns the original sensitive content as a successful string result. For example, a password shorter than eight UTF-8 bytes causes DESKeySpec construction to fail. A caller storing the result as protected note content can consequently persist plaintext without detecting the loss of confidentiality.",
+      "recommendation": "Propagate an explicit encryption failure and require callers to abort saving protected content when encryption fails.",
+      "suggested_test": "Call encrypt with sensitive content and a password shorter than eight bytes; assert an explicit failure and verify that the saving flow does not persist plaintext.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "low",
+      "title": "Comma-tag test supplies an invalid selection and checks unchanged input",
+      "file": "omniNotes/src/test/java/it/feio/android/omninotes/utils/TagsHelperTest.java",
+      "line": 123,
+      "evidence": "    List<Tag> tags = new ArrayList<>();\n    tags.add(new Tag(newTag, 1));\n    Pair<String, List<Tag>> newTags = TagsHelper.addTagToNote(tags, new Integer[]{0, 1}, note);\n    Map<String, Integer> tags1 = TagsHelper.retrieveTags(note);",
+      "explanation": "The selection includes index 1 although the list contains only index 0. Also, the returned tag text is never applied to the note before retrieval, so the final absence assertion checks a note that never contained the comma tag. It does not establish comma parsing behavior.",
+      "recommendation": "Select only index 0 and apply the returned text to the note before checking retrieval.",
+      "suggested_test": "Add \"#comma,comma\" using selection {0}, append the returned text to the note, and assert the exact intended parsed tag set. Test invalid selection indices separately if supported.",
+      "agents": [
+        "tests"
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "agent": "quality",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Encryption failures return plaintext as a successful result",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 66,
+          "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+          "explanation": "This is fail-open exception handling. A password shorter than eight UTF-8 bytes makes DESKeySpec fail, but encrypt returns the original sensitive text. Callers cannot distinguish this from successful encryption and may store plaintext as protected content.",
+          "recommendation": "Propagate a specific encryption exception and prevent saving protected content when encryption fails.",
+          "suggested_test": "Encrypt sensitive text with a short password and assert that an explicit failure occurs and plaintext is never returned."
+        },
+        {
+          "severity": "medium",
+          "title": "Note updates always skip the last adapter item",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+          "line": 1190,
+          "evidence": "    notesUpdatedEvent.getNotes().stream().forEach(updatedNote ->\n        IntStream.range(0, listAdapter.getNotes().size() - 1)\n            .filter(i -> listAdapter.getItem(i).get_id().equals(updatedNote.get_id()))",
+          "explanation": "IntStream.range excludes its upper bound. Subtracting one skips the final note, and a list containing one note processes no updates at all. Its displayed content and adapter model remain stale.",
+          "recommendation": "Use the list size as the exclusive upper bound.",
+          "suggested_test": "Post an update for the only note and for the last note in a larger list; assert that each adapter item is replaced and notified."
+        },
+        {
+          "severity": "medium",
+          "title": "Temporary category navigation can crash new-note creation",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+          "line": 938,
+          "evidence": "        if (checkNavigation(Navigation.CATEGORY) || !isEmpty(mainActivity.navigationTmp)) {\n          String categoryId = ObjectUtils.defaultIfNull(mainActivity.navigationTmp,\n              Navigation.getCategory().toString());",
+          "explanation": "Java evaluates both arguments before calling defaultIfNull. When a widget supplies navigationTmp while the persistent navigation has no category, Navigation.getCategory().toString() can throw NullPointerException even though the temporary category is available. The surrounding catch handles only NumberFormatException.",
+          "recommendation": "Select the category ID with a conditional expression so Navigation.getCategory() is evaluated only when needed, and handle an absent category.",
+          "suggested_test": "Open a category widget while persistent navigation is Notes, then create a note; assert that creation succeeds with the widget category."
+        },
+        {
+          "severity": "medium",
+          "title": "Undoing trash does not restore the canceled reminder",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+          "line": 1304,
+          "evidence": "      trackModifiedNotes(getSelectedNotes());\n      for (Note note : getSelectedNotes()) {\n        listAdapter.remove(note);\n        ReminderHelper.removeReminder(OmniNotes.getAppContext(), note);\n      }",
+          "explanation": "Trashing cancels reminders before the operation is committed. onUndo restores adapter items and clears the pending state without rescheduling their reminders. Trashing a note with a future reminder and pressing Undo therefore leaves the note active but its alarm canceled.",
+          "recommendation": "Defer reminder cancellation until trash is committed, or explicitly reschedule reminders when undoing trash.",
+          "suggested_test": "Schedule a future reminder, trash the note, and undo; assert that the note remains active and its reminder is still scheduled."
+        },
+        {
+          "severity": "medium",
+          "title": "Empty-state visibility ignores item insertions and removals",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/models/views/RecyclerViewEmptySupport.java",
+          "line": 32,
+          "evidence": "    @Override\n    public void onChanged() {\n      Adapter<?> adapter = getAdapter();",
+          "explanation": "The observer only handles notifyDataSetChanged. RecyclerView dispatches notifyItemInserted and notifyItemRemoved to separate observer callbacks, so removing the final item or inserting the first item through granular notifications leaves the empty view and list visibility unchanged.",
+          "recommendation": "Extract the visibility update into a helper and invoke it from onChanged, onItemRangeInserted, and onItemRangeRemoved.",
+          "suggested_test": "Remove the only item using notifyItemRemoved and assert that the empty view appears; insert an item using notifyItemInserted and assert that the list reappears."
+        },
+        {
+          "severity": "medium",
+          "title": "Reminder migration compares milliseconds against seconds",
+          "file": "omniNotes/src/main/assets/sql/upgrade-482.sql",
+          "line": 31,
+          "evidence": "UPDATE notes\nSET reminder_fired = 1\nWHERE alarm < (SELECT strftime('%s', 'now') + 1000);",
+          "explanation": "The supplied reminder tests store alarm timestamps in milliseconds, whereas strftime('%s', 'now') returns seconds. Adding 1000 does not convert units. Ordinary past reminders therefore fail this predicate and are not marked fired during migration.",
+          "recommendation": "Multiply the Unix timestamp by 1000 before comparing it with alarm.",
+          "suggested_test": "Migrate notes with alarms one minute before and after the current time; assert that only the past alarm is marked fired."
+        },
+        {
+          "severity": "high",
+          "title": "Duplicate-creation migration can preserve duplicates and update multiple notes",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessor.java",
+          "line": 171,
+          "evidence": "        ContentValues values = new ContentValues();\n        values.put(DbHelper.KEY_CREATION, note.getCreation() + (long) (Math.random() * 999));\n        DbHelper.getInstance().getDatabase()\n            .update(DbHelper.TABLE_NOTES, values, DbHelper.KEY_TITLE +\n                    \" = ? AND \" + DbHelper.KEY_CREATION + \" = ? AND \" + DbHelper.KEY_CONTENT + \" = ?\",\n                new String[]{note\n                    .getTitle(), String.valueOf(note.getCreation()), note.getContent()});",
+          "explanation": "Two notes sharing creation, title, and content both match this UPDATE and receive the same new creation value, so they remain duplicates. Even for distinct content, the random offset can be zero or collide with another creation. This fails the migration's uniqueness requirement before creation becomes the primary key, potentially preventing the transition.",
+          "recommendation": "Update each row by its existing unique ID and allocate a deterministic unused creation value, tracking newly assigned values.",
+          "suggested_test": "Migrate two identical notes with the same creation plus nearby occupied timestamps; assert that every row survives and all resulting creation values are unique."
+        },
+        {
+          "severity": "medium",
+          "title": "Category color selection is lost on activity recreation",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/CategoryActivity.java",
+          "line": 82,
+          "evidence": "  @Override\n  public void onSaveInstanceState(Bundle outState) {\n    outState.putParcelable(\"category\", category);\n    super.onSaveInstanceState(outState);\n  }",
+          "explanation": "onColorSelection updates selectedColor but does not update category. Only category is saved, and onCreate restores selectedColor from category.getColor(). Rotating after choosing a color therefore discards that choice, and saving persists the old color.",
+          "recommendation": "Save and restore selectedColor explicitly or update the category's color when the selection changes.",
+          "suggested_test": "Choose a different category color, recreate the activity, and save; assert that the chosen color remains displayed and is persisted."
+        },
+        {
+          "severity": "medium",
+          "title": "Downloads URI parsing assumes document IDs are numeric",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/FileHelper.java",
+          "line": 67,
+          "evidence": "        final Uri contentUri = ContentUris\n            .withAppendedId(Uri.parse(\"content://downloads/public_downloads\"),\n                parseLong(DocumentsContract.getDocumentId(uri)));",
+          "explanation": "Downloads document IDs can contain prefixes such as raw: or msf:. Passing such a valid document URI to getPath throws NumberFormatException before reaching getDataColumn's error handling, interrupting file selection.",
+          "recommendation": "Handle supported document-ID forms explicitly and use ContentResolver streams when a document has no usable filesystem path.",
+          "suggested_test": "Pass Downloads document URIs with numeric, raw:, and msf: IDs; assert that supported forms resolve and unsupported forms return a controlled result without throwing."
+        },
+        {
+          "severity": "medium",
+          "title": "External extension services are inaccessible to their host apps",
+          "file": "omniNotes/src/main/AndroidManifest.xml",
+          "line": 308,
+          "evidence": "    <service\n      android:name=\"it.feio.android.omninotes.extensions.PushBulletExtension\"\n      android:permission=\"com.pushbullet.android.permission.READ_MESSAGING_EXTENSION_DATA\"\n      android:exported=\"false\">",
+          "explanation": "Pushbullet runs under another UID and cannot bind to a service declared exported=false, even with the specified permission. The DashClock extension has the same declaration, so both advertised integrations are blocked.",
+          "recommendation": "Export the extension services while retaining their host-specific binding permissions.",
+          "suggested_test": "Bind from a separate test app holding the required host permission and assert that binding succeeds; assert that a caller without that permission is denied."
+        }
+      ],
+      "limitations": [
+        "Review was limited to the supplied snapshot; no tools or execution were used.",
+        "Implementations of DbHelper, Navigation, NoteAdapter, BaseNote, and reminder processors were not supplied, limiting verification of dependent behavior and migration sequencing."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "knowledge_enrichment": {
+          "provider": "keenable",
+          "status": "ok",
+          "sources": [
+            {
+              "title": "Java Code Review Checklist: Best Practices and Common Pitfalls",
+              "url": "https://pullpanda.io/blog/java-code-review-checklist",
+              "snippet": "**Resource Management**\n- Resources closed with try-with-resources: `try (var stream = Files.lines(path))`\n- No manual `close()` calls in finally blocks\n- Streams properly closed, especially for file operations\n- Database connections, statements, and result sets in try-with-resources\n- Thread pools shut down properly: `executor.shutdown()`\n- No suppressed exceptions from automatic resource closing\n- Resources not assigned to fields without careful lifecycle management\n**Thread Safety & Concurrency**\n- Shared mutable state protected by synchronization\n- Volatile used for simple flags, not complex operations\n- Double-checked locking avoided or implemented correctly with volatile\n- Collections wrapped with `Collections.synchronized*()` if shared\n- `ConcurrentHashMap` used instead of `Hashtable` or synchronized HashMap\n- Thread-safe classes from `java.util.concurrent` preferred\n- Immutable objects used for sharing state between threads\n- No publishing partially constructed objects from constructors\n\nJava's try-with-resources statement, introduced in Java 7, provides the standard pattern for managing resources that need cleanup. When we see code opening files, database connections, or s"
+            },
+            {
+              "title": "claude-code-java/.claude/skills/java-code-review/SKILL.md at main · decebals/claude-code-java",
+              "url": "https://github.com/decebals/claude-code-java/blob/main/.claude/skills/java-code-review/SKILL.md",
+              "snippet": "### 1. Null Safety\n**Check for:**\n```\n// ❌ NPE risk\nString name = user.getName().toUpperCase();\n// ✅ Safe\nString name = Optional.ofNullable(user.getName())\n.map(String::toUpperCase)\n.orElse(\"\");\n// ✅ Also safe (early return)\nif (user.getName() == null) {\nreturn \"\";\n}\nreturn user.getName().toUpperCase();\n```\n**Flags:**\n- Chained method calls without null checks\n- Missing `@Nullable` / `@NonNull` annotations on public APIs\n- `Optional.get()` without `isPresent()` check\n- Returning `null` from methods that could return `Optional` or empty collection\n**Suggest:**\n- Use `Optional` for return types that may be absent\n- Use `Objects.requireNonNull()` for constructor/method params\n- Return empty collections instead of null: `Collections.emptyList()`\n### 2. Exception Handling\n**Check for:**\n```\n// ❌ Swallowing exceptions\ntry {\nprocess();\n} catch (Exception e) {\n// silently ignored\n}\n// ❌ Catching too broad\ncatch (Exception e) { }\ncatch (Throwable t) { }\n// ❌ Losing stack trace\ncatch (IOException e) {\nthrow new RuntimeException(e.getMessage());\n}\n// ✅ Proper handling\ncatch (IOException e) {\nlog.error(\"Failed to process file: {}\", filename, e);\nthrow new ProcessingException(\"File processing f"
+            },
+            {
+              "title": "Java Code Review Checklist | Engineering Guidelines",
+              "url": "https://guidelines.ryanharrison.co.uk/languages/java/java-code-review",
+              "snippet": "- Not using try-with-resources for `AutoCloseable` resources → [Resource leaks prevention](/languages/java/java-general)\n- Streams/readers/writers not closed properly\n- Database connections not returned to pool\n- File handles leaked in error paths\n- Thread pools not shut down in `finally` block\n```\n// GOOD: try-with-resources ensures cleanup try ( var stream = Files . lines ( path ) ) { stream . forEach ( System . out :: println ) ; } // BAD: Stream never closed if exception occurs var stream = Files . lines ( path ) ; stream . forEach ( System . out :: println ) ;\n```\n\n- Mutable static fields accessed by multiple threads → [Java Concurrency](/languages/java/java-concurrency-fundamentals)\n- Missing synchronization on shared mutable state\n- Double-checked locking without `volatile` (broken pattern)\n- Non-thread-safe collections (ArrayList, HashMap) shared between threads\n- Race conditions in check-then-act patterns\n```\n// BAD: Race condition - multiple threads can pass check if ( counter < MAX ) { counter ++ ; // Not atomic! } // GOOD: Atomic operation atomicCounter . getAndIncrement ( ) ;\n```\n- Pinning virtual threads with `synchronized` blocks doing I/O → Use `ReentrantLock` ([Vir"
+            },
+            {
+              "title": "code-review-skill/reference/java8.md at 4850184dfd7765ea7b3c5c4e9b6cf8e0815ee7cb · awesome-skills/code-review-skill",
+              "url": "https://github.com/awesome-skills/code-review-skill/blob/HEAD/reference/java8.md",
+              "snippet": "### Captured variables must be effectively final\n```\n// ❌ Mutating a captured variable → compile error (or Atomic/array hacks)\nint sum = 0;\nlist.forEach(n -> sum += n); // does not compile\n// ✅ Reduce with a stream, or use an explicit mutable accumulator type\nint sum = list.stream().mapToInt(Integer::intValue).sum();\n```\n\nBoot 2 does not treat Spring 6 `ProblemDetail` as a first-class citizen (that is a Boot 3 story). Use a shared `@ControllerAdvice` with clear HTTP statuses.\n```\n// ❌ Swallow exceptions, printStackTrace, return null to hide failure\ntry {\nuserService.create(user);\n} catch (Exception e) {\ne.printStackTrace();\nreturn null;\n}\n// ✅ Domain exceptions + global handler\n@RestControllerAdvice\npublic class GlobalExceptionHandler {\n@ExceptionHandler(UserNotFoundException.class)\npublic ResponseEntity<ApiError> handleNotFound(UserNotFoundException e) {\nreturn ResponseEntity.status(HttpStatus.NOT_FOUND)\n.body(new ApiError(\"USER_NOT_FOUND\", e.getMessage()));\n}\n}\n```\nClose resources with try-with-resources (Java 7+). Avoid hand-rolled `finally { close() }` that forgets null checks.\n\n- Lambdas stay short; prefer method references and standard functional interfaces\n- Streams used for"
+            },
+            {
+              "title": "software-engineering-skills/plugins/java/skills/java-code-review/SKILL.md at main · wesleyegberto/software-engineering-skills",
+              "url": "https://github.com/wesleyegberto/software-engineering-skills/blob/main/plugins/java/skills/java-code-review/SKILL.md",
+              "snippet": "### 1. Null Safety\n**Check for:**\n```\n// ❌ NPE risk\nString name = user.getName().toUpperCase();\n// ✅ Safe\nString name = Optional.ofNullable(user.getName())\n.map(String::toUpperCase)\n.orElse(\"\");\n// ✅ Also safe (early return)\nif (user.getName() == null) {\nreturn \"\";\n}\nreturn user.getName().toUpperCase();\n```\n**Flags:**\n- Chained method calls without null checks\n- Missing `@Nullable` / `@NonNull` annotations on public APIs\n- `Optional.get()` without `isPresent()` check\n- Returning `null` from methods that could return `Optional` or empty collection\n**Suggest:**\n- Use `Optional` for return types that may be absent\n- Use `Objects.requireNonNull()` for constructor/method params\n- Return empty collections instead of null: `Collections.emptyList()`\n### 2. Exception Handling\n**Check for:**\n```\n// ❌ Swallowing exceptions\ntry {\nprocess();\n} catch (Exception e) {\n// silently ignored\n}\n// ❌ Catching too broad\ncatch (Exception e) { }\ncatch (Throwable t) { }\n// ❌ Losing stack trace\ncatch (IOException e) {\nthrow new RuntimeException(e.getMessage());\n}\n// ✅ Proper handling\ncatch (IOException e) {\nlog.error(\"Failed to process file: {}\", filename, e);\nthrow new ProcessingException(\"File processing f"
+            },
+            {
+              "title": "code-review-best-practices/example-guidelines/languages/java.yaml at main · augmentcode/code-review-best-practices",
+              "url": "https://github.com/augmentcode/code-review-best-practices/blob/main/example-guidelines/languages/java.yaml",
+              "snippet": "Prefer immutable objects and collections. Make classes immutable when possible. Use final fields, no setters, and return defensive copies of mutable fields. Use List.of(), Set.of(), Map.of() for immutable collections.\n\n- id: java-try-with-resources\ndescription: |\nUse try-with-resources for AutoCloseable resources. Always use try-with-resources for streams, connections, readers, writers, and any AutoCloseable resource. This ensures proper cleanup even when exceptions occur.\nBAD: Manual try-finally with is.close() that may throw and hide original exception.\nGOOD: try (InputStream is = new FileInputStream(file)) { } for automatic cleanup.\nseverity: medium\n\nEnsure thread safety for shared mutable state. Protect shared mutable state with proper synchronization. Use thread-safe collections (ConcurrentHashMap, CopyOnWriteArrayList) or immutable objects. Document thread-safety guarantees.\nBAD: private Map<String, User> cache = new HashMap<>();\nGOOD: private final Map<String, User> cache = new ConcurrentHashMap<>();"
+            }
+          ],
+          "queries": [
+            "Java code review anti-patterns error handling mutable state resource management official documentation"
+          ]
+        },
+        "citation_corrections": [],
+        "duration_seconds": 52.051
+      }
+    },
+    {
+      "agent": "security",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Note encryption uses a truncated DES key",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 58,
+          "evidence": "                val keySpec = DESKeySpec(password.toByteArray(StandardCharsets.UTF_8))\n                val keyFactory = SecretKeyFactory.getInstance(\"DES\")\n                val key = keyFactory.generateSecret(keySpec)\n                val clearText = value.toByteArray(StandardCharsets.UTF_8)\n                // Cipher is not thread safe\n                val cipher = Cipher.getInstance(\"DES\")",
+          "explanation": "An attacker who obtains encrypted notes can attack them offline. DES uses only the first eight password bytes and has at most 56 effective key bits. The password flow demonstrated in BackupHelperTest passes hexadecimal MD5 text, limiting those eight bytes to at most 32 bits of entropy before DES parity removal. Longer passwords therefore do not provide corresponding encryption strength.",
+          "recommendation": "Use a salted password KDF with an appropriate work factor and authenticated encryption such as AES-GCM. Version the encrypted format and migrate existing DES ciphertext after successful authentication.",
+          "suggested_test": "Verify that passwords sharing their first eight bytes produce independently decryptable ciphertext only with their respective full passwords, and that modified ciphertext fails authentication."
+        },
+        {
+          "severity": "medium",
+          "title": "Encryption failures silently return plaintext",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 66,
+          "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+          "explanation": "Any encryption exception returns the original sensitive content as a successful string result. For example, a password shorter than eight UTF-8 bytes causes DESKeySpec construction to fail. A caller storing the result as protected note content can consequently persist plaintext without detecting the loss of confidentiality.",
+          "recommendation": "Propagate an explicit encryption failure and require callers to abort saving protected content when encryption fails.",
+          "suggested_test": "Call encrypt with sensitive content and a password shorter than eight bytes; assert an explicit failure and verify that the saving flow does not persist plaintext."
+        }
+      ],
+      "limitations": [
+        "Review was limited to the supplied snapshot; no code was executed.",
+        "Production encryption callers, backup implementations, authentication helpers, dependency versions, and FileProvider path configuration were not supplied, so their protections and exploit reachability could not be verified."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "citation_corrections": [],
+        "duration_seconds": 19.771
+      }
+    },
+    {
+      "agent": "tests",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "Note updates always skip the final list item",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+          "line": 1190,
+          "evidence": "    notesUpdatedEvent.getNotes().stream().forEach(updatedNote ->\n        IntStream.range(0, listAdapter.getNotes().size() - 1)\n            .filter(i -> listAdapter.getItem(i).get_id().equals(updatedNote.get_id()))",
+          "explanation": "IntStream.range excludes its upper bound, so the final note is never updated. With one note, no items are examined. NoteLocationTest posts a CategoriesUpdatedEvent after NotesUpdatedEvent, causing a full reload that masks this defect.",
+          "recommendation": "Use the list size as the exclusive upper bound and test NotesUpdatedEvent without a subsequent full reload.",
+          "suggested_test": "Load a single note, post only NotesUpdatedEvent with changed title and location, and assert the adapter and displayed row contain the new values. Repeat for the last item of a multi-note list."
+        },
+        {
+          "severity": "medium",
+          "title": "Empty-state observer ignores granular insertions and removals",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/models/views/RecyclerViewEmptySupport.java",
+          "line": 32,
+          "evidence": "    @Override\n    public void onChanged() {\n      Adapter<?> adapter = getAdapter();",
+          "explanation": "The observer implements only onChanged. RecyclerView notifications such as notifyItemRemoved and notifyItemInserted invoke separate callbacks, so removing the last item or inserting the first item through these notifications leaves the empty-state visibility stale. Existing lifecycle tests largely exercise paths that explicitly call notifyDataSetChanged.",
+          "recommendation": "Recalculate empty-state visibility from range insertion and removal callbacks as well as onChanged.",
+          "suggested_test": "Attach an adapter containing one item, remove it and call only notifyItemRemoved(0); assert the empty view is visible and the list is gone. Insert the first item with only notifyItemInserted(0) and assert the inverse."
+        },
+        {
+          "severity": "medium",
+          "title": "Encryption failures return the original plaintext",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 66,
+          "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+          "explanation": "An encryption error is represented as a successful string result containing the sensitive input. For example, a password shorter than eight UTF-8 bytes makes DESKeySpec fail. The supplied locked-note backup tests use valid long passwords and do not exercise this failure path.",
+          "recommendation": "Return an explicit failure or throw an exception, and require callers to abort saving encrypted content on failure.",
+          "suggested_test": "Call encrypt with plaintext \"private note\" and password \"short\"; assert an explicit failure is reported and plaintext cannot be accepted as encrypted output."
+        },
+        {
+          "severity": "medium",
+          "title": "Create-note UI test never verifies that the note was saved",
+          "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/NoteLifecycleTest.java",
+          "line": 74,
+          "evidence": "    onView(withId(R.id.detail_content))\n        .perform(scrollTo(), replaceText(content), closeSoftKeyboard());\n\n    navigateUp();\n  }",
+          "explanation": "The test ends after navigation without asserting any saved state. A regression that silently discards the title, content, or entire note can pass as long as the editing controls and navigation still work.",
+          "recommendation": "Assert the resulting note appears in the list and retains its values when reopened.",
+          "suggested_test": "Create a note with title \"Note title\" and content \"Note content\", navigate up, assert exactly one saved note with those values, then reopen it and assert both editor fields."
+        },
+        {
+          "severity": "low",
+          "title": "Comma-tag test supplies an invalid selection and checks unchanged input",
+          "file": "omniNotes/src/test/java/it/feio/android/omninotes/utils/TagsHelperTest.java",
+          "line": 123,
+          "evidence": "    List<Tag> tags = new ArrayList<>();\n    tags.add(new Tag(newTag, 1));\n    Pair<String, List<Tag>> newTags = TagsHelper.addTagToNote(tags, new Integer[]{0, 1}, note);\n    Map<String, Integer> tags1 = TagsHelper.retrieveTags(note);",
+          "explanation": "The selection includes index 1 although the list contains only index 0. Also, the returned tag text is never applied to the note before retrieval, so the final absence assertion checks a note that never contained the comma tag. It does not establish comma parsing behavior.",
+          "recommendation": "Select only index 0 and apply the returned text to the note before checking retrieval.",
+          "suggested_test": "Add \"#comma,comma\" using selection {0}, append the returned text to the note, and assert the exact intended parsed tag set. Test invalid selection indices separately if supported."
+        }
+      ],
+      "limitations": [
+        "Static review only; no tools were called and no tests were run.",
+        "Several production helpers, adapters, base test classes, and dependency implementations are absent, limiting verification of test isolation and helper behavior.",
+        "Navigation resources and navigateTo implementation are absent, so the destination used by the trash lifecycle tests cannot be confirmed."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "citation_corrections": [],
+        "duration_seconds": 37.899
+      }
+    }
+  ],
+  "actual_models": [
+    "gpt-6.1-sol"
+  ],
+  "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+  "schema_version": "1.0",
+  "run_id": "391284c4-77b2-47a9-883e-6eb26673019a",
+  "started_at": "2026-10-25T06:22:45.892324+00:00",
+  "completed_at": "2026-10-25T06:23:37.998343+00:00",
+  "duration_seconds": 52.107,
+  "backend": "codex",
+  "repository": "/Users/krishnakumar/Documents/github/Omni-Notes",
+  "snapshot_sha256": "af3418895f8f3ad584bb2aebd4e4bfcb577943ebe5f67bb5a3e565524a98a012",
+  "snapshot_bytes": 222724,
+  "requested_model": null,
+  "model": "gpt-6.1-sol",
+  "batch": 2,
+  "source_revision": "504253db6781a19d377ab04153f2f2cd75ef5494"
+}

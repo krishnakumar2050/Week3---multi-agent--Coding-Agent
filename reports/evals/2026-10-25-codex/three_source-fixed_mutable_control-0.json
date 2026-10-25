@@ -1,0 +1,108 @@
+{
+  "variant": "three_source",
+  "case": "fixed_mutable_control",
+  "repeat": 0,
+  "metrics": {
+    "expected": 0,
+    "detected": 0,
+    "findings": 0,
+    "matched": 0,
+    "unmatched_indices": [],
+    "valid_citations": 0,
+    "severity_acceptable": 0,
+    "test_suggestion_present": 0,
+    "semantic_duplicate_excess": 0,
+    "complete": true,
+    "duration_seconds": 7.679,
+    "clean_control_pass": true
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "app.py",
+      "test_app.py"
+    ],
+    "counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "info": 0
+    },
+    "findings": [],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [],
+        "limitations": [
+          "Review limited to the supplied snapshot; code and tests were not executed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 6.113
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [],
+        "limitations": [
+          "Review limited to the supplied snapshot; no code was executed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 7.621
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [],
+        "limitations": [
+          "Review limited to the supplied snapshot; tests were inspected statically and were not executed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 6.998
+        }
+      }
+    ],
+    "actual_models": [
+      "gpt-6.1-sol"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "64a351cd-7b2e-4523-ac8f-c0fa0328f3f4",
+    "started_at": "2026-10-25T06:37:52.370047+00:00",
+    "completed_at": "2026-10-25T06:38:00.049814+00:00",
+    "duration_seconds": 7.679,
+    "backend": "codex",
+    "repository": "/Users/krishnakumar/Documents/ChatGPT/Week2 - multi agent- Coding Agent/eval-fixture",
+    "snapshot_sha256": "932ffb609c2f21177d9d3626a2489e4bd15a7697aa4c39f9f243ce168a35bea1",
+    "snapshot_bytes": 490,
+    "requested_model": null,
+    "model": "gpt-6.1-sol"
+  }
+}

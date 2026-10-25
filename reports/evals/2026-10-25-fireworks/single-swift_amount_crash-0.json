@@ -1,0 +1,127 @@
+{
+  "variant": "single",
+  "case": "swift_amount_crash",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 3,
+    "matched": 3,
+    "unmatched_indices": [],
+    "valid_citations": 3,
+    "severity_acceptable": 3,
+    "test_suggestion_present": 3,
+    "semantic_duplicate_excess": 2,
+    "complete": true,
+    "duration_seconds": 4.392,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Force unwrap of Double(text) crashes on invalid pasted input",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "The comment states the input is arbitrary pasted text and that invalid amounts must produce an error, but `Double(text)!` force-unwraps the optional. For any non-numeric text (e.g. \"abc\", \"1,234.56\" with a locale comma, \"12 USD\", empty string) `Double(text)` returns nil and the force unwrap triggers a runtime trap, crashing the app instead of reporting an error. Additionally, Double(text) does not trim whitespace, so a pasted amount like \" 12.50 \" or \"12.50\\n\" also returns nil and crashes.",
+        "recommendation": "Do not force unwrap. Either change the signature to `func parseAmount(_ text: String) throws -> Double` and throw a descriptive error, or return a Result/optional and have the caller handle failure. Trim whitespace and reject non-numeric input explicitly.",
+        "suggested_test": "Call parseAmount(\"abc\") and assert it returns nil / throws a defined error rather than trapping; call parseAmount(\" 12.50 \") and assert the parsed value is 12.50."
+      },
+      {
+        "severity": "medium",
+        "title": "Return type cannot express the error required by the documented contract",
+        "file": "Amount.swift",
+        "line": 3,
+        "evidence": "func parseAmount(_ text: String) -> Double {\n    // Input is arbitrary pasted text; invalid amounts must produce an error.",
+        "explanation": "The signature returns a non-optional Double and the function is not `throws`, so it has no way to signal the error its own comment promises. This forces the implementation to use a force unwrap, which is the root cause of the crash. The API contract is inconsistent with its documented behavior.",
+        "recommendation": "Align the API with the contract: `func parseAmount(_ text: String) throws -> Double` (or return `Double?`/Result) so callers must handle invalid input.",
+        "suggested_test": "Compile-time check that the function can fail, plus a unit test asserting a thrown error for \"not-a-number\"."
+      },
+      {
+        "severity": "medium",
+        "title": "No test coverage for the parsing helper",
+        "file": "Amount.swift",
+        "line": 3,
+        "evidence": "func parseAmount(_ text: String) -> Double {",
+        "explanation": "The only parsing logic in the file has no accompanying tests in the reviewed source, so the crash-on-invalid-input behavior and the whitespace/locale edge cases are unguarded against regressions.",
+        "recommendation": "Add unit tests covering valid integers, decimals, negative values, whitespace-padded input, empty string, and non-numeric strings.",
+        "suggested_test": "Table-driven XCTest: (\"12\", 12.0), (\"12.5\", 12.5), (\"-3.2\", -3.2), (\" 7 \", 7.0), and invalid inputs \"abc\", \"\", \"12,5\" assert failure rather than a trap."
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Force unwrap of Double(text) crashes on invalid pasted input",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "The comment states the input is arbitrary pasted text and that invalid amounts must produce an error, but `Double(text)!` force-unwraps the optional. For any non-numeric text (e.g. \"abc\", \"1,234.56\" with a locale comma, \"12 USD\", empty string) `Double(text)` returns nil and the force unwrap triggers a runtime trap, crashing the app instead of reporting an error. Additionally, Double(text) does not trim whitespace, so a pasted amount like \" 12.50 \" or \"12.50\\n\" also returns nil and crashes.",
+            "recommendation": "Do not force unwrap. Either change the signature to `func parseAmount(_ text: String) throws -> Double` and throw a descriptive error, or return a Result/optional and have the caller handle failure. Trim whitespace and reject non-numeric input explicitly.",
+            "suggested_test": "Call parseAmount(\"abc\") and assert it returns nil / throws a defined error rather than trapping; call parseAmount(\" 12.50 \") and assert the parsed value is 12.50."
+          },
+          {
+            "severity": "medium",
+            "title": "Return type cannot express the error required by the documented contract",
+            "file": "Amount.swift",
+            "line": 3,
+            "evidence": "func parseAmount(_ text: String) -> Double {\n    // Input is arbitrary pasted text; invalid amounts must produce an error.",
+            "explanation": "The signature returns a non-optional Double and the function is not `throws`, so it has no way to signal the error its own comment promises. This forces the implementation to use a force unwrap, which is the root cause of the crash. The API contract is inconsistent with its documented behavior.",
+            "recommendation": "Align the API with the contract: `func parseAmount(_ text: String) throws -> Double` (or return `Double?`/Result) so callers must handle invalid input.",
+            "suggested_test": "Compile-time check that the function can fail, plus a unit test asserting a thrown error for \"not-a-number\"."
+          },
+          {
+            "severity": "medium",
+            "title": "No test coverage for the parsing helper",
+            "file": "Amount.swift",
+            "line": 3,
+            "evidence": "func parseAmount(_ text: String) -> Double {",
+            "explanation": "The only parsing logic in the file has no accompanying tests in the reviewed source, so the crash-on-invalid-input behavior and the whitespace/locale edge cases are unguarded against regressions.",
+            "recommendation": "Add unit tests covering valid integers, decimals, negative values, whitespace-padded input, empty string, and non-numeric strings.",
+            "suggested_test": "Table-driven XCTest: (\"12\", 12.0), (\"12.5\", 12.5), (\"-3.2\", -3.2), (\" 7 \", 7.0), and invalid inputs \"abc\", \"\", \"12,5\" assert failure rather than a trap."
+          }
+        ],
+        "limitations": [
+          "Only Amount.swift was provided; callers of parseAmount were not visible, so the actual blast radius of the force unwrap crash could not be confirmed.",
+          "Locale-specific number formats (e.g. comma decimal separators) could not be verified against the app's requirements."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 804,
+            "prompt_tokens": 918,
+            "total_tokens": 1722,
+            "completion_tokens_details": {
+              "reasoning_tokens": 45
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 45
+            }
+          },
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 4.374
+        }
+      }
+    ],
+    "duration_seconds": 4.392
+  }
+}

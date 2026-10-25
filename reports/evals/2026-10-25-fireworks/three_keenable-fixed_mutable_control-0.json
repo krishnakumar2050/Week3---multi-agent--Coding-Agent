@@ -1,0 +1,264 @@
+{
+  "variant": "three_keenable",
+  "case": "fixed_mutable_control",
+  "repeat": 0,
+  "metrics": {
+    "expected": 0,
+    "detected": 0,
+    "findings": 3,
+    "matched": 0,
+    "unmatched_indices": [
+      0,
+      1,
+      2
+    ],
+    "valid_citations": 3,
+    "severity_acceptable": 0,
+    "test_suggestion_present": 0,
+    "semantic_duplicate_excess": 0,
+    "complete": true,
+    "duration_seconds": 6.299,
+    "clean_control_pass": false
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "app.py",
+      "test_app.py"
+    ],
+    "counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 2,
+      "info": 1
+    },
+    "findings": [
+      {
+        "severity": "low",
+        "title": "No test pins that the returned list holds a reference to the caller's ID object",
+        "file": "test_app.py",
+        "line": 12,
+        "evidence": "    assert record_customer(marker)[0] is marker",
+        "explanation": "The only non-string test uses an immutable `object()` sentinel and asserts identity, so it never exercises what happens when the caller's ID is a mutable object that changes after recording. `record_customer` stores the object by reference (`return [customer_id]`), so a later mutation of a dict/list ID is visible in the previously returned list. The production contract ('Return a fresh single-ID list for each call; ID may be any object') is silent about aliasing, and no test documents the intended behavior.",
+        "recommendation": "Either make the contract explicit (shallow copy of the ID) or add a test that records a mutable ID, mutates it, and asserts the documented outcome.",
+        "suggested_test": "def test_mutable_id_is_copied_or_shared_documented():\n    payload = {'id': 1}\n    recorded = record_customer(payload)\n    payload['id'] = 2\n    assert recorded == [{'id': 1}]  # if a copy is intended\n    # or: assert recorded[0] is payload  # if sharing is intended\n",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "low",
+        "title": "Falsy and empty-ID inputs are untested",
+        "file": "test_app.py",
+        "line": 13,
+        "evidence": "    assert record_customer(None) == [None]",
+        "explanation": "Only `None` is covered among falsy values. An empty string, `0`, `False`, or an empty container are valid 'any object' IDs per the docstring, and a future refactor that applies truthiness checks (e.g. `customer_id or default`) would break these cases without any test failing.",
+        "recommendation": "Add a parametrized test over falsy identifiers asserting that the ID is preserved verbatim in a single-element list.",
+        "suggested_test": "import pytest\n\n@pytest.mark.parametrize('value', ['', 0, False, [], {}])\ndef test_falsy_ids_preserved(value):\n    result = record_customer(value)\n    assert len(result) == 1\n    assert result[0] == value\n    assert type(result[0]) is type(value)\n",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "info",
+        "title": "No test verifies repeated calls with the same ID return distinct list objects",
+        "file": "test_app.py",
+        "line": 8,
+        "evidence": "    assert first is not second",
+        "explanation": "Identity independence is only asserted for two calls with *different* arguments. A shared-module-level cache or a mutable default argument keyed by value could pass the existing assertions while still violating 'fresh single-ID list for each call' when the same ID is recorded twice.",
+        "recommendation": "Assert object identity independence for two calls with an identical argument as well.",
+        "suggested_test": "def test_same_id_returns_fresh_list_each_time():\n    a = record_customer('A')\n    b = record_customer('A')\n    assert a == b == ['A']\n    assert a is not b\n    a.append('X')\n    assert b == ['A']\n",
+        "agents": [
+          "tests"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [],
+        "limitations": [
+          "The snapshot contains only a three-line function and its tests; there is no error handling, state, or resource management to evaluate, so no anti-pattern from the reference material is applicable."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 60,
+            "prompt_tokens": 2890,
+            "total_tokens": 2950,
+            "completion_tokens_details": {
+              "reasoning_tokens": 10
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 693
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 10
+            }
+          },
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "ok",
+            "sources": [
+              {
+                "title": "Python Code Review Checklist: Pythonic Patterns and Best Practices",
+                "url": "https://pullpanda.io/blog/python-code-review-checklist",
+                "snippet": "**Error Handling**\n- Specific exceptions caught, not bare `except:`\n- Exception messages provide context: what failed and why\n- `try` blocks minimal (only code that might fail)\n- Resources cleaned up in `finally` or with context managers\n- Custom exceptions inherit from appropriate base\n- EAFP preferred over LBYL: try/except over if checks\n- Exceptions not used for control flow\n- `raise from` preserves exception chain: `raise NewError() from e`\n**Resource Management**\n- Files opened with context manager: `with open() as f:`\n- Database connections use context managers\n- No manual `close()` calls (context manager handles it)\n- `__enter__` and `__exit__` implemented for custom context managers\n- Thread locks acquired with `with lock:`\n- Network connections properly closed\n- Temporary files use `tempfile` module\n- Large files processed in chunks, not loaded entirely\n\nTry blocks should contain minimal code\u2014only what might raise the exception we're catching. Large try blocks catch exceptions from unexpected places, masking bugs. When reviewing exception handling, we verify try blocks contain only the code that might throw the specific exceptions caught.\nEAFP (Easier to Ask Forgiveness th"
+              },
+              {
+                "title": "Common Error Anti-Patterns - Mistakes That Fail Silently in Production",
+                "url": "https://engineersofai.com/docs/python/python-foundation/error-handling-and-defensive-engineering/Common-Error-Anti-Patterns",
+                "snippet": "| Category | Anti-patterns |\n|---|---|\n| **Silent failures** (worst - no idea something went wrong) | 1: Swallowing exceptions (`bare except: pass`); 2: Catching too broadly (`except Exception`); 10: Catch-cleanup-reraise without logging |\n| **Lost context** (you know it failed, but not why or where) | 3: Losing exception chain (`raise NewError(str(e))`); 9: Boolean blindness (`if x:` misses falsy values) |\n| **Wrong tool** (the language provides a better mechanism) | 4: Exceptions for flow control; 8: Ignoring return values (`sort()` returns `None`) |\n| **Resource bugs** (data corruption, fd leaks, test flakiness) | 5: Not cleaning up resources (no `with`) |\n| **Initialization bugs** (shared state across calls - hardest to find) | 6: Mutable default arguments |\n|\n\n:::danger The Bare `except:` Rule Never use a bare `except:` (without specifying exception types). It catches `SystemExit`, `KeyboardInterrupt`, `MemoryError`, and `GeneratorExit` - system-level signals that Python raises to shut down the process. Swallowing them prevents the program from terminating cleanly.\nIf you must catch a broad range, use `except Exception:` at minimum. But see anti-pattern 2 for why that is also "
+              },
+              {
+                "title": "pycodereview",
+                "url": "https://pypi.org/project/pycodereview",
+                "snippet": "### Error Handling\n- Catch-alls and empty `except`\n- Improper exception re-raise losing traceback/context\n\n### Resource Management\n- Missing context managers (`with open(...)`)\n- File mode mismatches and missing encoding\n- Unsafe tempfile patterns (e.g. `mktemp()`)"
+              },
+              {
+                "title": "claude-code-arsenal/commands/python-review.md at main \u00b7 UsernameTron/claude-code-arsenal",
+                "url": "https://github.com/usernametron/claude-code-arsenal/blob/main/commands/python-review.md",
+                "snippet": "### HIGH (Should Fix)\n- Missing type hints on public functions\n- Mutable default arguments\n- Swallowing exceptions silently\n- Not using context managers for resources\n- C-style looping instead of comprehensions\n- Using type() instead of isinstance()\n- Race conditions without locks\n\n[HIGH] Mutable default argument File: app/services/auth.py:18 Issue: Mutable default argument causes shared state\n```\ndef process_items(items=[]): # Bad\nitems.append(\"new\")\nreturn items\n```\nFix: Use None as default\n```\ndef process_items(items=None): # Good\nif items is None:\nitems = []\nitems.append(\"new\")\nreturn items\n```"
+              },
+              {
+                "title": "ECC/commands/python-review.md at main \u00b7 affaan-m/ECC",
+                "url": "https://github.com/affaan-m/everything-claude-code/blob/main/commands/python-review.md",
+                "snippet": "- YAML unsafe load\n- Bare except clauses hiding errors\n### HIGH (Should Fix)\n- Missing type hints on public functions\n- Mutable default arguments\n- Swallowing exceptions silently\n- Not using context managers for resources\n- C-style looping instead of comprehensions\n- Using type() instead of isinstance()\n- Race conditions without locks\n\n[HIGH] Mutable default argument File: app/services/auth.py:18 Issue: Mutable default argument causes shared state\n```\ndef process_items ( items = []): # Bad items . append ( \"new\" ) return items\n```\nFix: Use None as default\n```\ndef process_items ( items = None ): # Good if items is None : items = [] items . append ( \"new\" ) return items\n```"
+              },
+              {
+                "title": "llm-knowledge-base/anti-patterns/python-antipatterns.md at main \u00b7 glennguilloux/llm-knowledge-base",
+                "url": "https://github.com/glennguilloux/llm-knowledge-base/blob/main/anti-patterns/python-antipatterns.md",
+                "snippet": "```\n# WRONG: Mutable default argument\ndef add_item(item, items=[]):\nitems.append(item)\nreturn items\n# CORRECT: Use None as sentinel\ndef add_item(item, items=None):\nif items is None:\nitems = []\nitems.append(item)\nreturn items\n# WRONG: Bare except clause\ntry:\nresult = int(user_input)\nexcept:\nresult = 0\n# CORRECT: Catch specific exceptions\ntry:\nresult = int(user_input)\nexcept ValueError:\nresult = 0\n# WRONG: Using == for None comparison\nif value == None:\nprint(\"missing\")\n# CORRECT: Use is for None\nif value is None:\nprint(\"missing\")\n# WRONG: Wildcard import\nfrom os import *\n# CORRECT: Explicit imports\nfrom os import path, getcwd, environ\n# WRONG: Global variables for state\ncounter = 0\ndef increment():\nglobal counter\ncounter += 1\n# CORRECT: Use a class or closure\nclass Counter:\ndef __init__(self):\nself.value = 0\ndef increment(self):\nself.value += 1\n# WRONG: String concatenation in loop\nresult = \"\"\nfor i in range(10000):\nresult += str(i)  # O(n^2) \u2014 creates new string each time\n# CORRECT: Use join or list append\nparts = []\nfor i in range(10000):\nparts.append(str(i))\nresult = \"\".join(parts)\n# WRONG: Not using enumerate\nindex = 0\nfor item in items:\nprint(f\"{index}: {item}\")\nindex += 1\n# COR"
+              }
+            ],
+            "queries": [
+              "Python code review anti-patterns error handling mutable state resource management official documentation"
+            ]
+          },
+          "citation_corrections": [],
+          "duration_seconds": 1.143
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [],
+        "limitations": [
+          "Snapshot contains only two trivial modules (app.py, test_app.py) with no I/O, network, deserialization, authentication, dependency, or filesystem/path handling, so no exploitable security vulnerability could be evidenced.",
+          "No configuration, dependency manifest, or deployment artifacts were supplied, so insecure dependency and secret-exposure checks could not be performed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 97,
+            "prompt_tokens": 1137,
+            "total_tokens": 1234,
+            "completion_tokens_details": {
+              "reasoning_tokens": 15
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 694
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 15
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 1.033
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "low",
+            "title": "No test pins that the returned list holds a reference to the caller's ID object",
+            "file": "test_app.py",
+            "line": 12,
+            "evidence": "    assert record_customer(marker)[0] is marker",
+            "explanation": "The only non-string test uses an immutable `object()` sentinel and asserts identity, so it never exercises what happens when the caller's ID is a mutable object that changes after recording. `record_customer` stores the object by reference (`return [customer_id]`), so a later mutation of a dict/list ID is visible in the previously returned list. The production contract ('Return a fresh single-ID list for each call; ID may be any object') is silent about aliasing, and no test documents the intended behavior.",
+            "recommendation": "Either make the contract explicit (shallow copy of the ID) or add a test that records a mutable ID, mutates it, and asserts the documented outcome.",
+            "suggested_test": "def test_mutable_id_is_copied_or_shared_documented():\n    payload = {'id': 1}\n    recorded = record_customer(payload)\n    payload['id'] = 2\n    assert recorded == [{'id': 1}]  # if a copy is intended\n    # or: assert recorded[0] is payload  # if sharing is intended\n"
+          },
+          {
+            "severity": "low",
+            "title": "Falsy and empty-ID inputs are untested",
+            "file": "test_app.py",
+            "line": 13,
+            "evidence": "    assert record_customer(None) == [None]",
+            "explanation": "Only `None` is covered among falsy values. An empty string, `0`, `False`, or an empty container are valid 'any object' IDs per the docstring, and a future refactor that applies truthiness checks (e.g. `customer_id or default`) would break these cases without any test failing.",
+            "recommendation": "Add a parametrized test over falsy identifiers asserting that the ID is preserved verbatim in a single-element list.",
+            "suggested_test": "import pytest\n\n@pytest.mark.parametrize('value', ['', 0, False, [], {}])\ndef test_falsy_ids_preserved(value):\n    result = record_customer(value)\n    assert len(result) == 1\n    assert result[0] == value\n    assert type(result[0]) is type(value)\n"
+          },
+          {
+            "severity": "info",
+            "title": "No test verifies repeated calls with the same ID return distinct list objects",
+            "file": "test_app.py",
+            "line": 8,
+            "evidence": "    assert first is not second",
+            "explanation": "Identity independence is only asserted for two calls with *different* arguments. A shared-module-level cache or a mutable default argument keyed by value could pass the existing assertions while still violating 'fresh single-ID list for each call' when the same ID is recorded twice.",
+            "recommendation": "Assert object identity independence for two calls with an identical argument as well.",
+            "suggested_test": "def test_same_id_returns_fresh_list_each_time():\n    a = record_customer('A')\n    b = record_customer('A')\n    assert a == b == ['A']\n    assert a is not b\n    a.append('X')\n    assert b == ['A']\n"
+          }
+        ],
+        "limitations": [
+          "Static inspection only; no tests were executed and no coverage measurement was performed.",
+          "The production function is a three-line wrapper, so there are few failure paths to test; findings target missing contract documentation (copy vs. reference) and untested falsy-input classes rather than confirmed defects.",
+          "Test framework details (e.g. whether pytest is available) are not visible in the supplied snapshot."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 1023,
+            "prompt_tokens": 1138,
+            "total_tokens": 2161,
+            "completion_tokens_details": {
+              "reasoning_tokens": 209
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 693
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 209
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 6.268
+        }
+      }
+    ],
+    "actual_models": [
+      "accounts/fireworks/models/minimax-m3p1-flash"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "839c1ac7-02f0-46e3-aa28-049fbb33f13b",
+    "started_at": "2026-10-25T06:51:12.492852+00:00",
+    "completed_at": "2026-10-25T06:51:18.792141+00:00",
+    "duration_seconds": 6.299,
+    "backend": "fireworks",
+    "repository": "/home/runner/work/Week1Project-GenAcademy/Week1Project-GenAcademy/.github/coding-review/eval-fixture",
+    "snapshot_sha256": "932ffb609c2f21177d9d3626a2489e4bd15a7697aa4c39f9f243ce168a35bea1",
+    "snapshot_bytes": 490,
+    "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+    "model": "accounts/fireworks/models/minimax-m3p1-flash"
+  }
+}

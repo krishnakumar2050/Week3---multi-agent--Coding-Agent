@@ -1,0 +1,71 @@
+{
+  "variant": "single",
+  "case": "sql_injection",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 1,
+    "matched": 1,
+    "unmatched_indices": [],
+    "valid_citations": 1,
+    "severity_acceptable": 1,
+    "test_suggestion_present": 1,
+    "semantic_duplicate_excess": 0,
+    "complete": true,
+    "duration_seconds": 16.963,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Unauthenticated input enables SQL injection",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+        "explanation": "The unauthenticated request's name is concatenated directly into SQL. A value such as ' OR '1'='1 changes the WHERE clause to match every user, exposing user IDs.",
+        "recommendation": "Use a parameterized query and pass name separately using the database driver's supported placeholder syntax.",
+        "suggested_test": "Create users with distinct names, then call find_user with ' OR '1'='1. Assert that no rows are returned unless a user has that exact literal name; also verify ordinary names and names containing apostrophes."
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Unauthenticated input enables SQL injection",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+            "explanation": "The unauthenticated request's name is concatenated directly into SQL. A value such as ' OR '1'='1 changes the WHERE clause to match every user, exposing user IDs.",
+            "recommendation": "Use a parameterized query and pass name separately using the database driver's supported placeholder syntax.",
+            "suggested_test": "Create users with distinct names, then call find_user with ' OR '1'='1. Assert that no rows are returned unless a user has that exact literal name; also verify ordinary names and names containing apostrophes."
+          }
+        ],
+        "limitations": [
+          "Only the supplied function was reviewed. Database driver behavior, surrounding authorization, and existing tests were not provided."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 16.919
+        }
+      }
+    ],
+    "duration_seconds": 16.963
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "variant": "single",
+  "case": "swift_amount_crash",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 1,
+    "matched": 1,
+    "unmatched_indices": [],
+    "valid_citations": 1,
+    "severity_acceptable": 1,
+    "test_suggestion_present": 1,
+    "semantic_duplicate_excess": 0,
+    "complete": true,
+    "duration_seconds": 13.021,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "findings": [
+      {
+        "severity": "medium",
+        "title": "Invalid amount input crashes instead of producing an error",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "Double(text) returns nil for invalid input such as \"abc\" or an empty string. Force-unwrapping it traps, terminating the process instead of reporting the required validation error.",
+        "recommendation": "Return a throwing result or Result type and handle failed conversion explicitly instead of force-unwrapping.",
+        "suggested_test": "Pass \"abc\" and an empty string; assert each produces a validation error without crashing. Pass \"12.50\" and assert successful conversion to 12.5."
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "medium",
+            "title": "Invalid amount input crashes instead of producing an error",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "Double(text) returns nil for invalid input such as \"abc\" or an empty string. Force-unwrapping it traps, terminating the process instead of reporting the required validation error.",
+            "recommendation": "Return a throwing result or Result type and handle failed conversion explicitly instead of force-unwrapping.",
+            "suggested_test": "Pass \"abc\" and an empty string; assert each produces a validation error without crashing. Pass \"12.50\" and assert successful conversion to 12.5."
+          }
+        ],
+        "limitations": [
+          "Only the supplied snapshot was reviewed; callers and existing tests were not provided."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 12.974
+        }
+      }
+    ],
+    "duration_seconds": 13.021
+  }
+}

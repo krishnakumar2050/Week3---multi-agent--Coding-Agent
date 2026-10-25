@@ -1,0 +1,180 @@
+{
+  "variant": "three_source",
+  "case": "fail_open_encryption",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 3,
+    "matched": 3,
+    "unmatched_indices": [],
+    "valid_citations": 3,
+    "severity_acceptable": 3,
+    "test_suggestion_present": 3,
+    "semantic_duplicate_excess": 2,
+    "complete": true,
+    "duration_seconds": 11.272,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "app.py"
+    ],
+    "counts": {
+      "critical": 0,
+      "high": 3,
+      "medium": 0,
+      "low": 0,
+      "info": 0
+    },
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Encryption failures expose plaintext to storage callers",
+        "file": "app.py",
+        "line": 5,
+        "evidence": "    except Exception:\n        return plaintext",
+        "explanation": "If encryption raises any exception, the function returns the original plaintext as though encryption succeeded. Storage callers can consequently persist sensitive data unencrypted, violating the function's explicit confidentiality contract. No attacker control is needed to trigger exposure during an encryption failure.",
+        "recommendation": "Fail closed by propagating the encryption exception or raising an explicit storage-encryption error; never return plaintext on failure.",
+        "suggested_test": "Use a cipher whose encrypt method raises an exception. Assert that encrypt_for_storage raises and never returns the plaintext.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "high",
+        "title": "Encryption failures return plaintext to storage callers",
+        "file": "app.py",
+        "line": 5,
+        "evidence": "    except Exception:\n        return plaintext",
+        "explanation": "Any exception from cipher.encrypt causes the function to return unencrypted input as if encryption succeeded, violating its explicit contract and allowing storage callers to persist plaintext.",
+        "recommendation": "Propagate the encryption exception or raise a dedicated error so callers cannot mistake plaintext for ciphertext.",
+        "suggested_test": "Use a cipher stub whose encrypt method raises an exception and call encrypt_for_storage with a sensitive plaintext value. Assert that the call raises an error instead of returning the plaintext. Also test successful encryption and assert that the returned value is the cipher's ciphertext.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "high",
+        "title": "Encryption failures silently return plaintext for storage",
+        "file": "app.py",
+        "line": 5,
+        "evidence": "    except Exception:\n        return plaintext",
+        "explanation": "The broad exception handling implements a fail-open fallback: if cipher.encrypt raises, the function returns the original plaintext as though encryption succeeded. Storage callers can then persist sensitive data unencrypted, violating the function's explicit contract and hiding the failure.",
+        "recommendation": "Remove the plaintext fallback. Propagate the encryption exception, or raise a dedicated encryption error while preserving its cause, so callers cannot proceed with storage as if encryption succeeded.",
+        "suggested_test": "Use a cipher whose encrypt method raises an exception. Assert that encrypt_for_storage raises an error rather than returning plaintext, and that the storage caller does not write the value.",
+        "agents": [
+          "quality"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Encryption failures silently return plaintext for storage",
+            "file": "app.py",
+            "line": 5,
+            "evidence": "    except Exception:\n        return plaintext",
+            "explanation": "The broad exception handling implements a fail-open fallback: if cipher.encrypt raises, the function returns the original plaintext as though encryption succeeded. Storage callers can then persist sensitive data unencrypted, violating the function's explicit contract and hiding the failure.",
+            "recommendation": "Remove the plaintext fallback. Propagate the encryption exception, or raise a dedicated encryption error while preserving its cause, so callers cannot proceed with storage as if encryption succeeded.",
+            "suggested_test": "Use a cipher whose encrypt method raises an exception. Assert that encrypt_for_storage raises an error rather than returning plaintext, and that the storage caller does not write the value."
+          }
+        ],
+        "limitations": [
+          "Only the supplied function was reviewed; cipher implementation and storage callers were not provided."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 10.078
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Encryption failures expose plaintext to storage callers",
+            "file": "app.py",
+            "line": 5,
+            "evidence": "    except Exception:\n        return plaintext",
+            "explanation": "If encryption raises any exception, the function returns the original plaintext as though encryption succeeded. Storage callers can consequently persist sensitive data unencrypted, violating the function's explicit confidentiality contract. No attacker control is needed to trigger exposure during an encryption failure.",
+            "recommendation": "Fail closed by propagating the encryption exception or raising an explicit storage-encryption error; never return plaintext on failure.",
+            "suggested_test": "Use a cipher whose encrypt method raises an exception. Assert that encrypt_for_storage raises and never returns the plaintext."
+          }
+        ],
+        "limitations": [
+          "Only the supplied function was reviewed; callers, cipher implementation, and actual storage behavior were not provided."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 9.483
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Encryption failures return plaintext to storage callers",
+            "file": "app.py",
+            "line": 5,
+            "evidence": "    except Exception:\n        return plaintext",
+            "explanation": "Any exception from cipher.encrypt causes the function to return unencrypted input as if encryption succeeded, violating its explicit contract and allowing storage callers to persist plaintext.",
+            "recommendation": "Propagate the encryption exception or raise a dedicated error so callers cannot mistake plaintext for ciphertext.",
+            "suggested_test": "Use a cipher stub whose encrypt method raises an exception and call encrypt_for_storage with a sensitive plaintext value. Assert that the call raises an error instead of returning the plaintext. Also test successful encryption and assert that the returned value is the cipher's ciphertext."
+          }
+        ],
+        "limitations": [
+          "Only the supplied function was available; no tests or storage callers were provided. This was a static review; no tests were run."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 11.214
+        }
+      }
+    ],
+    "actual_models": [
+      "gpt-6.1-sol"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "c781b5e3-8da2-4d3e-a96a-0f9dfc81e5d1",
+    "started_at": "2026-10-25T06:38:52.557086+00:00",
+    "completed_at": "2026-10-25T06:39:03.829467+00:00",
+    "duration_seconds": 11.272,
+    "backend": "codex",
+    "repository": "/Users/krishnakumar/Documents/ChatGPT/Week2 - multi agent- Coding Agent/eval-fixture",
+    "snapshot_sha256": "24f8e02e40b8411dd3f2d1f9988ab259919b122990330978fb71e45ec813eacb",
+    "snapshot_bytes": 216,
+    "requested_model": null,
+    "model": "gpt-6.1-sol"
+  }
+}

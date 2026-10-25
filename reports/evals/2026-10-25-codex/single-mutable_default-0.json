@@ -1,0 +1,71 @@
+{
+  "variant": "single",
+  "case": "mutable_default",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 1,
+    "matched": 1,
+    "unmatched_indices": [],
+    "valid_citations": 1,
+    "severity_acceptable": 1,
+    "test_suggestion_present": 1,
+    "semantic_duplicate_excess": 0,
+    "complete": true,
+    "duration_seconds": 13.264,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "findings": [
+      {
+        "severity": "medium",
+        "title": "Mutable default shares customer IDs across independent requests",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+        "explanation": "The default list is created once and reused by every call that omits customer_ids. Calling record_customer(\"A\") followed by record_customer(\"B\") returns [\"A\", \"B\"] for the second request, violating request isolation and exposing prior customer IDs. The second call also changes the list returned by the first call.",
+        "recommendation": "Use None as the default and create a fresh list inside the function when customer_ids is None.",
+        "suggested_test": "Call record_customer(\"A\") and record_customer(\"B\") without passing lists. Assert the results are [\"A\"] and [\"B\"], respectively, and that they are distinct list objects."
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "medium",
+            "title": "Mutable default shares customer IDs across independent requests",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+            "explanation": "The default list is created once and reused by every call that omits customer_ids. Calling record_customer(\"A\") followed by record_customer(\"B\") returns [\"A\", \"B\"] for the second request, violating request isolation and exposing prior customer IDs. The second call also changes the list returned by the first call.",
+            "recommendation": "Use None as the default and create a fresh list inside the function when customer_ids is None.",
+            "suggested_test": "Call record_customer(\"A\") and record_customer(\"B\") without passing lists. Assert the results are [\"A\"] and [\"B\"], respectively, and that they are distinct list objects."
+          }
+        ],
+        "limitations": [
+          "Only the supplied four-line snapshot was reviewed; callers and existing tests were not available."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 13.14
+        }
+      }
+    ],
+    "duration_seconds": 13.264
+  }
+}

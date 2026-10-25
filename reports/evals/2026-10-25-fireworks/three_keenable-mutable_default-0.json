@@ -1,0 +1,367 @@
+{
+  "variant": "three_keenable",
+  "case": "mutable_default",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 7,
+    "matched": 6,
+    "unmatched_indices": [
+      6
+    ],
+    "valid_citations": 7,
+    "severity_acceptable": 6,
+    "test_suggestion_present": 6,
+    "semantic_duplicate_excess": 5,
+    "complete": true,
+    "duration_seconds": 5.707,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "app.py"
+    ],
+    "counts": {
+      "critical": 0,
+      "high": 2,
+      "medium": 4,
+      "low": 1,
+      "info": 0
+    },
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Mutable default argument causes shared state across calls",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+        "explanation": "The anti-pattern is a mutable default argument. The list literal `[]` is evaluated once at function-definition time, so the same list object is reused on every call that omits `customer_ids`. The function then mutates it via `customer_ids.append(customer_id)` and returns it, so state from one request leaks into every later request. The docstring explicitly promises 'IDs belonging only to this independent request', but that guarantee is violated: after `record_customer('a')` and `record_customer('b')`, a call `record_customer('c')` returns `['a', 'b', 'c']`. This is hidden shared state that is invisible at the call site and can cause cross-tenant/cross-request data leakage or unbounded memory growth in a long-running process (e.g. a web server worker handling many requests).",
+        "recommendation": "Use `None` as the sentinel default and create a fresh list inside the function: `def record_customer(customer_id, customer_ids=None):` followed by `if customer_ids is None: customer_ids = []` before the append. If callers must be able to inspect the accumulated IDs, expose the list as an explicit return value of a new object rather than mutating shared state.",
+        "suggested_test": "Call `record_customer('a')`, then `record_customer('b')`, and assert the second result equals `['b']` (not `['a', 'b']`). Under the current implementation the second result is `['a', 'b']`, so the test fails.",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "severity": "high",
+        "title": "Mutable default argument leaks customer IDs across independent requests",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def record_customer(customer_id, customer_ids=[]):",
+        "explanation": "The default argument `customer_ids=[]` is evaluated once at function-definition time, so every call that omits the argument appends to and returns the same shared list object. Although the docstring claims the result contains 'IDs belonging only to this independent request', customer IDs from unrelated callers/requests accumulate in one list and are returned to each caller. This is a cross-request data leak (IDOR-style information disclosure) and also unbounded memory growth in a long-lived process. An attacker able to influence the customer_id values (e.g., enumeration) can observe other users' identifiers in the returned list, and the list returned is the shared default object itself, so any caller mutation (append/pop/clear) affects all other callers.",
+        "recommendation": "Never use a mutable default. Use `def record_customer(customer_id, customer_ids=None):` and inside do `if customer_ids is None: customer_ids = []`. Return a copy (e.g. `return list(customer_ids)`) so callers cannot mutate shared state, and avoid returning a shared accumulator at all if only the current request's ID is needed.",
+        "suggested_test": "Call `record_customer(\"a\")` then `record_customer(\"b\")` with no explicit list; assert the two returned values are not the same object and that the second call's result contains only `b` (e.g. `assert record_customer('b') == ['b']` and `assert len(record_customer('c')) == 1`). Also assert mutating a returned list does not affect a subsequent call.\nCall `record_customer('a')` then `record_customer('b')` and assert the second call's result equals `['b']` (not `['a', 'b']`); also assert the first call's result is still `['a']`. Expected: currently fails with `['a', 'b']`.",
+        "agents": [
+          "security",
+          "tests"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "No tests exist to cover state isolation between calls",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def record_customer(customer_id, customer_ids=[]):",
+        "explanation": "The snapshot contains only the production function and no test module. Without a regression test asserting per-call isolation, the shared-default defect can recur unnoticed, and there is no coverage of the caller-supplied `customer_ids` path, empty-call, or None-input edge cases.",
+        "recommendation": "Add a test module (e.g. `tests/test_record_customer.py`) covering: (1) sequential calls with default argument do not share state; (2) an explicitly passed list is used and appended to; (3) the returned list's mutation does not affect later calls; (4) `customer_id=None` or empty string behavior if allowed.",
+        "suggested_test": "pytest test: `assert record_customer('a') == ['a']`; `assert record_customer('b') == ['b']`; `seed = ['x']; assert record_customer('y', seed) == ['x','y']`; `assert seed == ['x','y']` (seed was mutated as documented) \u2014 assert isolation only for the default-argument path.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Function mutates the caller's list, making callers' inputs silently grow",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    customer_ids.append(customer_id)\n    return customer_ids",
+        "explanation": "Even when a caller passes an explicit list, the function mutates it in place rather than copying. A caller reusing one list object across logical operations (for example, passing the same accumulator to several requests, or keeping a reference to a 'seen' list) will observe unexpected appended elements. Combined with the mutable default, the caller has no reliable way to obtain an isolated list.",
+        "recommendation": "Copy defensively before mutating: `ids = list(customer_ids) if customer_ids is not None else []` then append to `ids` and return `ids`, so the function never mutates state it does not own.",
+        "suggested_test": "Pass an explicit list `existing = ['x']`, call `record_customer('y', existing)`, and assert `existing == ['x']` while the returned value is `['x', 'y']`.",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Function returns the caller's internal list by reference, allowing external mutation of accumulated state",
+        "file": "app.py",
+        "line": 4,
+        "evidence": "    return customer_ids",
+        "explanation": "The function returns the exact list object it appended to, not a copy. If the caller supplied the list, the caller can mutate shared state; if the default list was used, the caller receives the shared module-level default and can append arbitrary customer IDs (or clear it), poisoning subsequent callers' results and causing an unbounded-growth DoS. This compounds the shared-default defect.",
+        "recommendation": "Return a copy of the collected IDs (`return list(customer_ids)`) so the internal accumulator cannot be modified by callers; keep accumulation in a request-scoped or explicitly passed container.",
+        "suggested_test": "Call `record_customer('a')`, then `r = record_customer('b'); r.append('evil')`, then assert `record_customer('c')` returns only `['c']` and does not contain 'evil'.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Returned list is the same mutable object, allowing external mutation to corrupt later calls",
+        "file": "app.py",
+        "line": 4,
+        "evidence": "    return customer_ids",
+        "explanation": "The function returns the internal list object rather than a copy. A caller that mutates the returned list (e.g. `result.append('x')` or `result.clear()`) also mutates the shared default list, so subsequent calls observe corrupted state in addition to the accumulation bug.",
+        "recommendation": "Build and return a new list (e.g. `customer_ids = list(customer_ids) if customer_ids is not None else []` then append), or return a tuple/copy so callers cannot alter internal state.",
+        "suggested_test": "Call `r1 = record_customer('a')`; `r1.clear()`; then `r2 = record_customer('b')` and assert `r2 == ['b']`. Expected: currently `r2` is `[]` or `['b']` only if state was cleared.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "low",
+        "title": "Function does not validate or document customer_id input",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    customer_ids.append(customer_id)",
+        "explanation": "Any value, including None or duplicate IDs, is appended without validation or deduplication. The docstring only describes intent, so callers may assume validation guarantees that do not exist. This is bounded but should be clarified since the function is described as returning 'IDs belonging only to this independent request'.",
+        "recommendation": "Either validate `customer_id` (raise ValueError on None/empty) or document in the docstring that arbitrary values are accepted and duplicates are retained.",
+        "suggested_test": "Call `record_customer(None)` and assert the documented behavior (either `ValueError` raised, or result `[None]`) \u2014 pin the chosen contract so it cannot change silently.",
+        "agents": [
+          "tests"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Mutable default argument causes shared state across calls",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+            "explanation": "The anti-pattern is a mutable default argument. The list literal `[]` is evaluated once at function-definition time, so the same list object is reused on every call that omits `customer_ids`. The function then mutates it via `customer_ids.append(customer_id)` and returns it, so state from one request leaks into every later request. The docstring explicitly promises 'IDs belonging only to this independent request', but that guarantee is violated: after `record_customer('a')` and `record_customer('b')`, a call `record_customer('c')` returns `['a', 'b', 'c']`. This is hidden shared state that is invisible at the call site and can cause cross-tenant/cross-request data leakage or unbounded memory growth in a long-running process (e.g. a web server worker handling many requests).",
+            "recommendation": "Use `None` as the sentinel default and create a fresh list inside the function: `def record_customer(customer_id, customer_ids=None):` followed by `if customer_ids is None: customer_ids = []` before the append. If callers must be able to inspect the accumulated IDs, expose the list as an explicit return value of a new object rather than mutating shared state.",
+            "suggested_test": "Call `record_customer('a')`, then `record_customer('b')`, and assert the second result equals `['b']` (not `['a', 'b']`). Under the current implementation the second result is `['a', 'b']`, so the test fails."
+          },
+          {
+            "severity": "medium",
+            "title": "Function mutates the caller's list, making callers' inputs silently grow",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    customer_ids.append(customer_id)\n    return customer_ids",
+            "explanation": "Even when a caller passes an explicit list, the function mutates it in place rather than copying. A caller reusing one list object across logical operations (for example, passing the same accumulator to several requests, or keeping a reference to a 'seen' list) will observe unexpected appended elements. Combined with the mutable default, the caller has no reliable way to obtain an isolated list.",
+            "recommendation": "Copy defensively before mutating: `ids = list(customer_ids) if customer_ids is not None else []` then append to `ids` and return `ids`, so the function never mutates state it does not own.",
+            "suggested_test": "Pass an explicit list `existing = ['x']`, call `record_customer('y', existing)`, and assert `existing == ['x']` while the returned value is `['x', 'y']`."
+          }
+        ],
+        "limitations": [
+          "Only a single small function was provided; no callers, tests, or surrounding modules were available, so the real-world impact of the shared list (e.g. whether it is used per-request in a web handler) could not be confirmed.",
+          "No error-handling code exists in the snapshot, so exception-related anti-patterns could not be assessed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 729,
+            "prompt_tokens": 2667,
+            "total_tokens": 3396,
+            "completion_tokens_details": {
+              "reasoning_tokens": 5
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 5
+            }
+          },
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "ok",
+            "sources": [
+              {
+                "title": "Python Code Review Checklist: Pythonic Patterns and Best Practices",
+                "url": "https://pullpanda.io/blog/python-code-review-checklist",
+                "snippet": "**Error Handling**\n- Specific exceptions caught, not bare `except:`\n- Exception messages provide context: what failed and why\n- `try` blocks minimal (only code that might fail)\n- Resources cleaned up in `finally` or with context managers\n- Custom exceptions inherit from appropriate base\n- EAFP preferred over LBYL: try/except over if checks\n- Exceptions not used for control flow\n- `raise from` preserves exception chain: `raise NewError() from e`\n**Resource Management**\n- Files opened with context manager: `with open() as f:`\n- Database connections use context managers\n- No manual `close()` calls (context manager handles it)\n- `__enter__` and `__exit__` implemented for custom context managers\n- Thread locks acquired with `with lock:`\n- Network connections properly closed\n- Temporary files use `tempfile` module\n- Large files processed in chunks, not loaded entirely\n\nTry blocks should contain minimal code\u2014only what might raise the exception we're catching. Large try blocks catch exceptions from unexpected places, masking bugs. When reviewing exception handling, we verify try blocks contain only the code that might throw the specific exceptions caught.\nEAFP (Easier to Ask Forgiveness th"
+              },
+              {
+                "title": "Common Error Anti-Patterns - Mistakes That Fail Silently in Production",
+                "url": "https://engineersofai.com/docs/python/python-foundation/error-handling-and-defensive-engineering/Common-Error-Anti-Patterns",
+                "snippet": "| Category | Anti-patterns |\n|---|---|\n| **Silent failures** (worst - no idea something went wrong) | 1: Swallowing exceptions (`bare except: pass`); 2: Catching too broadly (`except Exception`); 10: Catch-cleanup-reraise without logging |\n| **Lost context** (you know it failed, but not why or where) | 3: Losing exception chain (`raise NewError(str(e))`); 9: Boolean blindness (`if x:` misses falsy values) |\n| **Wrong tool** (the language provides a better mechanism) | 4: Exceptions for flow control; 8: Ignoring return values (`sort()` returns `None`) |\n| **Resource bugs** (data corruption, fd leaks, test flakiness) | 5: Not cleaning up resources (no `with`) |\n| **Initialization bugs** (shared state across calls - hardest to find) | 6: Mutable default arguments |\n|\n\n:::danger The Bare `except:` Rule Never use a bare `except:` (without specifying exception types). It catches `SystemExit`, `KeyboardInterrupt`, `MemoryError`, and `GeneratorExit` - system-level signals that Python raises to shut down the process. Swallowing them prevents the program from terminating cleanly.\nIf you must catch a broad range, use `except Exception:` at minimum. But see anti-pattern 2 for why that is also "
+              },
+              {
+                "title": "pycodereview",
+                "url": "https://pypi.org/project/pycodereview",
+                "snippet": "### Error Handling\n- Catch-alls and empty `except`\n- Improper exception re-raise losing traceback/context\n\n### Resource Management\n- Missing context managers (`with open(...)`)\n- File mode mismatches and missing encoding\n- Unsafe tempfile patterns (e.g. `mktemp()`)"
+              },
+              {
+                "title": "claude-code-arsenal/commands/python-review.md at main \u00b7 UsernameTron/claude-code-arsenal",
+                "url": "https://github.com/usernametron/claude-code-arsenal/blob/main/commands/python-review.md",
+                "snippet": "### HIGH (Should Fix)\n- Missing type hints on public functions\n- Mutable default arguments\n- Swallowing exceptions silently\n- Not using context managers for resources\n- C-style looping instead of comprehensions\n- Using type() instead of isinstance()\n- Race conditions without locks\n\n[HIGH] Mutable default argument File: app/services/auth.py:18 Issue: Mutable default argument causes shared state\n```\ndef process_items(items=[]): # Bad\nitems.append(\"new\")\nreturn items\n```\nFix: Use None as default\n```\ndef process_items(items=None): # Good\nif items is None:\nitems = []\nitems.append(\"new\")\nreturn items\n```"
+              },
+              {
+                "title": "ECC/commands/python-review.md at main \u00b7 affaan-m/ECC",
+                "url": "https://github.com/affaan-m/everything-claude-code/blob/main/commands/python-review.md",
+                "snippet": "- YAML unsafe load\n- Bare except clauses hiding errors\n### HIGH (Should Fix)\n- Missing type hints on public functions\n- Mutable default arguments\n- Swallowing exceptions silently\n- Not using context managers for resources\n- C-style looping instead of comprehensions\n- Using type() instead of isinstance()\n- Race conditions without locks\n\n[HIGH] Mutable default argument File: app/services/auth.py:18 Issue: Mutable default argument causes shared state\n```\ndef process_items ( items = []): # Bad items . append ( \"new\" ) return items\n```\nFix: Use None as default\n```\ndef process_items ( items = None ): # Good if items is None : items = [] items . append ( \"new\" ) return items\n```"
+              },
+              {
+                "title": "llm-knowledge-base/anti-patterns/python-antipatterns.md at main \u00b7 glennguilloux/llm-knowledge-base",
+                "url": "https://github.com/glennguilloux/llm-knowledge-base/blob/main/anti-patterns/python-antipatterns.md",
+                "snippet": "```\n# WRONG: Mutable default argument\ndef add_item(item, items=[]):\nitems.append(item)\nreturn items\n# CORRECT: Use None as sentinel\ndef add_item(item, items=None):\nif items is None:\nitems = []\nitems.append(item)\nreturn items\n# WRONG: Bare except clause\ntry:\nresult = int(user_input)\nexcept:\nresult = 0\n# CORRECT: Catch specific exceptions\ntry:\nresult = int(user_input)\nexcept ValueError:\nresult = 0\n# WRONG: Using == for None comparison\nif value == None:\nprint(\"missing\")\n# CORRECT: Use is for None\nif value is None:\nprint(\"missing\")\n# WRONG: Wildcard import\nfrom os import *\n# CORRECT: Explicit imports\nfrom os import path, getcwd, environ\n# WRONG: Global variables for state\ncounter = 0\ndef increment():\nglobal counter\ncounter += 1\n# CORRECT: Use a class or closure\nclass Counter:\ndef __init__(self):\nself.value = 0\ndef increment(self):\nself.value += 1\n# WRONG: String concatenation in loop\nresult = \"\"\nfor i in range(10000):\nresult += str(i)  # O(n^2) \u2014 creates new string each time\n# CORRECT: Use join or list append\nparts = []\nfor i in range(10000):\nparts.append(str(i))\nresult = \"\".join(parts)\n# WRONG: Not using enumerate\nindex = 0\nfor item in items:\nprint(f\"{index}: {item}\")\nindex += 1\n# COR"
+              }
+            ],
+            "queries": [
+              "Python code review anti-patterns error handling mutable state resource management official documentation"
+            ]
+          },
+          "citation_corrections": [],
+          "duration_seconds": 4.183
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Mutable default argument leaks customer IDs across independent requests",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def record_customer(customer_id, customer_ids=[]):",
+            "explanation": "The default argument `customer_ids=[]` is evaluated once at function-definition time, so every call that omits the argument appends to and returns the same shared list object. Although the docstring claims the result contains 'IDs belonging only to this independent request', customer IDs from unrelated callers/requests accumulate in one list and are returned to each caller. This is a cross-request data leak (IDOR-style information disclosure) and also unbounded memory growth in a long-lived process. An attacker able to influence the customer_id values (e.g., enumeration) can observe other users' identifiers in the returned list, and the list returned is the shared default object itself, so any caller mutation (append/pop/clear) affects all other callers.",
+            "recommendation": "Never use a mutable default. Use `def record_customer(customer_id, customer_ids=None):` and inside do `if customer_ids is None: customer_ids = []`. Return a copy (e.g. `return list(customer_ids)`) so callers cannot mutate shared state, and avoid returning a shared accumulator at all if only the current request's ID is needed.",
+            "suggested_test": "Call `record_customer(\"a\")` then `record_customer(\"b\")` with no explicit list; assert the two returned values are not the same object and that the second call's result contains only `b` (e.g. `assert record_customer('b') == ['b']` and `assert len(record_customer('c')) == 1`). Also assert mutating a returned list does not affect a subsequent call."
+          },
+          {
+            "severity": "medium",
+            "title": "Function returns the caller's internal list by reference, allowing external mutation of accumulated state",
+            "file": "app.py",
+            "line": 4,
+            "evidence": "    return customer_ids",
+            "explanation": "The function returns the exact list object it appended to, not a copy. If the caller supplied the list, the caller can mutate shared state; if the default list was used, the caller receives the shared module-level default and can append arbitrary customer IDs (or clear it), poisoning subsequent callers' results and causing an unbounded-growth DoS. This compounds the shared-default defect.",
+            "recommendation": "Return a copy of the collected IDs (`return list(customer_ids)`) so the internal accumulator cannot be modified by callers; keep accumulation in a request-scoped or explicitly passed container.",
+            "suggested_test": "Call `record_customer('a')`, then `r = record_customer('b'); r.append('evil')`, then assert `record_customer('c')` returns only `['c']` and does not contain 'evil'."
+          }
+        ],
+        "limitations": [
+          "No surrounding application code, framework wiring, or tests were provided, so it is unknown whether callers always pass an explicit `customer_ids` argument, which would mitigate the shared-default impact.",
+          "The snapshot contains only this function; no evidence of how customer_id values are obtained (user input vs. validated) was available, so the exploitability of the data leak depends on unverified caller behavior."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 734,
+            "prompt_tokens": 914,
+            "total_tokens": 1648,
+            "completion_tokens_details": {
+              "reasoning_tokens": 39
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 913
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 39
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 4.28
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Mutable default argument leaks customer IDs across independent requests",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def record_customer(customer_id, customer_ids=[]):",
+            "explanation": "The default value `[]` is evaluated once at function-definition time, so every call that omits `customer_ids` mutates and returns the same shared list. The docstring claims each call returns 'IDs belonging only to this independent request', but the returned list accumulates IDs from all previous calls, causing cross-request data leakage (e.g. a customer_id from one call appearing in another call's result).",
+            "recommendation": "Use `customer_ids=None` and create the list inside the function (`if customer_ids is None: customer_ids = []`), so each call starts with a fresh list.",
+            "suggested_test": "Call `record_customer('a')` then `record_customer('b')` and assert the second call's result equals `['b']` (not `['a', 'b']`); also assert the first call's result is still `['a']`. Expected: currently fails with `['a', 'b']`."
+          },
+          {
+            "severity": "medium",
+            "title": "Returned list is the same mutable object, allowing external mutation to corrupt later calls",
+            "file": "app.py",
+            "line": 4,
+            "evidence": "    return customer_ids",
+            "explanation": "The function returns the internal list object rather than a copy. A caller that mutates the returned list (e.g. `result.append('x')` or `result.clear()`) also mutates the shared default list, so subsequent calls observe corrupted state in addition to the accumulation bug.",
+            "recommendation": "Build and return a new list (e.g. `customer_ids = list(customer_ids) if customer_ids is not None else []` then append), or return a tuple/copy so callers cannot alter internal state.",
+            "suggested_test": "Call `r1 = record_customer('a')`; `r1.clear()`; then `r2 = record_customer('b')` and assert `r2 == ['b']`. Expected: currently `r2` is `[]` or `['b']` only if state was cleared."
+          },
+          {
+            "severity": "medium",
+            "title": "No tests exist to cover state isolation between calls",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def record_customer(customer_id, customer_ids=[]):",
+            "explanation": "The snapshot contains only the production function and no test module. Without a regression test asserting per-call isolation, the shared-default defect can recur unnoticed, and there is no coverage of the caller-supplied `customer_ids` path, empty-call, or None-input edge cases.",
+            "recommendation": "Add a test module (e.g. `tests/test_record_customer.py`) covering: (1) sequential calls with default argument do not share state; (2) an explicitly passed list is used and appended to; (3) the returned list's mutation does not affect later calls; (4) `customer_id=None` or empty string behavior if allowed.",
+            "suggested_test": "pytest test: `assert record_customer('a') == ['a']`; `assert record_customer('b') == ['b']`; `seed = ['x']; assert record_customer('y', seed) == ['x','y']`; `assert seed == ['x','y']` (seed was mutated as documented) \u2014 assert isolation only for the default-argument path."
+          },
+          {
+            "severity": "low",
+            "title": "Function does not validate or document customer_id input",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    customer_ids.append(customer_id)",
+            "explanation": "Any value, including None or duplicate IDs, is appended without validation or deduplication. The docstring only describes intent, so callers may assume validation guarantees that do not exist. This is bounded but should be clarified since the function is described as returning 'IDs belonging only to this independent request'.",
+            "recommendation": "Either validate `customer_id` (raise ValueError on None/empty) or document in the docstring that arbitrary values are accepted and duplicates are retained.",
+            "suggested_test": "Call `record_customer(None)` and assert the documented behavior (either `ValueError` raised, or result `[None]`) \u2014 pin the chosen contract so it cannot change silently."
+          }
+        ],
+        "limitations": [
+          "No test files were supplied in the snapshot, so coverage of existing behavior could not be assessed; findings about missing tests are based on the absence of any test module in the provided source.",
+          "Only app.py (4 lines) was provided; surrounding call sites and configuration were not visible, so the real-world impact of the shared default list cannot be confirmed.",
+          "No execution environment was available; all assertions above are expected to fail or pass based on static reading only."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 1069,
+            "prompt_tokens": 915,
+            "total_tokens": 1984,
+            "completion_tokens_details": {
+              "reasoning_tokens": 22
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 693
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 22
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 5.675
+        }
+      }
+    ],
+    "actual_models": [
+      "accounts/fireworks/models/minimax-m3p1-flash"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "cde59228-c7dc-492d-967a-a7283119e96b",
+    "started_at": "2026-10-25T06:50:06.944913+00:00",
+    "completed_at": "2026-10-25T06:50:12.651544+00:00",
+    "duration_seconds": 5.707,
+    "backend": "fireworks",
+    "repository": "/home/runner/work/Week1Project-GenAcademy/Week1Project-GenAcademy/.github/coding-review/eval-fixture",
+    "snapshot_sha256": "b0e98105830998f18b6f23041e60675e2a1e67c02ad4dc79a450008e8f56c90b",
+    "snapshot_bytes": 177,
+    "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+    "model": "accounts/fireworks/models/minimax-m3p1-flash"
+  }
+}

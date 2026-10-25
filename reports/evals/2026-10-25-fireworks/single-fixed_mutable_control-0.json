@@ -1,0 +1,111 @@
+{
+  "variant": "single",
+  "case": "fixed_mutable_control",
+  "repeat": 0,
+  "metrics": {
+    "expected": 0,
+    "detected": 0,
+    "findings": 2,
+    "matched": 0,
+    "unmatched_indices": [
+      0,
+      1
+    ],
+    "valid_citations": 2,
+    "severity_acceptable": 0,
+    "test_suggestion_present": 0,
+    "semantic_duplicate_excess": 0,
+    "complete": true,
+    "duration_seconds": 3.388,
+    "clean_control_pass": false
+  },
+  "report": {
+    "status": "complete",
+    "findings": [
+      {
+        "severity": "low",
+        "title": "No validation of customer_id; None and arbitrary objects silently accepted",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    return [customer_id]",
+        "explanation": "record_customer accepts any value including None, empty strings, or unhashable objects and stores it without validation. Downstream consumers that use the ID as a key or identifier will fail later (e.g. TypeError/KeyError) far from the origin of the bad input, and the existing test explicitly locks in the permissive behavior (test_app.py:13 asserts record_customer(None) == [None]).",
+        "recommendation": "Add an explicit contract: reject None/empty IDs (raise ValueError) and document that the ID must be a non-empty, hashable identifier; update the test to assert the error instead of accepting None.",
+        "suggested_test": "def test_rejects_invalid_id():\n    with pytest.raises(ValueError):\n        record_customer(None)\n    with pytest.raises(ValueError):\n        record_customer(\"\")"
+      },
+      {
+        "severity": "info",
+        "title": "Missing test asserting the returned list is mutable-independent and not shared state",
+        "file": "test_app.py",
+        "line": 8,
+        "evidence": "    assert first is not second",
+        "explanation": "The suite only checks that two calls yield distinct list objects and correct contents. It never verifies that mutating one returned list cannot affect another call's result, which is the actual shared-state risk a single-element list factory can introduce if a cached/default list is ever reused.",
+        "recommendation": "Add a test that mutates the first returned list and asserts a subsequent call still returns a pristine list.",
+        "suggested_test": "def test_mutating_result_does_not_affect_later_calls():\n    first = record_customer(\"A\")\n    first.append(\"X\")\n    assert record_customer(\"B\") == [\"B\"]"
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "low",
+            "title": "No validation of customer_id; None and arbitrary objects silently accepted",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    return [customer_id]",
+            "explanation": "record_customer accepts any value including None, empty strings, or unhashable objects and stores it without validation. Downstream consumers that use the ID as a key or identifier will fail later (e.g. TypeError/KeyError) far from the origin of the bad input, and the existing test explicitly locks in the permissive behavior (test_app.py:13 asserts record_customer(None) == [None]).",
+            "recommendation": "Add an explicit contract: reject None/empty IDs (raise ValueError) and document that the ID must be a non-empty, hashable identifier; update the test to assert the error instead of accepting None.",
+            "suggested_test": "def test_rejects_invalid_id():\n    with pytest.raises(ValueError):\n        record_customer(None)\n    with pytest.raises(ValueError):\n        record_customer(\"\")"
+          },
+          {
+            "severity": "info",
+            "title": "Missing test asserting the returned list is mutable-independent and not shared state",
+            "file": "test_app.py",
+            "line": 8,
+            "evidence": "    assert first is not second",
+            "explanation": "The suite only checks that two calls yield distinct list objects and correct contents. It never verifies that mutating one returned list cannot affect another call's result, which is the actual shared-state risk a single-element list factory can introduce if a cached/default list is ever reused.",
+            "recommendation": "Add a test that mutates the first returned list and asserts a subsequent call still returns a pristine list.",
+            "suggested_test": "def test_mutating_result_does_not_affect_later_calls():\n    first = record_customer(\"A\")\n    first.append(\"X\")\n    assert record_customer(\"B\") == [\"B\"]"
+          }
+        ],
+        "limitations": [
+          "Very small snapshot; only app.py and test_app.py were provided, so callers of record_customer and any surrounding modules could not be reviewed.",
+          "No runtime or test execution was possible; findings are based on static reading.",
+          "The nature of the intended contract for customer_id is not documented anywhere in the snapshot, so the severity of the validation gap is inferred."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 567,
+            "prompt_tokens": 1121,
+            "total_tokens": 1688,
+            "completion_tokens_details": {
+              "reasoning_tokens": 54
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 690
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 54
+            }
+          },
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 3.37
+        }
+      }
+    ],
+    "duration_seconds": 3.388
+  }
+}

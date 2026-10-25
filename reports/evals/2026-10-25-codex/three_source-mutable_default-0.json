@@ -1,0 +1,180 @@
+{
+  "variant": "three_source",
+  "case": "mutable_default",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 3,
+    "matched": 3,
+    "unmatched_indices": [],
+    "valid_citations": 3,
+    "severity_acceptable": 3,
+    "test_suggestion_present": 3,
+    "semantic_duplicate_excess": 2,
+    "complete": true,
+    "duration_seconds": 15.378,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "app.py"
+    ],
+    "counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 3,
+      "low": 0,
+      "info": 0
+    },
+    "findings": [
+      {
+        "severity": "medium",
+        "title": "Mutable default list shares customer IDs across requests",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+        "explanation": "The mutable default argument is created once and reused. Calling record_customer(1) followed by record_customer(2) without explicit lists returns [1, 2] on the second call, violating request isolation. The second call also mutates the list returned by the first call.",
+        "recommendation": "Use customer_ids=None and create a new list inside the function when the argument is None.",
+        "suggested_test": "Call record_customer(1) and then record_customer(2) without explicit lists. Assert the results are [1] and [2], respectively, and are distinct objects.",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Mutable default shares customer IDs across independent requests",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+        "explanation": "The default list is created once and reused by every call that omits customer_ids. Later requests receive earlier customer IDs, violating the documented isolation. Subsequent calls also mutate lists returned by earlier calls.",
+        "recommendation": "Default customer_ids to None and create a new list inside the function when it is None.",
+        "suggested_test": "Call first = record_customer('A'), then second = record_customer('B') without passing lists. Assert first == ['A'], second == ['B'], and first is not second.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Shared default list leaks customer IDs across independent requests",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+        "explanation": "Calls that omit customer_ids reuse the same list, so later requests receive IDs recorded by earlier requests. If this return value is exposed to callers, a caller can obtain other customers' IDs by invoking the function without an explicit list.",
+        "recommendation": "Default customer_ids to None and create a new list inside the function when it is None.",
+        "suggested_test": "Call record_customer('A') and then record_customer('B') without explicit lists. Assert the second result is ['B'] and the first remains ['A'].",
+        "agents": [
+          "security"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "medium",
+            "title": "Mutable default list shares customer IDs across requests",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+            "explanation": "The mutable default argument is created once and reused. Calling record_customer(1) followed by record_customer(2) without explicit lists returns [1, 2] on the second call, violating request isolation. The second call also mutates the list returned by the first call.",
+            "recommendation": "Use customer_ids=None and create a new list inside the function when the argument is None.",
+            "suggested_test": "Call record_customer(1) and then record_customer(2) without explicit lists. Assert the results are [1] and [2], respectively, and are distinct objects."
+          }
+        ],
+        "limitations": [
+          "Only the supplied function was reviewed; callers and surrounding request handling were not provided."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 15.319
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "medium",
+            "title": "Shared default list leaks customer IDs across independent requests",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+            "explanation": "Calls that omit customer_ids reuse the same list, so later requests receive IDs recorded by earlier requests. If this return value is exposed to callers, a caller can obtain other customers' IDs by invoking the function without an explicit list.",
+            "recommendation": "Default customer_ids to None and create a new list inside the function when it is None.",
+            "suggested_test": "Call record_customer('A') and then record_customer('B') without explicit lists. Assert the second result is ['B'] and the first remains ['A']."
+          }
+        ],
+        "limitations": [
+          "The snapshot contains no callers or response handling, so external exposure of the returned IDs cannot be confirmed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 10.657
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "medium",
+            "title": "Mutable default shares customer IDs across independent requests",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+            "explanation": "The default list is created once and reused by every call that omits customer_ids. Later requests receive earlier customer IDs, violating the documented isolation. Subsequent calls also mutate lists returned by earlier calls.",
+            "recommendation": "Default customer_ids to None and create a new list inside the function when it is None.",
+            "suggested_test": "Call first = record_customer('A'), then second = record_customer('B') without passing lists. Assert first == ['A'], second == ['B'], and first is not second."
+          }
+        ],
+        "limitations": [
+          "Only the supplied function was available; no tests or callers were supplied, and no code was executed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 10.658
+        }
+      }
+    ],
+    "actual_models": [
+      "gpt-6.1-sol"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "a4609f06-21e1-4bd0-9b13-20d37aeef602",
+    "started_at": "2026-10-25T06:38:07.117771+00:00",
+    "completed_at": "2026-10-25T06:38:22.495795+00:00",
+    "duration_seconds": 15.378,
+    "backend": "codex",
+    "repository": "/Users/krishnakumar/Documents/ChatGPT/Week2 - multi agent- Coding Agent/eval-fixture",
+    "snapshot_sha256": "b0e98105830998f18b6f23041e60675e2a1e67c02ad4dc79a450008e8f56c90b",
+    "snapshot_bytes": 177,
+    "requested_model": null,
+    "model": "gpt-6.1-sol"
+  }
+}

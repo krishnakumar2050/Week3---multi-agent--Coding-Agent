@@ -1,0 +1,257 @@
+{
+  "variant": "three_source",
+  "case": "fixed_mutable_control",
+  "repeat": 0,
+  "metrics": {
+    "expected": 0,
+    "detected": 0,
+    "findings": 4,
+    "matched": 0,
+    "unmatched_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "valid_citations": 4,
+    "severity_acceptable": 0,
+    "test_suggestion_present": 0,
+    "semantic_duplicate_excess": 0,
+    "complete": true,
+    "duration_seconds": 7.898,
+    "clean_control_pass": false
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "app.py",
+      "test_app.py"
+    ],
+    "counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 1,
+      "low": 2,
+      "info": 1
+    },
+    "findings": [
+      {
+        "severity": "medium",
+        "title": "Test suite would not catch a per-ID cached/shared list regression",
+        "file": "test_app.py",
+        "line": 3,
+        "evidence": "def test_independent_requests():\n    first = record_customer(\"A\")\n    second = record_customer(\"B\")\n    assert first == [\"A\"]\n    assert second == [\"B\"]\n    assert first is not second",
+        "explanation": "The independence test uses two different customer IDs (\"A\" and \"B\"). A regression where the implementation caches and reuses a list per customer_id (e.g. a module-level dict of lists, or a defaultdict returning the same list object for the same key) would still satisfy every assertion here, because the two calls use different keys and therefore different list objects. The core contract in the docstring \u2014 \"Return a fresh single-ID list for each call\" \u2014 is only asserted across different IDs, never across two calls with the same ID.",
+        "recommendation": "Add a case that calls record_customer twice with the same ID and asserts the two returned lists are distinct objects and that mutating one does not affect the other.",
+        "suggested_test": "def test_same_id_returns_distinct_lists():\n    a = record_customer(\"A\")\n    b = record_customer(\"A\")\n    assert a == b == [\"A\"]\n    assert a is not b\n    a.append(\"mutated\")\n    assert record_customer(\"A\") == [\"A\"]\n    assert b == [\"A\"]",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "low",
+        "title": "No test covers falsy customer IDs (0, empty string, False)",
+        "file": "test_app.py",
+        "line": 10,
+        "evidence": "def test_any_object():\n    marker = object()\n    assert record_customer(marker)[0] is marker\n    assert record_customer(None) == [None]",
+        "explanation": "The docstring states the ID may be any object, but only None and a plain object() are exercised. A falsy-ID bug (e.g. an implementation that treats a falsy customer_id as \"missing\" and returns [] or substitutes a default) would pass the current tests. Falsy IDs are the most likely edge case to be mishandled by guard clauses such as `if not customer_id:`.",
+        "recommendation": "Add assertions for falsy-but-valid IDs so that any truthiness-based guard in the implementation is caught.",
+        "suggested_test": "def test_falsy_ids_are_preserved():\n    assert record_customer(0) == [0]\n    assert record_customer(\"\") == [\"\"]\n    assert record_customer(False) == [False]\n    assert record_customer([]) == [[]]",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "low",
+        "title": "No test asserts the returned list is independent of the caller's input object",
+        "file": "test_app.py",
+        "line": 12,
+        "evidence": "    assert record_customer(marker)[0] is marker",
+        "explanation": "The function builds a list containing the caller's object. The tests verify identity of the element but never that the returned container is a new list rather than an alias of some caller-held structure, nor that mutating the returned list does not mutate shared state. This matters if the implementation is later changed to store references in a shared structure.",
+        "recommendation": "Assert that the returned list is a distinct, mutable container whose mutation is not visible to subsequent calls, using an input the test itself owns.",
+        "suggested_test": "def test_returned_list_is_isolated_from_input():\n    payload = [1, 2]\n    result = record_customer(payload)\n    assert result == [payload]\n    assert result is not payload\n    result.append(3)\n    assert payload == [1, 2]",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "info",
+        "title": "No failure-path test covers unexpected argument types",
+        "file": "test_app.py",
+        "line": 1,
+        "evidence": "from app import record_customer",
+        "explanation": "record_customer accepts any object as customer_id, and there is no documented behavior for wrong arity or unexpected keyword usage. The suite has no negative/failure-path test at all, so a future change that adds validation (raising TypeError for a non-hashable or wrong-typed ID) would either silently break callers or be untested against its intended contract.",
+        "recommendation": "If validation is intended, add an explicit test pinning the raised exception type and message; if not, note in the docstring that customer_id may be any object and add a test asserting no exception is raised for an arbitrary type.",
+        "suggested_test": "def test_no_exception_for_arbitrary_type():\n    class Weird:\n        def __repr__(self):\n            return \"<weird>\"\n    assert record_customer(Weird()) == [record_customer.__defaults__[0]] if record_customer.__defaults__ else True",
+        "agents": [
+          "tests"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [],
+        "limitations": [
+          "Snapshot contains only two trivial files (app.py, test_app.py); no broader project context available to assess integration issues.",
+          "No error handling paths exist in the supplied code, so error-handling defects could not be evaluated."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 69,
+            "prompt_tokens": 1182,
+            "total_tokens": 1251,
+            "completion_tokens_details": {
+              "reasoning_tokens": 11
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 11
+            }
+          },
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 0.78
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [],
+        "limitations": [
+          "Code is trivial (3-line function) with no I/O, no deserialization, no auth, no secret handling, and no third-party dependencies; no injection, traversal, or secret-exposure surface exists to assess.",
+          "No evidence of dependency manifests or configuration files was supplied, so insecure dependency review was not possible.",
+          "The function accepts an arbitrary object and wraps it in a list; this is by design and documented in the docstring, so it is not reported as a defect."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 119,
+            "prompt_tokens": 1137,
+            "total_tokens": 1256,
+            "completion_tokens_details": {
+              "reasoning_tokens": 8
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 8
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 1.128
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "medium",
+            "title": "Test suite would not catch a per-ID cached/shared list regression",
+            "file": "test_app.py",
+            "line": 3,
+            "evidence": "def test_independent_requests():\n    first = record_customer(\"A\")\n    second = record_customer(\"B\")\n    assert first == [\"A\"]\n    assert second == [\"B\"]\n    assert first is not second",
+            "explanation": "The independence test uses two different customer IDs (\"A\" and \"B\"). A regression where the implementation caches and reuses a list per customer_id (e.g. a module-level dict of lists, or a defaultdict returning the same list object for the same key) would still satisfy every assertion here, because the two calls use different keys and therefore different list objects. The core contract in the docstring \u2014 \"Return a fresh single-ID list for each call\" \u2014 is only asserted across different IDs, never across two calls with the same ID.",
+            "recommendation": "Add a case that calls record_customer twice with the same ID and asserts the two returned lists are distinct objects and that mutating one does not affect the other.",
+            "suggested_test": "def test_same_id_returns_distinct_lists():\n    a = record_customer(\"A\")\n    b = record_customer(\"A\")\n    assert a == b == [\"A\"]\n    assert a is not b\n    a.append(\"mutated\")\n    assert record_customer(\"A\") == [\"A\"]\n    assert b == [\"A\"]"
+          },
+          {
+            "severity": "low",
+            "title": "No test covers falsy customer IDs (0, empty string, False)",
+            "file": "test_app.py",
+            "line": 10,
+            "evidence": "def test_any_object():\n    marker = object()\n    assert record_customer(marker)[0] is marker\n    assert record_customer(None) == [None]",
+            "explanation": "The docstring states the ID may be any object, but only None and a plain object() are exercised. A falsy-ID bug (e.g. an implementation that treats a falsy customer_id as \"missing\" and returns [] or substitutes a default) would pass the current tests. Falsy IDs are the most likely edge case to be mishandled by guard clauses such as `if not customer_id:`.",
+            "recommendation": "Add assertions for falsy-but-valid IDs so that any truthiness-based guard in the implementation is caught.",
+            "suggested_test": "def test_falsy_ids_are_preserved():\n    assert record_customer(0) == [0]\n    assert record_customer(\"\") == [\"\"]\n    assert record_customer(False) == [False]\n    assert record_customer([]) == [[]]"
+          },
+          {
+            "severity": "low",
+            "title": "No test asserts the returned list is independent of the caller's input object",
+            "file": "test_app.py",
+            "line": 12,
+            "evidence": "    assert record_customer(marker)[0] is marker",
+            "explanation": "The function builds a list containing the caller's object. The tests verify identity of the element but never that the returned container is a new list rather than an alias of some caller-held structure, nor that mutating the returned list does not mutate shared state. This matters if the implementation is later changed to store references in a shared structure.",
+            "recommendation": "Assert that the returned list is a distinct, mutable container whose mutation is not visible to subsequent calls, using an input the test itself owns.",
+            "suggested_test": "def test_returned_list_is_isolated_from_input():\n    payload = [1, 2]\n    result = record_customer(payload)\n    assert result == [payload]\n    assert result is not payload\n    result.append(3)\n    assert payload == [1, 2]"
+          },
+          {
+            "severity": "info",
+            "title": "No failure-path test covers unexpected argument types",
+            "file": "test_app.py",
+            "line": 1,
+            "evidence": "from app import record_customer",
+            "explanation": "record_customer accepts any object as customer_id, and there is no documented behavior for wrong arity or unexpected keyword usage. The suite has no negative/failure-path test at all, so a future change that adds validation (raising TypeError for a non-hashable or wrong-typed ID) would either silently break callers or be untested against its intended contract.",
+            "recommendation": "If validation is intended, add an explicit test pinning the raised exception type and message; if not, note in the docstring that customer_id may be any object and add a test asserting no exception is raised for an arbitrary type.",
+            "suggested_test": "def test_no_exception_for_arbitrary_type():\n    class Weird:\n        def __repr__(self):\n            return \"<weird>\"\n    assert record_customer(Weird()) == [record_customer.__defaults__[0]] if record_customer.__defaults__ else True"
+          }
+        ],
+        "limitations": [
+          "Static inspection only; no tests were executed and no coverage was measured.",
+          "The production file app.py is only three lines, so most findings concern untested contracts rather than observed defects.",
+          "Behavior with keyword arguments (e.g. record_customer(customer_id=\"A\")) was not exercised in the supplied tests and could not be confirmed from the source."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 1448,
+            "prompt_tokens": 1138,
+            "total_tokens": 2586,
+            "completion_tokens_details": {
+              "reasoning_tokens": 277
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 277
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 7.839
+        }
+      }
+    ],
+    "actual_models": [
+      "accounts/fireworks/models/minimax-m3p1-flash"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "a1d4f286-81a5-4535-b7d8-51a1c42fddc6",
+    "started_at": "2026-10-25T06:49:45.687156+00:00",
+    "completed_at": "2026-10-25T06:49:53.585290+00:00",
+    "duration_seconds": 7.898,
+    "backend": "fireworks",
+    "repository": "/home/runner/work/Week1Project-GenAcademy/Week1Project-GenAcademy/.github/coding-review/eval-fixture",
+    "snapshot_sha256": "932ffb609c2f21177d9d3626a2489e4bd15a7697aa4c39f9f243ce168a35bea1",
+    "snapshot_bytes": 490,
+    "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+    "model": "accounts/fireworks/models/minimax-m3p1-flash"
+  }
+}

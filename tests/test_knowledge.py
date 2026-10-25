@@ -95,3 +95,11 @@ def test_swift_language_query(monkeypatch):
     _, metadata = enrich_quality({"App.swift": "import UIKit"}, client)
     assert metadata["status"] == "ok"
     assert len(client.queries) == 1 and client.queries[0].startswith("Swift ")
+
+
+def test_kotlin_language_query(monkeypatch):
+    monkeypatch.setenv("KEENABLE_ENABLED", "true")
+    client = Search()
+    _, metadata = enrich_quality({"Security.kt": "class Security"}, client)
+    assert metadata["status"] == "ok"
+    assert client.queries[0].startswith("Kotlin ")

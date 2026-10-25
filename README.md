@@ -9,9 +9,17 @@ Three specialist reviewers examine one bounded source snapshot: correctness and 
 
 ## Review reports
 
+- [Omni-Notes Android — comprehensive prioritized findings](reports/omni-notes/review-report-omni-notes.md)
+- [Omni-Notes — raw findings and execution provenance](reports/omni-notes/review-report-omni-notes.json)
 - [Expense Tracker mobile app — prioritized findings](reports/expense-tracker/review-report-expense-tracker.md)
 - [Expense Tracker — full three-agent report](reports/expense-tracker/review-report-expense-tracker-raw.md)
 - [Expense Tracker — JSON results and provenance](reports/expense-tracker/review-report-expense-tracker.json)
+
+## Architecture evaluations
+
+- [Fireworks MiniMax vs Codex: live evaluation comparison](reports/evals/2026-10-25-fireworks/comparison-report.md)
+- [Live comparison: single reviewer vs three agents with/without Keenable](reports/evals/2026-10-25-codex/evaluation-report.md)
+- [Evaluation harness, metrics, and repeat-run instructions](evals/README.md)
 
 ## Quick start
 
@@ -30,6 +38,8 @@ coding-review ./examples --format json --output review-report.json
 For this workspace, use `.venv313/bin/python -m coding_review` in place of `coding-review`. The previous `python -m coding_review.cli` entry point also works. The key must be exported in the same Terminal where you run the command; a `.env` file is not loaded automatically.
 
 The Fireworks adapter uses the documented `https://api.fireworks.ai/inference/v1` endpoint, JSON-schema responses, and the existing OpenAI-compatible SDK transport. It sends only `FIREWORKS_API_KEY` to Fireworks and does not use `OPENAI_API_KEY`, OpenAI endpoint settings, or Codex authentication. Requests have two provider retries. Truncated, empty, refused, invalid, or abnormal responses fail explicitly rather than becoming successful empty reviews. The completion budget is 32,768 tokens per specialist, including reasoning, with low reasoning effort to reserve room for the final JSON report. Requested and provider-reported model names are retained separately in reports.
+
+CLI reviews, Python service configuration, and all eval variants (single reviewer, three agents, and Keenable-enriched three agents) default to Fireworks. GitHub PR reviews also use Fireworks. Missing credentials cause an error; the application does not automatically switch to Codex. Keenable supplies search context rather than model inference.
 
 Override the model with `--model`, or set `FIREWORKS_MODEL` to a Fireworks model/deployment resource. Precedence is `--model`, then `FIREWORKS_MODEL`, then the MiniMax default. `REVIEW_MODEL` applies only to the OpenAI API backend.
 

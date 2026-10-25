@@ -1,0 +1,474 @@
+{
+  "variant": "three_keenable",
+  "case": "swift_amount_crash",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 12,
+    "matched": 10,
+    "unmatched_indices": [
+      5,
+      6
+    ],
+    "valid_citations": 12,
+    "severity_acceptable": 6,
+    "test_suggestion_present": 10,
+    "semantic_duplicate_excess": 9,
+    "complete": true,
+    "duration_seconds": 9.638,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "Amount.swift"
+    ],
+    "counts": {
+      "critical": 1,
+      "high": 3,
+      "medium": 5,
+      "low": 3,
+      "info": 0
+    },
+    "findings": [
+      {
+        "severity": "critical",
+        "title": "Force unwrap of `Double(text)` crashes on invalid input instead of returning an error",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "`Double.init?(_ text: String)` returns nil for any string it cannot parse (empty string, \"abc\", \"1,000\", \"12 34\", trailing garbage). Force-unwrapping that optional with `!` traps at runtime: the process crashes with \"Fatal error: Unexpectedly found nil while unwrapping an Optional value\". The function's own comment (line 4) states the input is arbitrary pasted text and that invalid amounts must produce an error, so the very case the function is meant to handle is the one that crashes the app. Any caller passing user-typed or pasted text can terminate the application, and since this is a non-throwing API the caller has no way to guard against it.",
+        "recommendation": "Make the failure explicit and recoverable: change the signature to `func parseAmount(_ text: String) throws -> Double` with a domain error type (e.g. `enum AmountParseError: Error { case empty, invalidFormat(String), notFinite }`), and use `guard let value = Double(text.trimmingCharacters(in: .whitespaces)) else { throw AmountParseError.invalidFormat(text) }`. Callers then decide how to surface the error (inline validation message, etc.) rather than the process aborting.",
+        "suggested_test": "Call `parseAmount(\"abc\")` and `parseAmount(\"\")` and assert that a domain error is thrown rather than the test process trapping; assert `parseAmount(\"12.50\") == 12.50` for the valid path.",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "severity": "high",
+        "title": "Function signature cannot express the error contract stated in its own comment",
+        "file": "Amount.swift",
+        "line": 4,
+        "evidence": "    // Input is arbitrary pasted text; invalid amounts must produce an error.\n    return Double(text)!",
+        "explanation": "The declared contract is `func parseAmount(_ text: String) -> Double` \u2014 a non-optional, non-throwing return. The comment requires invalid input to \"produce an error\", but the type signature makes that impossible; the only way the function currently signals failure is the implicit trap in the force unwrap on line 5. This is the classic \"error handling absent from the API\" anti-pattern: the error becomes a crash instead of a value the caller can handle, and every caller must either pre-validate the string itself (duplicating the parsing rule in N places) or inherit the crash.",
+        "recommendation": "Encode the contract in the type: `func parseAmount(_ text: String) throws -> Double` (or return `Double?` plus a separate `Result` variant if the codebase prefers value-style errors). Then implement the parse with `guard`/`if let` and throw a descriptive error. If a non-throwing API is required for the call site, provide both: a throwing `parseAmount(_:)` and a convenience `parseAmountOrNil(_:)` that maps the error to nil without losing the reason.",
+        "suggested_test": "Compile-time check that the function can be called with `try` and that its error type is catchable as `AmountParseError`; verify the non-throwing variant, if added, returns nil for \"abc\".",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "severity": "high",
+        "title": "Force unwrap crashes on invalid pasted amount instead of producing an error",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "The function's own contract states that invalid amounts must produce an error, but the implementation force-unwraps `Double(text)`. Any non-numeric input (empty string, \"abc\", \"1,000\", \"12.3.4\") makes `Double(text)` return nil and the force unwrap traps, crashing the app. The function signature also returns a bare `Double` with no `throws`/error channel, so callers cannot handle failure even if it were made safe.",
+        "recommendation": "Change the signature to `func parseAmount(_ text: String) throws -> Double` (or return `Double?`) and avoid force unwrapping. Validate the input first (trim whitespace, reject empty strings) and throw a descriptive error such as `AmountError.invalidAmount(text)`.",
+        "suggested_test": "Table-driven test over inputs [\"\", \"   \", \"abc\", \"1,000\", \"12.3.4\", \"--5\"] asserting that each throws (or returns nil) rather than trapping. A regression test should also assert that a process-level trap is not reachable: e.g. `XCTAssertThrowsError(try parseAmount(\"abc\"))`.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "high",
+        "title": "Force-unwrapping Double(text) crashes on arbitrary pasted input",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "The function's own contract (comment on line 4) states the input is arbitrary pasted text and that invalid amounts must produce an error, but `Double(text)!` force-unwraps the optional. Any non-numeric, empty, or locale-mismatched string (e.g. \"\", \"abc\", \"1,000\", \"12 USD\", \"--5\") yields nil and triggers a precondition failure, terminating the process. This is an unhandled-input crash reachable from user-pasted content, i.e. a denial-of-service / crash bug rather than the specified error path.",
+        "recommendation": "Return an optional or a Result: `func parseAmount(_ text: String) -> Double? { return Double(text.trimmingCharacters(in: .whitespaces)) }`, or throw a typed error (`enum AmountError: Error { case invalidAmount(String) }`) and surface it to the caller instead of trapping.",
+        "suggested_test": "Call parseAmount(\"not a number\") and parseAmount(\"\") and assert the function returns nil / throws AmountError.invalidAmount rather than trapping; the test process should complete normally.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "No tests supplied for the only public parsing function",
+        "file": "Amount.swift",
+        "line": 3,
+        "evidence": "func parseAmount(_ text: String) -> Double {",
+        "explanation": "The snapshot contains no test target or test file for `parseAmount`, which is the sole entry point of this module and the place where the crash and NaN/infinity defects live. There is no evidence of coverage for valid inputs, invalid inputs, or edge-case literals.",
+        "recommendation": "Add a unit test file (e.g. `AmountTests.swift`) covering: valid integers, valid decimals, negative values, zero, leading/trailing whitespace, empty string, non-numeric text, thousands separators, and the special literals nan/inf, asserting both success values and thrown errors.",
+        "suggested_test": "A table-driven XCTest: for input \"42\" expect 42.0; for \"3.14\" expect 3.14; for \"0\" expect 0.0; for each invalid input assert `XCTAssertThrowsError` and that the thrown error equals a specific `AmountError.invalidAmount` case.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Double(text) accepts \"nan\" and \"inf\", allowing non-finite amounts to propagate",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "Swift's `Double(String)` initializer accepts the special strings \"nan\", \"inf\", \"-inf\", and \"infinity\". Since the text is arbitrary pasted user input, a pasted value of \"nan\" parses successfully and returns a NaN, and \"inf\" returns infinity. NaN propagates silently through any arithmetic (NaN + x = NaN, comparisons are always false), so totals or validation checks downstream can become meaningless or bypassed, while infinity can overflow later arithmetic or corrupt display/serialization (e.g. JSON encoding of non-conforming values).",
+        "recommendation": "After parsing, validate finiteness and reject non-numeric/overflow input, e.g. `guard let value = Double(text), value.isFinite else { throw AmountError.invalidAmount(text) }`. If NaN/inf are meaningful, require an explicit separate parser path.",
+        "suggested_test": "parseAmount(\"nan\") and parseAmount(\"inf\") should both fail with an invalid-amount error; parseAmount(\"-1.50\") should succeed and return -1.5.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Parser accepts NaN and infinity, yielding non-usable monetary values",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "Swift's `Double(String)` initializer accepts the special literals \"nan\", \"NaN\", \"inf\", \"infinity\", and \"-infinity\". Because the parsed value is returned unchecked, a pasted amount of \"nan\" produces NaN and \"inf\" produces infinity, both of which silently propagate into arithmetic and formatting instead of being rejected as invalid amounts.",
+        "recommendation": "After converting, reject non-finite values (`value.isFinite`) and throw an invalid-amount error; optionally reject values that are negative if only positive amounts are valid.",
+        "suggested_test": "Assert that parsing \"nan\", \"NaN\", \"inf\", \"-inf\", and \"infinity\" throws (or returns nil), and that a valid value such as \"1234.56\" returns exactly 1234.56.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Whitespace-only and whitespace-padded input behavior is undefined and untested",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "`Double(\"   \")` returns nil and crashes, while `Double(\" 12.5 \")` succeeds because the initializer trims whitespace. This inconsistency between blank input and padded input is exactly the kind of edge case a pasted-text field hits, and no test documents which behavior is intended.",
+        "recommendation": "Normalize the input explicitly (trim whitespace and newlines) before conversion, then reject the trimmed-empty case with a clear error rather than relying on the initializer's implicit behavior.",
+        "suggested_test": "Assert `parseAmount(\"   \")` throws with an empty/invalid-input error, and that `parseAmount(\" 12.5 \")` (and \"12.5\\n\") returns 12.5.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "`Double(_:)` accepts non-finite values such as \"nan\" and \"inf\", silently producing invalid amounts",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "Swift's `Double(String)` initializer accepts the special literals \"nan\", \"inf\", \"-infinity\" and also overflows to infinity for very large exponents (e.g. \"1e400\" -> +infinity). These parse successfully, so the force unwrap does not catch them and the function returns a non-finite amount. Any downstream arithmetic (totals, comparisons, formatting) with NaN propagates silently: comparisons against NaN are always false, and a sum containing NaN becomes NaN, which can corrupt totals without any error being raised. This defeats the stated purpose of validating pasted amount text.",
+        "recommendation": "After parsing, validate finiteness before returning: `guard value.isFinite else { throw AmountParseError.notFinite }` (and reject empty strings explicitly). Additionally consider rejecting locale-mismatched thousands separators, since `Double(\"1,000\")` is nil while `Double(\"1000\")` is not, causing the two to be treated inconsistently.",
+        "suggested_test": "Assert that `parseAmount(\"nan\")`, `parseAmount(\"inf\")` and `parseAmount(\"1e400\")` throw a non-finite error rather than returning a value, and that `parseAmount(\"1000\")` succeeds.",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "severity": "low",
+        "title": "No documented behavior for out-of-range and locale-formatted numeric strings",
+        "file": "Amount.swift",
+        "line": 4,
+        "evidence": "    // Input is arbitrary pasted text; invalid amounts must produce an error.",
+        "explanation": "The comment states the requirement but leaves open whether values like \"1e400\" (overflow to infinity) or locale-formatted \"1.234,56\" are valid. `Double(\"1e400\")` yields infinity and `Double(\"1.234,56\")` is nil, so these inputs currently trap or produce unusable values depending on shape.",
+        "recommendation": "Define and document the accepted grammar (e.g. optional sign, digits, optional single '.' with digits) and either parse with a strict scanner/number formatter or validate against a regex before conversion, then throw a specific error for non-matching input.",
+        "suggested_test": "Assert documented outcomes for \"1e400\", \"1e5\", \"+7\", \".5\", \"5.\", and \"1.234,56\", asserting either the exact parsed value or a thrown error.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "low",
+        "title": "No trimming or locale-safe handling of pasted amounts",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "`Double(String)` uses the POSIX/C locale and does not tolerate surrounding whitespace or thousands separators in user-pasted text such as \" $1,234.56 \" or \"1 234,56\". Combined with the force unwrap, realistic pasted inputs crash the app, and the accepted number format may differ from the user's locale expectation, causing silent misinterpretation of amounts (e.g. \"1,5\" not parsing, or a comma-decimal value being rejected).",
+        "recommendation": "Trim whitespace and newlines before parsing, and either use a NumberFormatter with an explicit locale or reject locale-ambiguous formats with a clear error message.",
+        "suggested_test": "parseAmount(\" 12.50 \\n\") should return 12.5; parseAmount(\"1,234.56\") should either parse deterministically with a documented locale or return an explicit invalid-amount error rather than crashing.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "low",
+        "title": "Untrimmed whitespace makes valid pasted amounts fail to parse",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "`Double(_:)` requires the whole string to be a valid number and does not tolerate surrounding whitespace, so pasted values such as `\" 12.50 \"` or `\"$12.50\"` return nil and, via the force unwrap, crash the app. Since the documented input source is arbitrary pasted text, whitespace and common currency decoration are the most likely real-world inputs, making the crash path far more reachable than it appears.",
+        "recommendation": "Normalize the input before parsing, e.g. `let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)` and strip a leading currency symbol/currency-code prefix explicitly, then parse the cleaned value and throw a descriptive error if it still fails.",
+        "suggested_test": "Assert `parseAmount(\" 12.50 \")` yields 12.50 (or a documented normalization result) and that `\"$12.50\"` throws a clear invalid-format error instead of trapping.",
+        "agents": [
+          "quality"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "critical",
+            "title": "Force unwrap of `Double(text)` crashes on invalid input instead of returning an error",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "`Double.init?(_ text: String)` returns nil for any string it cannot parse (empty string, \"abc\", \"1,000\", \"12 34\", trailing garbage). Force-unwrapping that optional with `!` traps at runtime: the process crashes with \"Fatal error: Unexpectedly found nil while unwrapping an Optional value\". The function's own comment (line 4) states the input is arbitrary pasted text and that invalid amounts must produce an error, so the very case the function is meant to handle is the one that crashes the app. Any caller passing user-typed or pasted text can terminate the application, and since this is a non-throwing API the caller has no way to guard against it.",
+            "recommendation": "Make the failure explicit and recoverable: change the signature to `func parseAmount(_ text: String) throws -> Double` with a domain error type (e.g. `enum AmountParseError: Error { case empty, invalidFormat(String), notFinite }`), and use `guard let value = Double(text.trimmingCharacters(in: .whitespaces)) else { throw AmountParseError.invalidFormat(text) }`. Callers then decide how to surface the error (inline validation message, etc.) rather than the process aborting.",
+            "suggested_test": "Call `parseAmount(\"abc\")` and `parseAmount(\"\")` and assert that a domain error is thrown rather than the test process trapping; assert `parseAmount(\"12.50\") == 12.50` for the valid path."
+          },
+          {
+            "severity": "high",
+            "title": "Function signature cannot express the error contract stated in its own comment",
+            "file": "Amount.swift",
+            "line": 4,
+            "evidence": "    // Input is arbitrary pasted text; invalid amounts must produce an error.\n    return Double(text)!",
+            "explanation": "The declared contract is `func parseAmount(_ text: String) -> Double` \u2014 a non-optional, non-throwing return. The comment requires invalid input to \"produce an error\", but the type signature makes that impossible; the only way the function currently signals failure is the implicit trap in the force unwrap on line 5. This is the classic \"error handling absent from the API\" anti-pattern: the error becomes a crash instead of a value the caller can handle, and every caller must either pre-validate the string itself (duplicating the parsing rule in N places) or inherit the crash.",
+            "recommendation": "Encode the contract in the type: `func parseAmount(_ text: String) throws -> Double` (or return `Double?` plus a separate `Result` variant if the codebase prefers value-style errors). Then implement the parse with `guard`/`if let` and throw a descriptive error. If a non-throwing API is required for the call site, provide both: a throwing `parseAmount(_:)` and a convenience `parseAmountOrNil(_:)` that maps the error to nil without losing the reason.",
+            "suggested_test": "Compile-time check that the function can be called with `try` and that its error type is catchable as `AmountParseError`; verify the non-throwing variant, if added, returns nil for \"abc\"."
+          },
+          {
+            "severity": "medium",
+            "title": "`Double(_:)` accepts non-finite values such as \"nan\" and \"inf\", silently producing invalid amounts",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "Swift's `Double(String)` initializer accepts the special literals \"nan\", \"inf\", \"-infinity\" and also overflows to infinity for very large exponents (e.g. \"1e400\" -> +infinity). These parse successfully, so the force unwrap does not catch them and the function returns a non-finite amount. Any downstream arithmetic (totals, comparisons, formatting) with NaN propagates silently: comparisons against NaN are always false, and a sum containing NaN becomes NaN, which can corrupt totals without any error being raised. This defeats the stated purpose of validating pasted amount text.",
+            "recommendation": "After parsing, validate finiteness before returning: `guard value.isFinite else { throw AmountParseError.notFinite }` (and reject empty strings explicitly). Additionally consider rejecting locale-mismatched thousands separators, since `Double(\"1,000\")` is nil while `Double(\"1000\")` is not, causing the two to be treated inconsistently.",
+            "suggested_test": "Assert that `parseAmount(\"nan\")`, `parseAmount(\"inf\")` and `parseAmount(\"1e400\")` throw a non-finite error rather than returning a value, and that `parseAmount(\"1000\")` succeeds."
+          },
+          {
+            "severity": "low",
+            "title": "Untrimmed whitespace makes valid pasted amounts fail to parse",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "`Double(_:)` requires the whole string to be a valid number and does not tolerate surrounding whitespace, so pasted values such as `\" 12.50 \"` or `\"$12.50\"` return nil and, via the force unwrap, crash the app. Since the documented input source is arbitrary pasted text, whitespace and common currency decoration are the most likely real-world inputs, making the crash path far more reachable than it appears.",
+            "recommendation": "Normalize the input before parsing, e.g. `let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)` and strip a leading currency symbol/currency-code prefix explicitly, then parse the cleaned value and throw a descriptive error if it still fails.",
+            "suggested_test": "Assert `parseAmount(\" 12.50 \")` yields 12.50 (or a documented normalization result) and that `\"$12.50\"` throws a clear invalid-format error instead of trapping."
+          }
+        ],
+        "limitations": [
+          "Only the single 6-line file `Amount.swift` was supplied; no call sites, tests, or surrounding types were available, so the frequency of invalid input and the impact of a trap on the host app could not be assessed.",
+          "The exact intended API shape (throwing vs. optional return, error enum naming) cannot be determined without seeing the rest of the module.",
+          "Findings rely on standard Swift Foundation behavior for `Double.init?(_: String)`; no build or test execution was possible in this review."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 1593,
+            "prompt_tokens": 3249,
+            "total_tokens": 4842,
+            "completion_tokens_details": {
+              "reasoning_tokens": 154
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 972
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 154
+            }
+          },
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "ok",
+            "sources": [
+              {
+                "title": "skills/skills/write-swift/SKILL.md at main \u00b7 emilkowalski/skills",
+                "url": "https://github.com/emilkowalski/skills/blob/main/skills/write-swift/SKILL.md",
+                "snippet": "- **Default to `struct` and `enum`. Use `class` only for identity, shared mutable state, inheritance, or resource lifetime.** A window, a database connection, an entity stored in a rendering engine \u2014 those have identity. A `Point`, a `Drink`, a `Material` does not.\n- **`let` by default; `var` only when you mutate.** This is the same discipline as `some` before `any` and value before reference: start narrow, widen with cause.\n- **A struct with a mutable reference-type property is neither a value nor a reference.** Copies share the object; mutations leak across copies. Either keep the referenced type immutable, expose only computed properties that forward to it, or make it a `private` stored property behind copy-on-write.\n- **Copy-on-write is how you get out-of-line storage *and* value semantics.** Wrap a final class in a struct and check `isKnownUniquelyReferenced(&storage)` before mutating; copy first if it isn't. This is exactly how `Array`, `String`, and `Dictionary` work.\n- **Enums are the tool for \"a fixed set of things\" and for mutually exclusive state.** Replacing a pile of optional stored properties (`isSharing`, `selectedRows`, `shareTarget`) with one `enum State` makes inv"
+              },
+              {
+                "title": "code-review-skill/reference/swift.md at 4850184dfd7765ea7b3c5c4e9b6cf8e0815ee7cb \u00b7 awesome-skills/code-review-skill",
+                "url": "https://github.com/awesome-skills/code-review-skill/blob/HEAD/reference/swift.md",
+                "snippet": "```\n// \u2705 Use a struct for data/models with value semantics\nstruct Coordinate {\nvar latitude: Double\nvar longitude: Double\n}\n// Copies are independent; no shared mutable state, thread-friendly.\nvar a = Coordinate(latitude: 1, longitude: 2)\nvar b = a\nb.latitude = 99   // a is unchanged\n```\n\n```\n// \u274c Wrong: try! crashes on any thrown error\nlet data = try! Data(contentsOf: url)\n// \u274c Often wrong: try? silently discards the error and the cause\nlet data = try? Data(contentsOf: url)   // data is nil, you lose \"why\"\n// \u2705 Correct: propagate or handle with do-catch\ndo {\nlet data = try Data(contentsOf: url)\nprocess(data)\n} catch {\nlog.error(\"failed to read \\(url): \\(error)\")\n}\n```\n\n```\n// \u274c Wrong: callback pyramid, error handling scattered\nfunc loadProfile(completion: @escaping (Result<Profile, Error>) -> Void) {\nfetchUser { userResult in\nswitch userResult {\ncase .success(let user):\nfetchAvatar(user) { avatarResult in /* ... */ }\ncase .failure(let error):\ncompletion(.failure(error))\n}\n}\n}\n// \u2705 Correct: linear async/await\nfunc loadProfile() async throws -> Profile {\nlet user = try await fetchUser()\nlet avatar = try await fetchAvatar(user)\nreturn Profile(user: user, avatar: avatar)\n}\n```\n\n### 5."
+              },
+              {
+                "title": "claude-code-ios-plugin/skills/code-review-checklist/SKILL.md at main \u00b7 arimunandar/claude-code-ios-plugin",
+                "url": "https://github.com/arimunandar/claude-code-ios-plugin/blob/main/skills/code-review-checklist/SKILL.md",
+                "snippet": "### VIP+W Pattern\n```\n\u2705 CORRECT                          \u274c INCORRECT\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nViewController only displays        ViewController has business logic\nInteractor orchestrates logic       Interactor makes API calls directly\nWorker handles async operations     Worker knows about Presenter\nPresenter formats for display       Presenter has business logic\nRouter handles navigation           Navigation in ViewController\n```\n**Review Questions:**\n- Does ViewController only call `interactor?.methodName(request:)`?\n- Does Interactor delegate async work to Worker?\n- Does Presenter only format data, no business logic?\n- Is navigation handled by Router only?\n- Are all dependencies injected via Configurator?\n\n```\n// \u274c RETAIN CYCLE\nbutton.onTap = {\nself.handleTap()  // Strong capture\n}\n// \u2705 FIXED\nbutton.onTap = { [weak self] in\nself?.handleTap()\n}\n```\n**Checklist:**\n- Closures use `[weak self]` or `[unowned self]`\n- Delegates are `weak`\n- Timers are invalidated in `deinit`\n- NotificationCenter observers removed\n- No circular references between objects\n\n```\n// \u2705 GOOD - Actor for shared mutable state\nactor UserCache {\nprivate var cache: [String: Us"
+              },
+              {
+                "title": "Swift-6-Agent-Skill/swift-6-agent-skill/SKILL.md at 307e013374525ec75debb55d8936e7d40ef7709f \u00b7 pchelnikov/Swift-6-Agent-Skill",
+                "url": "https://github.com/pchelnikov/Swift-6-Agent-Skill/blob/307e013374525ec75debb55d8936e7d40ef7709f/swift-6-agent-skill/SKILL.md",
+                "snippet": "- Check for deprecated or outdated patterns against the Quick Reference table below\n- Audit concurrency safety: global variables, actor isolation, Sendable conformance (see `references/SWIFT_6_0.md`)\n- Verify `@MainActor` annotations are explicit where needed post-SE-0401\n- Check import visibility: transitive imports should be explicit (SE-0444, see `references/SWIFT_6_1.md`)\n- Look for unnecessary `@unchecked Sendable` \u2014 compiler region analysis (SE-0414) may make them redundant\n- Verify test code uses Swift Testing patterns, not legacy XCTest (see Testing)\n\n- **Use `Mutex` for shared mutable state** \u2014 prefer `Mutex` from the Synchronization library over `NSLock` or `os_unfair_lock`. Use `Atomic` for simple lock-free flags and counters (SE-0433, SE-0410).\n\n### Error Handling\n- **Prefer typed throws for constrained domains** where the error set is fixed and known (internal modules, embedded Swift). Use untyped `throws` for public library APIs to preserve flexibility (SE-0413).\n- **Leverage typed throws in generic contexts** \u2014 `throws(E)` enables `throws(Never)` inference for non-throwing closures, eliminating unnecessary do/catch.\n\n### Concurrency Safety\n- No bare mutable global va"
+              },
+              {
+                "title": "ECC/agents/swift-reviewer.md at 1a2cd81ed34cbb6fc826eafeb23eea27234c664e \u00b7 affaan-m/ECC",
+                "url": "https://github.com/affaan-m/ECC/blob/1a2cd81ed34cbb6fc826eafeb23eea27234c664e/agents/swift-reviewer.md",
+                "snippet": "### CRITICAL - Error Handling\n- **Silenced errors**: Empty `catch {}` blocks or `try?` discarding meaningful errors\n- **Missing error context**: Rethrowing without wrapping in a domain-specific error\n- **`fatalError()` for recoverable conditions**: Use `throw` for errors that callers can handle\n- **`assert` for required invariants**: `assert` is stripped in release builds (debug-only) - use `precondition` when the check must hold in release, or `throw` for public API boundaries\n- **`precondition` / `fatalError` in library code**: `precondition` crashes in both debug and release; `fatalError` crashes unconditionally in all builds - use `throw` for recoverable errors at public API boundaries\n### HIGH - Concurrency\n- **Data races**: Mutable shared state without actor isolation or synchronization\n- **`@Sendable` violations**: Non-`Sendable` types crossing isolation boundaries\n- **Blocking the main actor**: Synchronous I/O or `Thread.sleep` on `@MainActor` - use `Task.sleep` and async I/O\n- **Unstructured `Task {}` without cancellation**: Fire-and-forget tasks leaking - use structured concurrency (`async let`, `TaskGroup`)\n- **Actor reentrancy issues**: Assumptions about state consisten"
+              },
+              {
+                "title": "GitHub - Fueled/swift-style-guide: Official Swift language style guide used at Fueled (Swift 6, language rules only).",
+                "url": "https://github.com/fueled/swift-style-guide",
+                "snippet": "### Safety\nCode is written to **prevent incorrect behavior by construction** rather than relying on discipline or conventions.\n- Prefer language features that eliminate entire classes of bugs\n- Make invalid states unrepresentable\n- Avoid unsafe constructs even when they appear convenient\n- Fail early and explicitly when assumptions are violated\nSafety principles include:\n- Avoiding force unwraps and force casts\n- Favoring `guard` and explicit error handling\n- Using strong typing to prevent misuse\n- Treating concurrency and shared state as safety concerns\nSafety takes precedence over performance and brevity unless there is a clear, measured reason to trade it off.\n\n## Error Handling\nError handling must be **explicit, intentional, and type-driven**.\nErrors are part of the API contract and must be designed, documented, and propagated deliberately.\n---\n### Error Types\n- Define errors as concrete `enum` types conforming to `Error`\n- Error cases must be descriptive and domain-specific\n- Avoid throwing opaque or generic errors without context\n```\nenum NetworkError : Error { case offline case unauthorized case timeout }\n```\n```\n// AVOID: No defined error domain func fetchData ( ) throws ->"
+              }
+            ],
+            "queries": [
+              "Swift code review anti-patterns error handling mutable state resource management official documentation"
+            ]
+          },
+          "citation_corrections": [],
+          "duration_seconds": 9.61
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Force-unwrapping Double(text) crashes on arbitrary pasted input",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "The function's own contract (comment on line 4) states the input is arbitrary pasted text and that invalid amounts must produce an error, but `Double(text)!` force-unwraps the optional. Any non-numeric, empty, or locale-mismatched string (e.g. \"\", \"abc\", \"1,000\", \"12 USD\", \"--5\") yields nil and triggers a precondition failure, terminating the process. This is an unhandled-input crash reachable from user-pasted content, i.e. a denial-of-service / crash bug rather than the specified error path.",
+            "recommendation": "Return an optional or a Result: `func parseAmount(_ text: String) -> Double? { return Double(text.trimmingCharacters(in: .whitespaces)) }`, or throw a typed error (`enum AmountError: Error { case invalidAmount(String) }`) and surface it to the caller instead of trapping.",
+            "suggested_test": "Call parseAmount(\"not a number\") and parseAmount(\"\") and assert the function returns nil / throws AmountError.invalidAmount rather than trapping; the test process should complete normally."
+          },
+          {
+            "severity": "medium",
+            "title": "Double(text) accepts \"nan\" and \"inf\", allowing non-finite amounts to propagate",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "Swift's `Double(String)` initializer accepts the special strings \"nan\", \"inf\", \"-inf\", and \"infinity\". Since the text is arbitrary pasted user input, a pasted value of \"nan\" parses successfully and returns a NaN, and \"inf\" returns infinity. NaN propagates silently through any arithmetic (NaN + x = NaN, comparisons are always false), so totals or validation checks downstream can become meaningless or bypassed, while infinity can overflow later arithmetic or corrupt display/serialization (e.g. JSON encoding of non-conforming values).",
+            "recommendation": "After parsing, validate finiteness and reject non-numeric/overflow input, e.g. `guard let value = Double(text), value.isFinite else { throw AmountError.invalidAmount(text) }`. If NaN/inf are meaningful, require an explicit separate parser path.",
+            "suggested_test": "parseAmount(\"nan\") and parseAmount(\"inf\") should both fail with an invalid-amount error; parseAmount(\"-1.50\") should succeed and return -1.5."
+          },
+          {
+            "severity": "low",
+            "title": "No trimming or locale-safe handling of pasted amounts",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "`Double(String)` uses the POSIX/C locale and does not tolerate surrounding whitespace or thousands separators in user-pasted text such as \" $1,234.56 \" or \"1 234,56\". Combined with the force unwrap, realistic pasted inputs crash the app, and the accepted number format may differ from the user's locale expectation, causing silent misinterpretation of amounts (e.g. \"1,5\" not parsing, or a comma-decimal value being rejected).",
+            "recommendation": "Trim whitespace and newlines before parsing, and either use a NumberFormatter with an explicit locale or reject locale-ambiguous formats with a clear error message.",
+            "suggested_test": "parseAmount(\" 12.50 \\n\") should return 12.5; parseAmount(\"1,234.56\") should either parse deterministically with a documented locale or return an explicit invalid-amount error rather than crashing."
+          }
+        ],
+        "limitations": [
+          "Only a single 6-line file was provided; the callers of parseAmount are unknown, so the actual crash reachability and the impact of NaN/inf propagation cannot be confirmed from this snapshot.",
+          "No evidence of how pasted text reaches this function, so the input is assumed to be user-controlled per the in-code comment but not verified.",
+          "Uncertainty about intended Swift API contract (throwing vs optional) cannot be resolved from the snapshot."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 961,
+            "prompt_tokens": 934,
+            "total_tokens": 1895,
+            "completion_tokens_details": {
+              "reasoning_tokens": 90
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 933
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 90
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 6.155
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Force unwrap crashes on invalid pasted amount instead of producing an error",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "The function's own contract states that invalid amounts must produce an error, but the implementation force-unwraps `Double(text)`. Any non-numeric input (empty string, \"abc\", \"1,000\", \"12.3.4\") makes `Double(text)` return nil and the force unwrap traps, crashing the app. The function signature also returns a bare `Double` with no `throws`/error channel, so callers cannot handle failure even if it were made safe.",
+            "recommendation": "Change the signature to `func parseAmount(_ text: String) throws -> Double` (or return `Double?`) and avoid force unwrapping. Validate the input first (trim whitespace, reject empty strings) and throw a descriptive error such as `AmountError.invalidAmount(text)`.",
+            "suggested_test": "Table-driven test over inputs [\"\", \"   \", \"abc\", \"1,000\", \"12.3.4\", \"--5\"] asserting that each throws (or returns nil) rather than trapping. A regression test should also assert that a process-level trap is not reachable: e.g. `XCTAssertThrowsError(try parseAmount(\"abc\"))`."
+          },
+          {
+            "severity": "medium",
+            "title": "Parser accepts NaN and infinity, yielding non-usable monetary values",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "Swift's `Double(String)` initializer accepts the special literals \"nan\", \"NaN\", \"inf\", \"infinity\", and \"-infinity\". Because the parsed value is returned unchecked, a pasted amount of \"nan\" produces NaN and \"inf\" produces infinity, both of which silently propagate into arithmetic and formatting instead of being rejected as invalid amounts.",
+            "recommendation": "After converting, reject non-finite values (`value.isFinite`) and throw an invalid-amount error; optionally reject values that are negative if only positive amounts are valid.",
+            "suggested_test": "Assert that parsing \"nan\", \"NaN\", \"inf\", \"-inf\", and \"infinity\" throws (or returns nil), and that a valid value such as \"1234.56\" returns exactly 1234.56."
+          },
+          {
+            "severity": "medium",
+            "title": "Whitespace-only and whitespace-padded input behavior is undefined and untested",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "`Double(\"   \")` returns nil and crashes, while `Double(\" 12.5 \")` succeeds because the initializer trims whitespace. This inconsistency between blank input and padded input is exactly the kind of edge case a pasted-text field hits, and no test documents which behavior is intended.",
+            "recommendation": "Normalize the input explicitly (trim whitespace and newlines) before conversion, then reject the trimmed-empty case with a clear error rather than relying on the initializer's implicit behavior.",
+            "suggested_test": "Assert `parseAmount(\"   \")` throws with an empty/invalid-input error, and that `parseAmount(\" 12.5 \")` (and \"12.5\\n\") returns 12.5."
+          },
+          {
+            "severity": "medium",
+            "title": "No tests supplied for the only public parsing function",
+            "file": "Amount.swift",
+            "line": 3,
+            "evidence": "func parseAmount(_ text: String) -> Double {",
+            "explanation": "The snapshot contains no test target or test file for `parseAmount`, which is the sole entry point of this module and the place where the crash and NaN/infinity defects live. There is no evidence of coverage for valid inputs, invalid inputs, or edge-case literals.",
+            "recommendation": "Add a unit test file (e.g. `AmountTests.swift`) covering: valid integers, valid decimals, negative values, zero, leading/trailing whitespace, empty string, non-numeric text, thousands separators, and the special literals nan/inf, asserting both success values and thrown errors.",
+            "suggested_test": "A table-driven XCTest: for input \"42\" expect 42.0; for \"3.14\" expect 3.14; for \"0\" expect 0.0; for each invalid input assert `XCTAssertThrowsError` and that the thrown error equals a specific `AmountError.invalidAmount` case."
+          },
+          {
+            "severity": "low",
+            "title": "No documented behavior for out-of-range and locale-formatted numeric strings",
+            "file": "Amount.swift",
+            "line": 4,
+            "evidence": "    // Input is arbitrary pasted text; invalid amounts must produce an error.",
+            "explanation": "The comment states the requirement but leaves open whether values like \"1e400\" (overflow to infinity) or locale-formatted \"1.234,56\" are valid. `Double(\"1e400\")` yields infinity and `Double(\"1.234,56\")` is nil, so these inputs currently trap or produce unusable values depending on shape.",
+            "recommendation": "Define and document the accepted grammar (e.g. optional sign, digits, optional single '.' with digits) and either parse with a strict scanner/number formatter or validate against a regex before conversion, then throw a specific error for non-matching input.",
+            "suggested_test": "Assert documented outcomes for \"1e400\", \"1e5\", \"+7\", \".5\", \"5.\", and \"1.234,56\", asserting either the exact parsed value or a thrown error."
+          }
+        ],
+        "limitations": [
+          "Only `Amount.swift` (6 lines) was supplied; the surrounding module, call sites, and error types were not visible, so it is unknown whether callers already pre-validate input or how the returned value is used downstream.",
+          "No test files or test target were provided in the snapshot, so coverage could not be inspected; the absence of tests is inferred from the supplied content only.",
+          "No runtime execution was possible, so the exact behavior of `Double(String)` for each input was reasoned from documented Swift semantics rather than observed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 1417,
+            "prompt_tokens": 935,
+            "total_tokens": 2352,
+            "completion_tokens_details": {
+              "reasoning_tokens": 137
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 934
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 137
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 8.573
+        }
+      }
+    ],
+    "actual_models": [
+      "accounts/fireworks/models/minimax-m3p1-flash"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "a94ab50a-88b3-467c-8a71-24ae5e625e1c",
+    "started_at": "2026-10-25T06:50:55.908681+00:00",
+    "completed_at": "2026-10-25T06:51:05.546718+00:00",
+    "duration_seconds": 9.638,
+    "backend": "fireworks",
+    "repository": "/home/runner/work/Week1Project-GenAcademy/Week1Project-GenAcademy/.github/coding-review/eval-fixture",
+    "snapshot_sha256": "2bf81121ba901a0f3b70b85cd976c143c7495146e096cfa372539859328d7809",
+    "snapshot_bytes": 169,
+    "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+    "model": "accounts/fireworks/models/minimax-m3p1-flash"
+  }
+}

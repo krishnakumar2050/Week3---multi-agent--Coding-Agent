@@ -1,0 +1,326 @@
+{
+  "variant": "three_source",
+  "case": "fail_open_encryption",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 6,
+    "matched": 5,
+    "unmatched_indices": [
+      5
+    ],
+    "valid_citations": 6,
+    "severity_acceptable": 3,
+    "test_suggestion_present": 5,
+    "semantic_duplicate_excess": 4,
+    "complete": true,
+    "duration_seconds": 4.423,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "app.py"
+    ],
+    "counts": {
+      "critical": 2,
+      "high": 1,
+      "medium": 3,
+      "low": 0,
+      "info": 0
+    },
+    "findings": [
+      {
+        "severity": "critical",
+        "title": "Encryption failure silently returns plaintext, violating the documented storage contract",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    try:\n        return cipher.encrypt(plaintext)\n    except Exception:\n        return plaintext",
+        "explanation": "The function catches every exception from cipher.encrypt() and falls back to returning the plaintext value. Its own docstring states \"Return ciphertext; storage callers must never receive plaintext\", but the fallback path does exactly that. A concrete failure scenario: an encryption backend raises (bad key, invalid IV length, HSM/keystore outage, misconfigured cipher object); the caller persists the returned plaintext to the database believing it is ciphertext, so secrets are stored unencrypted with no error surfaced, no log entry, and no indication of the degraded path. Because the except clause is `Exception`, even programming errors (TypeError, AttributeError from a None cipher) are masked, making the bug invisible during testing.",
+        "recommendation": "Remove the plaintext fallback entirely. Let the exception propagate so the storage write fails loudly, or catch only the specific expected exceptions and re-raise them wrapped in a domain-specific error (e.g. `EncryptionError`). If a fallback is truly required by policy, it must fail closed (raise/abort the write) and never hand back plaintext; a fallback must not return plaintext under any circumstance.",
+        "suggested_test": "Pass a cipher stub whose encrypt() raises ValueError('invalid key'). Assert the call raises (EncryptionError or the original exception) and that the plaintext string is not returned and is not passed to the storage layer; assert the persistence call is never reached.",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "severity": "critical",
+        "title": "Encryption failure silently falls back to returning plaintext",
+        "file": "app.py",
+        "line": 5,
+        "evidence": "    except Exception:\n        return plaintext",
+        "explanation": "When cipher.encrypt raises any exception, encrypt_for_storage returns the original plaintext instead of raising. The docstring on line 2 states that storage callers must never receive plaintext, but this fallback guarantees that exactly the failure case (a broken/unkeyed cipher, corrupted key, or an encrypt() implementation that returns non-bytes) leaks cleartext into storage. The broad `except Exception` also swallows programming errors, so the failure is invisible to callers and monitoring.",
+        "recommendation": "Remove the fallback and let the exception propagate (or wrap it in a domain-specific exception such as EncryptionError) so the write to storage is aborted and the caller can retry or fail loudly. If a fallback is required by contract, return a sentinel/raise rather than the plaintext, and log the error.",
+        "suggested_test": "Use a stub cipher whose encrypt() raises RuntimeError('no key'). Call encrypt_for_storage(stub, b'secret') and assert it raises (pytest.raises(RuntimeError) or EncryptionError) \u2014 assert that the returned value is never equal to b'secret' and that b'secret' is not written to the store. Add a second test asserting a successful encrypt() returns exactly the ciphertext bytes and that plaintext is never the returned value.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "high",
+        "title": "Encryption failure silently downgraded to returning plaintext",
+        "file": "app.py",
+        "line": 5,
+        "evidence": "    except Exception:\n        return plaintext",
+        "explanation": "Any error raised by cipher.encrypt (invalid key, unsupported plaintext type, crypto backend failure) is caught and the function returns the original plaintext instead of raising. The docstring states that storage callers must never receive plaintext, but this path guarantees that unencrypted secret material is handed back to the caller, which will typically persist it to storage. Because the exception is swallowed, monitoring, alerting, and audit logs see a normal successful call, so the failure is completely silent and the vulnerability persists indefinitely.",
+        "recommendation": "Remove the bare except fallback. Let the exception propagate so the write is aborted, or re-raise a dedicated error after logging it (with the plaintext value excluded from the log record). Never return plaintext from a function whose contract is to return ciphertext.",
+        "suggested_test": "Use a cipher double whose encrypt() raises Exception('boom'); assert encrypt_for_storage raises (or returns a sentinel that is not the plaintext) and that the returned value is never equal to the input plaintext.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "No test coverage supplied for encrypt_for_storage success and failure paths",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def encrypt_for_storage(cipher, plaintext):",
+        "explanation": "Only the implementation is present in the reviewed snapshot; no test file exercises this helper. The critical failure path (encrypt raising) and the normal path are both unverified, so the plaintext-leaking fallback can reach production unnoticed.",
+        "recommendation": "Add unit tests for encrypt_for_storage covering: (1) happy path \u2014 a fake cipher recording the argument and returning fixed ciphertext, asserting the exact ciphertext is returned and the plaintext is passed through unchanged to the cipher; (2) failure path \u2014 a cipher raising Exception, asserting the call does not return plaintext; (3) empty-string/empty-bytes input; (4) a cipher returning None or a non-bytes value, asserting the behavior is either an explicit error or a documented conversion.",
+        "suggested_test": "Create tests/test_app.py with a FakeCipher class implementing encrypt(self, data): return b'ENC:' + data. Test: assert encrypt_for_storage(FakeCipher(), b'abc') == b'ENC:abc'; with a RaisingCipher, assert encrypt_for_storage(RaisingCipher(), b'abc') raises (pytest.raises(Exception)) and specifically that b'abc' is not the result.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Unvalidated plaintext passed directly to cipher.encrypt",
+        "file": "app.py",
+        "line": 4,
+        "evidence": "        return cipher.encrypt(plaintext)",
+        "explanation": "The plaintext is passed to encrypt() with no type or encoding validation. Depending on the cipher implementation (for example Fernet/Cryptography), passing a str instead of bytes raises a TypeError, which is then swallowed by the except block and returned as plaintext, turning a caller-side type bug into a silent plaintext-storage incident. Any encoding choice also risks non-UTF-8 data being mangled or truncated.",
+        "recommendation": "Validate/normalize input to bytes (e.g. plaintext.encode('utf-8')) before calling encrypt(), and enforce that the input is non-empty str/bytes. Reject invalid input explicitly rather than letting it fall through to the error path.",
+        "suggested_test": "Call encrypt_for_storage(cipher, 'secret') and encrypt_for_storage(cipher, b'secret') with a real cipher and assert both return ciphertext that differs from the input and that decrypting it yields the original value.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Overly broad exception handling masks the true error cause",
+        "file": "app.py",
+        "line": 5,
+        "evidence": "    except Exception:\n        return plaintext",
+        "explanation": "Catching `Exception` swallows all subclasses, including unrelated programming mistakes such as AttributeError (cipher is None), TypeError (wrong argument types), or ImportError raised lazily inside the cipher implementation. The original exception is neither re-raised nor logged, so operators have no traceback and no signal that encryption is broken; monitoring cannot distinguish a transient outage from a permanent misconfiguration.",
+        "recommendation": "Catch only the narrow set of recoverable cipher errors (or a custom CipherError hierarchy) and either re-raise with context via `raise EncryptionError(...) from exc` or log at ERROR with `exc_info=True` before failing the operation.",
+        "suggested_test": "Using a cipher stub that raises RuntimeError('backend down'), assert a specific wrapped exception type is raised carrying the original message and that the original exception is chained (`__cause__` is not None).",
+        "agents": [
+          "quality"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "critical",
+            "title": "Encryption failure silently returns plaintext, violating the documented storage contract",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    try:\n        return cipher.encrypt(plaintext)\n    except Exception:\n        return plaintext",
+            "explanation": "The function catches every exception from cipher.encrypt() and falls back to returning the plaintext value. Its own docstring states \"Return ciphertext; storage callers must never receive plaintext\", but the fallback path does exactly that. A concrete failure scenario: an encryption backend raises (bad key, invalid IV length, HSM/keystore outage, misconfigured cipher object); the caller persists the returned plaintext to the database believing it is ciphertext, so secrets are stored unencrypted with no error surfaced, no log entry, and no indication of the degraded path. Because the except clause is `Exception`, even programming errors (TypeError, AttributeError from a None cipher) are masked, making the bug invisible during testing.",
+            "recommendation": "Remove the plaintext fallback entirely. Let the exception propagate so the storage write fails loudly, or catch only the specific expected exceptions and re-raise them wrapped in a domain-specific error (e.g. `EncryptionError`). If a fallback is truly required by policy, it must fail closed (raise/abort the write) and never hand back plaintext; a fallback must not return plaintext under any circumstance.",
+            "suggested_test": "Pass a cipher stub whose encrypt() raises ValueError('invalid key'). Assert the call raises (EncryptionError or the original exception) and that the plaintext string is not returned and is not passed to the storage layer; assert the persistence call is never reached."
+          },
+          {
+            "severity": "medium",
+            "title": "Overly broad exception handling masks the true error cause",
+            "file": "app.py",
+            "line": 5,
+            "evidence": "    except Exception:\n        return plaintext",
+            "explanation": "Catching `Exception` swallows all subclasses, including unrelated programming mistakes such as AttributeError (cipher is None), TypeError (wrong argument types), or ImportError raised lazily inside the cipher implementation. The original exception is neither re-raised nor logged, so operators have no traceback and no signal that encryption is broken; monitoring cannot distinguish a transient outage from a permanent misconfiguration.",
+            "recommendation": "Catch only the narrow set of recoverable cipher errors (or a custom CipherError hierarchy) and either re-raise with context via `raise EncryptionError(...) from exc` or log at ERROR with `exc_info=True` before failing the operation.",
+            "suggested_test": "Using a cipher stub that raises RuntimeError('backend down'), assert a specific wrapped exception type is raised carrying the original message and that the original exception is chained (`__cause__` is not None)."
+          }
+        ],
+        "limitations": [
+          "Only a single function body was provided, so caller behavior (whether the return value is persisted directly) could not be verified.",
+          "No tests, cipher implementation, or surrounding modules were available to confirm whether a plaintext fallback is intentional and compensated for elsewhere.",
+          "The exact exception types raised by the concrete cipher are unknown, so the recommended catch list is illustrative.",
+          "Corrected 2 source citation(s) using unambiguous matches in the cited file; exact source excerpts retained."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 697,
+            "prompt_tokens": 988,
+            "total_tokens": 1685,
+            "completion_tokens_details": {
+              "reasoning_tokens": 33
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 881
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 33
+            }
+          },
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [
+            {
+              "title": "Encryption failure silently returns plaintext, violating the documented storage contract",
+              "file": "app.py",
+              "original_line": 5,
+              "line": 3,
+              "method": "relocated_exact"
+            },
+            {
+              "title": "Overly broad exception handling masks the true error cause",
+              "file": "app.py",
+              "original_line": 6,
+              "line": 5,
+              "method": "relocated_exact"
+            }
+          ],
+          "duration_seconds": 4.214
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Encryption failure silently downgraded to returning plaintext",
+            "file": "app.py",
+            "line": 5,
+            "evidence": "    except Exception:\n        return plaintext",
+            "explanation": "Any error raised by cipher.encrypt (invalid key, unsupported plaintext type, crypto backend failure) is caught and the function returns the original plaintext instead of raising. The docstring states that storage callers must never receive plaintext, but this path guarantees that unencrypted secret material is handed back to the caller, which will typically persist it to storage. Because the exception is swallowed, monitoring, alerting, and audit logs see a normal successful call, so the failure is completely silent and the vulnerability persists indefinitely.",
+            "recommendation": "Remove the bare except fallback. Let the exception propagate so the write is aborted, or re-raise a dedicated error after logging it (with the plaintext value excluded from the log record). Never return plaintext from a function whose contract is to return ciphertext.",
+            "suggested_test": "Use a cipher double whose encrypt() raises Exception('boom'); assert encrypt_for_storage raises (or returns a sentinel that is not the plaintext) and that the returned value is never equal to the input plaintext."
+          },
+          {
+            "severity": "medium",
+            "title": "Unvalidated plaintext passed directly to cipher.encrypt",
+            "file": "app.py",
+            "line": 4,
+            "evidence": "        return cipher.encrypt(plaintext)",
+            "explanation": "The plaintext is passed to encrypt() with no type or encoding validation. Depending on the cipher implementation (for example Fernet/Cryptography), passing a str instead of bytes raises a TypeError, which is then swallowed by the except block and returned as plaintext, turning a caller-side type bug into a silent plaintext-storage incident. Any encoding choice also risks non-UTF-8 data being mangled or truncated.",
+            "recommendation": "Validate/normalize input to bytes (e.g. plaintext.encode('utf-8')) before calling encrypt(), and enforce that the input is non-empty str/bytes. Reject invalid input explicitly rather than letting it fall through to the error path.",
+            "suggested_test": "Call encrypt_for_storage(cipher, 'secret') and encrypt_for_storage(cipher, b'secret') with a real cipher and assert both return ciphertext that differs from the input and that decrypting it yields the original value."
+          }
+        ],
+        "limitations": [
+          "Only the single supplied file (app.py) was provided; callers, cipher construction, key management, and storage-layer behavior are unknown, so the actual impact of the plaintext fallback on persisted data could not be confirmed.",
+          "The cipher implementation is not shown; behavior for str vs bytes input depends on it, so the type-related finding is conditional.",
+          "No dependency manifest was supplied, so no specific vulnerable third-party package could be identified."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 666,
+            "prompt_tokens": 943,
+            "total_tokens": 1609,
+            "completion_tokens_details": {
+              "reasoning_tokens": 74
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 694
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 74
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 3.909
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "critical",
+            "title": "Encryption failure silently falls back to returning plaintext",
+            "file": "app.py",
+            "line": 5,
+            "evidence": "    except Exception:\n        return plaintext",
+            "explanation": "When cipher.encrypt raises any exception, encrypt_for_storage returns the original plaintext instead of raising. The docstring on line 2 states that storage callers must never receive plaintext, but this fallback guarantees that exactly the failure case (a broken/unkeyed cipher, corrupted key, or an encrypt() implementation that returns non-bytes) leaks cleartext into storage. The broad `except Exception` also swallows programming errors, so the failure is invisible to callers and monitoring.",
+            "recommendation": "Remove the fallback and let the exception propagate (or wrap it in a domain-specific exception such as EncryptionError) so the write to storage is aborted and the caller can retry or fail loudly. If a fallback is required by contract, return a sentinel/raise rather than the plaintext, and log the error.",
+            "suggested_test": "Use a stub cipher whose encrypt() raises RuntimeError('no key'). Call encrypt_for_storage(stub, b'secret') and assert it raises (pytest.raises(RuntimeError) or EncryptionError) \u2014 assert that the returned value is never equal to b'secret' and that b'secret' is not written to the store. Add a second test asserting a successful encrypt() returns exactly the ciphertext bytes and that plaintext is never the returned value."
+          },
+          {
+            "severity": "medium",
+            "title": "No test coverage supplied for encrypt_for_storage success and failure paths",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def encrypt_for_storage(cipher, plaintext):",
+            "explanation": "Only the implementation is present in the reviewed snapshot; no test file exercises this helper. The critical failure path (encrypt raising) and the normal path are both unverified, so the plaintext-leaking fallback can reach production unnoticed.",
+            "recommendation": "Add unit tests for encrypt_for_storage covering: (1) happy path \u2014 a fake cipher recording the argument and returning fixed ciphertext, asserting the exact ciphertext is returned and the plaintext is passed through unchanged to the cipher; (2) failure path \u2014 a cipher raising Exception, asserting the call does not return plaintext; (3) empty-string/empty-bytes input; (4) a cipher returning None or a non-bytes value, asserting the behavior is either an explicit error or a documented conversion.",
+            "suggested_test": "Create tests/test_app.py with a FakeCipher class implementing encrypt(self, data): return b'ENC:' + data. Test: assert encrypt_for_storage(FakeCipher(), b'abc') == b'ENC:abc'; with a RaisingCipher, assert encrypt_for_storage(RaisingCipher(), b'abc') raises (pytest.raises(Exception)) and specifically that b'abc' is not the result."
+          }
+        ],
+        "limitations": [
+          "Only app.py (6 lines) was provided; no test files, cipher implementation, or storage-layer callers were visible, so the real-world exploitability of the plaintext fallback and existing coverage could not be confirmed.",
+          "Behavior of cipher.encrypt (whether it may return None, raise on empty input, or accept str vs bytes) is unknown, so the recommended test inputs are illustrative.",
+          "Corrected 1 source citation(s) using unambiguous matches in the cited file; exact source excerpts retained."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 751,
+            "prompt_tokens": 944,
+            "total_tokens": 1695,
+            "completion_tokens_details": {
+              "reasoning_tokens": 54
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 54
+            }
+          },
+          "citation_corrections": [
+            {
+              "title": "Encryption failure silently falls back to returning plaintext",
+              "file": "app.py",
+              "original_line": 6,
+              "line": 5,
+              "method": "relocated_exact"
+            }
+          ],
+          "duration_seconds": 4.39
+        }
+      }
+    ],
+    "actual_models": [
+      "accounts/fireworks/models/minimax-m3p1-flash"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "d4bc7997-f398-4225-9a92-0e3281b9d986",
+    "started_at": "2026-10-25T06:50:12.652124+00:00",
+    "completed_at": "2026-10-25T06:50:17.075339+00:00",
+    "duration_seconds": 4.423,
+    "backend": "fireworks",
+    "repository": "/home/runner/work/Week1Project-GenAcademy/Week1Project-GenAcademy/.github/coding-review/eval-fixture",
+    "snapshot_sha256": "24f8e02e40b8411dd3f2d1f9988ab259919b122990330978fb71e45ec813eacb",
+    "snapshot_bytes": 216,
+    "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+    "model": "accounts/fireworks/models/minimax-m3p1-flash"
+  }
+}

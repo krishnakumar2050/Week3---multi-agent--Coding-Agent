@@ -1,0 +1,213 @@
+{
+  "variant": "three_keenable",
+  "case": "swift_amount_crash",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 3,
+    "matched": 3,
+    "unmatched_indices": [],
+    "valid_citations": 3,
+    "severity_acceptable": 3,
+    "test_suggestion_present": 3,
+    "semantic_duplicate_excess": 2,
+    "complete": true,
+    "duration_seconds": 11.933,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "Amount.swift"
+    ],
+    "counts": {
+      "critical": 0,
+      "high": 2,
+      "medium": 1,
+      "low": 0,
+      "info": 0
+    },
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Invalid pasted amounts crash instead of producing an error",
+        "file": "Amount.swift",
+        "line": 4,
+        "evidence": "    // Input is arbitrary pasted text; invalid amounts must produce an error.\n    return Double(text)!",
+        "explanation": "Double(text) returns nil for invalid numeric text. Force-unwrapping it traps, so arbitrary pasted input such as \"abc\" terminates execution instead of returning the required error.",
+        "recommendation": "Make parseAmount throwing or return a Result, and handle failed conversion without force-unwrapping.",
+        "suggested_test": "After adding error handling, pass \"abc\" and an empty string and assert that each produces the expected invalid-amount error. Pass \"12.50\" and assert that it returns 12.5.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "high",
+        "title": "Invalid pasted amounts crash instead of producing an error",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "The force-unwrapping anti-pattern turns a recoverable parse failure into a runtime trap. For example, parseAmount(\"abc\") receives nil from Double(text) and terminates the process, violating the stated requirement that invalid amounts produce an error.",
+        "recommendation": "Make parseAmount throwing, unwrap Double(text) with guard let, and throw a domain-specific invalid-amount error when conversion fails.",
+        "suggested_test": "Verify that parsing \"abc\" and an empty string throws the invalid-amount error without crashing, and that parsing \"12.50\" returns 12.5.",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Invalid amount input crashes the process",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "Double(text) returns nil for invalid input such as \"abc\". Force-unwrapping it traps instead of producing an error. Anyone able to supply pasted text to this function can trigger a process crash.",
+        "recommendation": "Use a guarded conversion and throw a validation error when parsing fails.",
+        "suggested_test": "Pass \"abc\" and an empty string; assert that each produces a validation error without crashing.",
+        "agents": [
+          "security"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Invalid pasted amounts crash instead of producing an error",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "The force-unwrapping anti-pattern turns a recoverable parse failure into a runtime trap. For example, parseAmount(\"abc\") receives nil from Double(text) and terminates the process, violating the stated requirement that invalid amounts produce an error.",
+            "recommendation": "Make parseAmount throwing, unwrap Double(text) with guard let, and throw a domain-specific invalid-amount error when conversion fails.",
+            "suggested_test": "Verify that parsing \"abc\" and an empty string throws the invalid-amount error without crashing, and that parsing \"12.50\" returns 12.5."
+          }
+        ],
+        "limitations": [
+          "Only the supplied snapshot was reviewed; callers and tests were not provided."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "ok",
+            "sources": [
+              {
+                "title": "skills/skills/write-swift/SKILL.md at main \u00b7 emilkowalski/skills",
+                "url": "https://github.com/emilkowalski/skills/blob/main/skills/write-swift/SKILL.md",
+                "snippet": "- **Default to `struct` and `enum`. Use `class` only for identity, shared mutable state, inheritance, or resource lifetime.** A window, a database connection, an entity stored in a rendering engine \u2014 those have identity. A `Point`, a `Drink`, a `Material` does not.\n- **`let` by default; `var` only when you mutate.** This is the same discipline as `some` before `any` and value before reference: start narrow, widen with cause.\n- **A struct with a mutable reference-type property is neither a value nor a reference.** Copies share the object; mutations leak across copies. Either keep the referenced type immutable, expose only computed properties that forward to it, or make it a `private` stored property behind copy-on-write.\n- **Copy-on-write is how you get out-of-line storage *and* value semantics.** Wrap a final class in a struct and check `isKnownUniquelyReferenced(&storage)` before mutating; copy first if it isn't. This is exactly how `Array`, `String`, and `Dictionary` work.\n- **Enums are the tool for \"a fixed set of things\" and for mutually exclusive state.** Replacing a pile of optional stored properties (`isSharing`, `selectedRows`, `shareTarget`) with one `enum State` makes inv"
+              },
+              {
+                "title": "code-review-skill/reference/swift.md at 4850184dfd7765ea7b3c5c4e9b6cf8e0815ee7cb \u00b7 awesome-skills/code-review-skill",
+                "url": "https://github.com/awesome-skills/code-review-skill/blob/HEAD/reference/swift.md",
+                "snippet": "```\n// \u2705 Use a struct for data/models with value semantics\nstruct Coordinate {\nvar latitude: Double\nvar longitude: Double\n}\n// Copies are independent; no shared mutable state, thread-friendly.\nvar a = Coordinate(latitude: 1, longitude: 2)\nvar b = a\nb.latitude = 99   // a is unchanged\n```\n\n```\n// \u274c Wrong: try! crashes on any thrown error\nlet data = try! Data(contentsOf: url)\n// \u274c Often wrong: try? silently discards the error and the cause\nlet data = try? Data(contentsOf: url)   // data is nil, you lose \"why\"\n// \u2705 Correct: propagate or handle with do-catch\ndo {\nlet data = try Data(contentsOf: url)\nprocess(data)\n} catch {\nlog.error(\"failed to read \\(url): \\(error)\")\n}\n```\n\n```\n// \u274c Wrong: callback pyramid, error handling scattered\nfunc loadProfile(completion: @escaping (Result<Profile, Error>) -> Void) {\nfetchUser { userResult in\nswitch userResult {\ncase .success(let user):\nfetchAvatar(user) { avatarResult in /* ... */ }\ncase .failure(let error):\ncompletion(.failure(error))\n}\n}\n}\n// \u2705 Correct: linear async/await\nfunc loadProfile() async throws -> Profile {\nlet user = try await fetchUser()\nlet avatar = try await fetchAvatar(user)\nreturn Profile(user: user, avatar: avatar)\n}\n```\n\n### 5."
+              },
+              {
+                "title": "claude-code-ios-plugin/skills/code-review-checklist/SKILL.md at main \u00b7 arimunandar/claude-code-ios-plugin",
+                "url": "https://github.com/arimunandar/claude-code-ios-plugin/blob/main/skills/code-review-checklist/SKILL.md",
+                "snippet": "### VIP+W Pattern\n```\n\u2705 CORRECT                          \u274c INCORRECT\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nViewController only displays        ViewController has business logic\nInteractor orchestrates logic       Interactor makes API calls directly\nWorker handles async operations     Worker knows about Presenter\nPresenter formats for display       Presenter has business logic\nRouter handles navigation           Navigation in ViewController\n```\n**Review Questions:**\n- Does ViewController only call `interactor?.methodName(request:)`?\n- Does Interactor delegate async work to Worker?\n- Does Presenter only format data, no business logic?\n- Is navigation handled by Router only?\n- Are all dependencies injected via Configurator?\n\n```\n// \u274c RETAIN CYCLE\nbutton.onTap = {\nself.handleTap()  // Strong capture\n}\n// \u2705 FIXED\nbutton.onTap = { [weak self] in\nself?.handleTap()\n}\n```\n**Checklist:**\n- Closures use `[weak self]` or `[unowned self]`\n- Delegates are `weak`\n- Timers are invalidated in `deinit`\n- NotificationCenter observers removed\n- No circular references between objects\n\n```\n// \u2705 GOOD - Actor for shared mutable state\nactor UserCache {\nprivate var cache: [String: Us"
+              },
+              {
+                "title": "Swift-6-Agent-Skill/swift-6-agent-skill/SKILL.md at 307e013374525ec75debb55d8936e7d40ef7709f \u00b7 pchelnikov/Swift-6-Agent-Skill",
+                "url": "https://github.com/pchelnikov/Swift-6-Agent-Skill/blob/307e013374525ec75debb55d8936e7d40ef7709f/swift-6-agent-skill/SKILL.md",
+                "snippet": "- Check for deprecated or outdated patterns against the Quick Reference table below\n- Audit concurrency safety: global variables, actor isolation, Sendable conformance (see `references/SWIFT_6_0.md`)\n- Verify `@MainActor` annotations are explicit where needed post-SE-0401\n- Check import visibility: transitive imports should be explicit (SE-0444, see `references/SWIFT_6_1.md`)\n- Look for unnecessary `@unchecked Sendable` \u2014 compiler region analysis (SE-0414) may make them redundant\n- Verify test code uses Swift Testing patterns, not legacy XCTest (see Testing)\n\n- **Use `Mutex` for shared mutable state** \u2014 prefer `Mutex` from the Synchronization library over `NSLock` or `os_unfair_lock`. Use `Atomic` for simple lock-free flags and counters (SE-0433, SE-0410).\n\n### Error Handling\n- **Prefer typed throws for constrained domains** where the error set is fixed and known (internal modules, embedded Swift). Use untyped `throws` for public library APIs to preserve flexibility (SE-0413).\n- **Leverage typed throws in generic contexts** \u2014 `throws(E)` enables `throws(Never)` inference for non-throwing closures, eliminating unnecessary do/catch.\n\n### Concurrency Safety\n- No bare mutable global va"
+              },
+              {
+                "title": "ECC/agents/swift-reviewer.md at 1a2cd81ed34cbb6fc826eafeb23eea27234c664e \u00b7 affaan-m/ECC",
+                "url": "https://github.com/affaan-m/ECC/blob/1a2cd81ed34cbb6fc826eafeb23eea27234c664e/agents/swift-reviewer.md",
+                "snippet": "### CRITICAL - Error Handling\n- **Silenced errors**: Empty `catch {}` blocks or `try?` discarding meaningful errors\n- **Missing error context**: Rethrowing without wrapping in a domain-specific error\n- **`fatalError()` for recoverable conditions**: Use `throw` for errors that callers can handle\n- **`assert` for required invariants**: `assert` is stripped in release builds (debug-only) - use `precondition` when the check must hold in release, or `throw` for public API boundaries\n- **`precondition` / `fatalError` in library code**: `precondition` crashes in both debug and release; `fatalError` crashes unconditionally in all builds - use `throw` for recoverable errors at public API boundaries\n### HIGH - Concurrency\n- **Data races**: Mutable shared state without actor isolation or synchronization\n- **`@Sendable` violations**: Non-`Sendable` types crossing isolation boundaries\n- **Blocking the main actor**: Synchronous I/O or `Thread.sleep` on `@MainActor` - use `Task.sleep` and async I/O\n- **Unstructured `Task {}` without cancellation**: Fire-and-forget tasks leaking - use structured concurrency (`async let`, `TaskGroup`)\n- **Actor reentrancy issues**: Assumptions about state consisten"
+              },
+              {
+                "title": "GitHub - Fueled/swift-style-guide: Official Swift language style guide used at Fueled (Swift 6, language rules only).",
+                "url": "https://github.com/fueled/swift-style-guide",
+                "snippet": "### Safety\nCode is written to **prevent incorrect behavior by construction** rather than relying on discipline or conventions.\n- Prefer language features that eliminate entire classes of bugs\n- Make invalid states unrepresentable\n- Avoid unsafe constructs even when they appear convenient\n- Fail early and explicitly when assumptions are violated\nSafety principles include:\n- Avoiding force unwraps and force casts\n- Favoring `guard` and explicit error handling\n- Using strong typing to prevent misuse\n- Treating concurrency and shared state as safety concerns\nSafety takes precedence over performance and brevity unless there is a clear, measured reason to trade it off.\n\n## Error Handling\nError handling must be **explicit, intentional, and type-driven**.\nErrors are part of the API contract and must be designed, documented, and propagated deliberately.\n---\n### Error Types\n- Define errors as concrete `enum` types conforming to `Error`\n- Error cases must be descriptive and domain-specific\n- Avoid throwing opaque or generic errors without context\n```\nenum NetworkError : Error { case offline case unauthorized case timeout }\n```\n```\n// AVOID: No defined error domain func fetchData ( ) throws ->"
+              }
+            ],
+            "queries": [
+              "Swift code review anti-patterns error handling mutable state resource management official documentation"
+            ]
+          },
+          "citation_corrections": [],
+          "duration_seconds": 10.485
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "medium",
+            "title": "Invalid amount input crashes the process",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "Double(text) returns nil for invalid input such as \"abc\". Force-unwrapping it traps instead of producing an error. Anyone able to supply pasted text to this function can trigger a process crash.",
+            "recommendation": "Use a guarded conversion and throw a validation error when parsing fails.",
+            "suggested_test": "Pass \"abc\" and an empty string; assert that each produces a validation error without crashing."
+          }
+        ],
+        "limitations": [
+          "Only the supplied function was reviewed; caller behavior and external reachability are unknown."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 11.559
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Invalid pasted amounts crash instead of producing an error",
+            "file": "Amount.swift",
+            "line": 4,
+            "evidence": "    // Input is arbitrary pasted text; invalid amounts must produce an error.\n    return Double(text)!",
+            "explanation": "Double(text) returns nil for invalid numeric text. Force-unwrapping it traps, so arbitrary pasted input such as \"abc\" terminates execution instead of returning the required error.",
+            "recommendation": "Make parseAmount throwing or return a Result, and handle failed conversion without force-unwrapping.",
+            "suggested_test": "After adding error handling, pass \"abc\" and an empty string and assert that each produces the expected invalid-amount error. Pass \"12.50\" and assert that it returns 12.5."
+          }
+        ],
+        "limitations": [
+          "Only Amount.swift was supplied; no tests or callers were available to assess. Review was static; no code or tests were executed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 11.879
+        }
+      }
+    ],
+    "actual_models": [
+      "gpt-6.1-sol"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "1a45091f-2ff5-4cef-9ca0-99a6286d686b",
+    "started_at": "2026-10-25T06:39:49.313980+00:00",
+    "completed_at": "2026-10-25T06:40:01.246806+00:00",
+    "duration_seconds": 11.933,
+    "backend": "codex",
+    "repository": "/Users/krishnakumar/Documents/ChatGPT/Week2 - multi agent- Coding Agent/eval-fixture",
+    "snapshot_sha256": "2bf81121ba901a0f3b70b85cd976c143c7495146e096cfa372539859328d7809",
+    "snapshot_bytes": 169,
+    "requested_model": null,
+    "model": "gpt-6.1-sol"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "variant": "single",
+  "case": "fixed_mutable_control",
+  "repeat": 0,
+  "metrics": {
+    "expected": 0,
+    "detected": 0,
+    "findings": 0,
+    "matched": 0,
+    "unmatched_indices": [],
+    "valid_citations": 0,
+    "severity_acceptable": 0,
+    "test_suggestion_present": 0,
+    "semantic_duplicate_excess": 0,
+    "complete": true,
+    "duration_seconds": 7.066,
+    "clean_control_pass": true
+  },
+  "report": {
+    "status": "complete",
+    "findings": [],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [],
+        "limitations": [
+          "Review limited to the supplied snapshot; tests were not executed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 7.016
+        }
+      }
+    ],
+    "duration_seconds": 7.066
+  }
+}

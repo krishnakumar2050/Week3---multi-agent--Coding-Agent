@@ -1,0 +1,562 @@
+{
+  "status": "complete",
+  "files_reviewed": [
+    "omniNotes/src/alpha/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/async/notes/NoteRemindersTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/AppVersionHelperTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/LanguageHelperTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/LocationProviderFactoryTest.kt",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/count/CountFactoryTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/CategoryMenuFooterTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/MiscUtilsTest.kt",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/ShortcutHelperTest.java",
+    "omniNotes/src/beta/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/foss/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/main/AndroidManifest.xml",
+    "omniNotes/src/main/assets/sql/upgrade-453.sql",
+    "omniNotes/src/main/assets/sql/upgrade-481.sql",
+    "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/NoteInfosActivity.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/AlarmRestoreOnRebootService.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/AttachmentTask.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NavigationUpdatedNavDrawerClosedEvent.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotesLoadedEvent.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessorTrash.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/SaveNoteTask.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/BackupException.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/factory/MediaStoreFactory.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationManagerLocationProvider.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide4.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide5.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/Category.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/PushBulletMessage.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/UndoBarController.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnAttachingFileListener.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnCABItemClickedListener.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnReminderPickedListener.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/misc/DynamicNavigationLookupTable.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/views/InterceptorLinearLayout.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/views/NonScrollableListView.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/views/SquareImageView.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/receiver/AlarmReceiver.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/ParcelableUtil.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/ReminderHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/ResourcesUtils.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/ShortcutHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/widget/SimpleWidgetProvider.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/widget/WidgetConfigurationActivity.java",
+    "omniNotes/src/main/res/xml/settings_navigation.xml",
+    "omniNotes/src/main/res/xml/shortcuts.xml",
+    "omniNotes/src/play/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/test/java/it/feio/android/omninotes/BaseUnitTest.java",
+    "omniNotes/src/test/java/it/feio/android/omninotes/helpers/count/DefaultWordCounterTest.java",
+    "omniNotes/src/test/java/it/feio/android/omninotes/models/listeners/RecyclerViewItemClickSupportTest.java",
+    "omniNotes/src/test/java/it/feio/android/omninotes/utils/date/RecurrenceHelperTest.java"
+  ],
+  "counts": {
+    "critical": 0,
+    "high": 1,
+    "medium": 14,
+    "low": 1,
+    "info": 0
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Encryption failures return plaintext as a successful result",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 66,
+      "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+      "explanation": "This is a fail-open exception-handling anti-pattern. For example, a password shorter than eight bytes causes DESKeySpec construction to fail, after which encrypt returns the original sensitive value. Callers cannot distinguish plaintext from successful encryption and may store or transmit it.",
+      "recommendation": "Propagate an explicit encryption failure and prevent persistence or transmission until encryption succeeds. Never return the input as an encryption fallback.",
+      "suggested_test": "Encrypt a sensitive value with a password shorter than eight bytes; assert an explicit failure and that no plaintext result is returned.\nEncrypt a sensitive value with a password shorter than eight UTF-8 bytes and assert that the operation reports failure and never returns the input value.",
+      "agents": [
+        "quality",
+        "security"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "The address migration discards every note's trash status",
+      "file": "omniNotes/src/main/assets/sql/upgrade-453.sql",
+      "line": 23,
+      "evidence": "INSERT INTO notes(note_id, creation, last_modification, title, content, archived, alarm, latitude, longitude, category_id, locked, checklist)\nSELECT note_id, creation, last_modification, title, content, archived, alarm, latitude, longitude, category_id, locked, checklist\nFROM notes_tmp;",
+      "explanation": "The replacement table declares trashed, but the copy omits it. Migrated rows receive NULL instead of their existing trash status, and dropping notes_tmp permanently loses that state. The supplied reminder tests create fresh rows and cannot detect migration damage.",
+      "recommendation": "Include trashed in both the INSERT and SELECT column lists.",
+      "suggested_test": "Seed the pre-migration table with trashed=1 and trashed=0 notes, run upgrade-453.sql, and assert both values and all existing note fields are preserved.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "The table migration drops every note's trash status",
+      "file": "omniNotes/src/main/assets/sql/upgrade-453.sql",
+      "line": 23,
+      "evidence": "INSERT INTO notes(note_id, creation, last_modification, title, content, archived, alarm, latitude, longitude, category_id, locked, checklist)\nSELECT note_id, creation, last_modification, title, content, archived, alarm, latitude, longitude, category_id, locked, checklist\nFROM notes_tmp;\nDROP TABLE notes_tmp; ",
+      "explanation": "The replacement schema includes trashed, but the copy omits it. Existing trash flags are replaced with NULL and the original table is deleted. Upgrading a database containing trashed notes therefore loses their trash state.",
+      "recommendation": "Include trashed in both the INSERT column list and the SELECT projection.",
+      "suggested_test": "Migrate a database containing both trashed and active notes; assert that each note retains its original trashed value.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Process Text reads a CharSequence extra as a String",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "line": 532,
+      "evidence": "      if (Intent.ACTION_PROCESS_TEXT.equals(i.getAction())){\n        content = i.getStringExtra(Intent.EXTRA_PROCESS_TEXT).toString();",
+      "explanation": "EXTRA_PROCESS_TEXT carries a CharSequence, which can be a styled text object rather than a String. getStringExtra can return null for that valid payload, and the immediate toString call then crashes the activity. A missing extra also crashes.",
+      "recommendation": "Read the value with getCharSequenceExtra and convert it to a String only after checking for null.",
+      "suggested_test": "Launch ACTION_PROCESS_TEXT with a SpannableString payload and assert that its text becomes the note content without a crash.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Changing a note's coordinates retains its previous address",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "line": 940,
+      "evidence": "      noteTmp.setLatitude(location.getLatitude());\n      noteTmp.setLongitude(location.getLongitude());\n      if (!TextUtils.isEmpty(noteTmp.getAddress())) {\n        binding.fragmentDetailContent.location.setVisibility(View.VISIBLE);\n        binding.fragmentDetailContent.location.setText(noteTmp.getAddress());",
+      "explanation": "When a note already has an address and the user retrieves a different location, the coordinates change but the old address suppresses reverse geocoding. The note displays and retains the old place while opening the map at the new place. Removing a location also leaves the address intact, so adding another location reproduces this mismatch.",
+      "recommendation": "Invalidate the cached address when coordinates change or are removed, then resolve the address for the new coordinates.",
+      "suggested_test": "Start with coordinates and address A, retrieve location B, and assert that address A is cleared and replaced by B's address or coordinates.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Refreshing coordinates retains the previous location's address",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "line": 940,
+      "evidence": "      noteTmp.setLatitude(location.getLatitude());\n      noteTmp.setLongitude(location.getLongitude());\n      if (!TextUtils.isEmpty(noteTmp.getAddress())) {\n        binding.fragmentDetailContent.location.setVisibility(View.VISIBLE);\n        binding.fragmentDetailContent.location.setText(noteTmp.getAddress());",
+      "explanation": "For a note with an existing address, retrieving a new location updates coordinates but reuses the old address and skips reverse geocoding. The displayed and persisted address can therefore describe a different place from the map destination.",
+      "recommendation": "Invalidate the cached address when coordinates change and resolve an address for the new coordinates.",
+      "suggested_test": "Open a note with coordinates and address A, then deliver location B. Assert reverse geocoding receives B and the displayed and saved address becomes B's address, or B's coordinates when lookup fails.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Completed playback abandons the MediaPlayer without releasing it",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "line": 1782,
+      "evidence": "      mPlayer.setOnCompletionListener(mp -> {\n        mPlayer = null;",
+      "explanation": "This is a resource leak. Each naturally completed playback clears the only field used by stopPlaying to release the player, without releasing mp. Repeatedly playing attachments accumulates native media resources until garbage collection and can exhaust playback resources.",
+      "recommendation": "Release mp in the completion callback before clearing the field, and release the player on preparation failures as well.",
+      "suggested_test": "Complete playback repeatedly with a mocked MediaPlayer; assert release is called exactly once for every created player.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Recording failures leave a recorder that Stop cannot safely stop",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "line": 1833,
+      "evidence": "          try {\n            audioRecordingTimeStart = Calendar.getInstance().getTimeInMillis();\n            mRecorder.prepare();\n            mRecorder.start();\n          } catch (IOException | IllegalStateException e) {\n            LogDelegate.e(\"prepare() failed\", e);\n            mainActivity.showMessage(R.string.error, ONStyle.ALERT);\n          }",
+      "explanation": "This is incomplete error recovery: isRecording is set before preparation, but this catch neither resets it nor releases mRecorder. If prepare fails, the next recording-button click calls stopRecording, whose unguarded mRecorder.stop() throws because recording never started. Stopping immediately after a successful start can also throw when insufficient audio has been captured.",
+      "recommendation": "Set isRecording only after start succeeds, release and clear the recorder on failure, and handle stop failures with cleanup in a finally block. Attach a recording only after a successful stop.",
+      "suggested_test": "Simulate prepare throwing IOException, then click the recording control again; assert no crash, a released recorder, and no invalid attachment.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Removing all attachments disconnects the adapter from subsequent additions",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "line": 2018,
+      "evidence": "  private void removeAllAttachments() {\n    noteTmp.setAttachmentsList(new ArrayList<>());\n    mAttachmentAdapter = new AttachmentAdapter(mainActivity, new ArrayList<>());\n    mGridView.invalidateViews();\n    mGridView.setAdapter(mAttachmentAdapter);\n  }",
+      "explanation": "The note and adapter receive different empty lists. Subsequent attachment callbacks add to noteTmp and notify the adapter, but the adapter still observes its separate empty list. Attachments added after Delete All therefore do not appear in the grid.",
+      "recommendation": "Construct the replacement adapter with noteTmp.getAttachmentsList(), as initViewAttachments does.",
+      "suggested_test": "Delete all attachments, then add another attachment; assert that the grid displays the new attachment and the note contains it.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Location cache selection ignores how old the fix is",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationManagerLocationProvider.java",
+      "line": 118,
+      "evidence": "      if (location != null && (bestLocation == null\n          || location.getAccuracy() < bestLocation.getAccuracy())) {\n        bestLocation = location;\n      }",
+      "explanation": "The provider selects cached fixes solely by accuracy and getLocation immediately returns the selected fix without requesting an update. An accurate GPS fix from a previous trip therefore beats a recent network fix and can be attached to a new note as the device's current position.",
+      "recommendation": "Reject fixes older than a defined freshness threshold using elapsed realtime, consider recency when comparing fixes, and request an update when no sufficiently fresh fix exists.",
+      "suggested_test": "Provide an old accurate GPS fix and a recent network fix; assert that the old fix is not returned as the current position.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Location selection accepts arbitrarily stale cached fixes",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationManagerLocationProvider.java",
+      "line": 118,
+      "evidence": "      if (location != null && (bestLocation == null\n          || location.getAccuracy() < bestLocation.getAccuracy())) {\n        bestLocation = location;\n      }",
+      "explanation": "Cached locations are ranked only by accuracy, with no age check. getLocation() immediately returns the selected fix, so an old precise GPS fix can override a recent network fix and prevent requesting the current position. The supplied factory test only checks that a provider exists.",
+      "recommendation": "Reject expired fixes and consider recency when selecting among acceptable cached locations.",
+      "suggested_test": "Supply a day-old GPS fix with 5-meter accuracy and a recent network fix with 50-meter accuracy. Assert the recent fix is selected. With only expired fixes, assert fresh updates are requested and timeout produces exactly one failure callback.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Queued alarms can overwrite a trashed note with stale data",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/receiver/AlarmReceiver.java",
+      "line": 55,
+      "evidence": "        if (isNoteGone(note)) {\n          LogDelegate.d(\"Reminder fired for a note that no longer exists, skipping\");\n          return;\n        }\n        createNotification(mContext, note);\n        SnoozeActivity.setNextRecurrentReminder(note);\n        updateNote(note);",
+      "explanation": "The guard only checks existence. A queued broadcast serialized before trashing still passes because the database row exists, then displays a notification and writes its old, untrashed state through updateNote(). The supplied receiver test covers deletion only, so it misses this path and stale edits to existing notes.",
+      "recommendation": "Load the current database note, reject trashed notes and obsolete alarms, and apply reminder changes to current data.",
+      "suggested_test": "Serialize an active reminded note, trash and save it, then deliver the original broadcast. Assert the database note remains trashed, no notification appears, and no recurrent alarm is scheduled. Also edit the title after serialization and assert delivery preserves the edit.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Denied exact-alarm access launches settings from an application context",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/ReminderHelper.java",
+      "line": 63,
+      "evidence": "        if (!alarmManager.canScheduleExactAlarms()) {\n          Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);\n          context.startActivity(intent);\n          return;\n        }",
+      "explanation": "SaveNoteTask supplies OmniNotes.getAppContext(). When exact-alarm access is denied on Android 12+, startActivity() lacks FLAG_ACTIVITY_NEW_TASK and throws from that application context. The reminder tests assume scheduling succeeds and do not exercise denied access.",
+      "recommendation": "Handle permission requests through an activity, or add the required task flag when launching from an application context and provide a way to retry scheduling after access is granted.",
+      "suggested_test": "On API 31+, simulate canScheduleExactAlarms() returning false and call addReminder with an application context. Assert no exception, the settings intent has FLAG_ACTIVITY_NEW_TASK, and no alarm is scheduled before permission is granted.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Exact-alarm permission requests crash when using the application context",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/ReminderHelper.java",
+      "line": 63,
+      "evidence": "        if (!alarmManager.canScheduleExactAlarms()) {\n          Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);\n          context.startActivity(intent);\n          return;\n        }",
+      "explanation": "SaveNoteTask and AlarmRestoreOnRebootService call this helper with the application context. When exact-alarm access is unavailable on Android 12 or later, starting this activity without FLAG_ACTIVITY_NEW_TASK throws instead of handling the missing permission.",
+      "recommendation": "Move permission prompting to an activity and return a scheduling failure to background callers, or use the required activity flag when an application-context launch is appropriate.",
+      "suggested_test": "Deny exact-alarm access and schedule a future reminder through SaveNoteTask; assert that the operation reports missing access without throwing.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "DES encryption provides only a 56-bit effective key",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 58,
+      "evidence": "                val keySpec = DESKeySpec(password.toByteArray(StandardCharsets.UTF_8))\n                val keyFactory = SecretKeyFactory.getInstance(\"DES\")\n                val key = keyFactory.generateSecret(keySpec)\n                val clearText = value.toByteArray(StandardCharsets.UTF_8)\n                // Cipher is not thread safe\n                val cipher = Cipher.getInstance(\"DES\")",
+      "explanation": "An attacker who obtains ciphertext produced by this helper can attack DES's 56-bit effective key offline. DESKeySpec also uses only the first eight password bytes, so longer passwords do not increase key strength. The snapshot does not show which data uses this helper.",
+      "recommendation": "Use authenticated encryption such as AES-GCM with a randomly generated nonce and a suitable password-based key derivation function. Version the ciphertext format to support migration.",
+      "suggested_test": "Verify that the replacement produces different ciphertext for repeated encryption of identical inputs, rejects tampering, and derives different keys when password bytes beyond the eighth byte change.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "low",
+      "title": "Google Play availability assertion cannot detect an incorrect result",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/MiscUtilsTest.kt",
+      "line": 29,
+      "evidence": "        assertTrue(MiscUtils.isGooglePlayAvailable(testContext) is Boolean)",
+      "explanation": "Checking the result's Boolean type does not verify availability behavior. An implementation that always returns true or always returns false can pass this test.",
+      "recommendation": "Control the availability dependency and assert the expected Boolean value for each relevant state.",
+      "suggested_test": "Arrange Google Play services as available and assert true; arrange services as missing or unavailable and assert false.",
+      "agents": [
+        "tests"
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "agent": "quality",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Encryption failures return plaintext as a successful result",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 66,
+          "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+          "explanation": "This is a fail-open exception-handling anti-pattern. For example, a password shorter than eight bytes causes DESKeySpec construction to fail, after which encrypt returns the original sensitive value. Callers cannot distinguish plaintext from successful encryption and may store or transmit it.",
+          "recommendation": "Propagate an explicit encryption failure and prevent persistence or transmission until encryption succeeds. Never return the input as an encryption fallback.",
+          "suggested_test": "Encrypt a sensitive value with a password shorter than eight bytes; assert an explicit failure and that no plaintext result is returned."
+        },
+        {
+          "severity": "medium",
+          "title": "The table migration drops every note's trash status",
+          "file": "omniNotes/src/main/assets/sql/upgrade-453.sql",
+          "line": 23,
+          "evidence": "INSERT INTO notes(note_id, creation, last_modification, title, content, archived, alarm, latitude, longitude, category_id, locked, checklist)\nSELECT note_id, creation, last_modification, title, content, archived, alarm, latitude, longitude, category_id, locked, checklist\nFROM notes_tmp;\nDROP TABLE notes_tmp; ",
+          "explanation": "The replacement schema includes trashed, but the copy omits it. Existing trash flags are replaced with NULL and the original table is deleted. Upgrading a database containing trashed notes therefore loses their trash state.",
+          "recommendation": "Include trashed in both the INSERT column list and the SELECT projection.",
+          "suggested_test": "Migrate a database containing both trashed and active notes; assert that each note retains its original trashed value."
+        },
+        {
+          "severity": "medium",
+          "title": "Exact-alarm permission requests crash when using the application context",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/ReminderHelper.java",
+          "line": 63,
+          "evidence": "        if (!alarmManager.canScheduleExactAlarms()) {\n          Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);\n          context.startActivity(intent);\n          return;\n        }",
+          "explanation": "SaveNoteTask and AlarmRestoreOnRebootService call this helper with the application context. When exact-alarm access is unavailable on Android 12 or later, starting this activity without FLAG_ACTIVITY_NEW_TASK throws instead of handling the missing permission.",
+          "recommendation": "Move permission prompting to an activity and return a scheduling failure to background callers, or use the required activity flag when an application-context launch is appropriate.",
+          "suggested_test": "Deny exact-alarm access and schedule a future reminder through SaveNoteTask; assert that the operation reports missing access without throwing."
+        },
+        {
+          "severity": "medium",
+          "title": "Process Text reads a CharSequence extra as a String",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+          "line": 532,
+          "evidence": "      if (Intent.ACTION_PROCESS_TEXT.equals(i.getAction())){\n        content = i.getStringExtra(Intent.EXTRA_PROCESS_TEXT).toString();",
+          "explanation": "EXTRA_PROCESS_TEXT carries a CharSequence, which can be a styled text object rather than a String. getStringExtra can return null for that valid payload, and the immediate toString call then crashes the activity. A missing extra also crashes.",
+          "recommendation": "Read the value with getCharSequenceExtra and convert it to a String only after checking for null.",
+          "suggested_test": "Launch ACTION_PROCESS_TEXT with a SpannableString payload and assert that its text becomes the note content without a crash."
+        },
+        {
+          "severity": "medium",
+          "title": "Removing all attachments disconnects the adapter from subsequent additions",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+          "line": 2018,
+          "evidence": "  private void removeAllAttachments() {\n    noteTmp.setAttachmentsList(new ArrayList<>());\n    mAttachmentAdapter = new AttachmentAdapter(mainActivity, new ArrayList<>());\n    mGridView.invalidateViews();\n    mGridView.setAdapter(mAttachmentAdapter);\n  }",
+          "explanation": "The note and adapter receive different empty lists. Subsequent attachment callbacks add to noteTmp and notify the adapter, but the adapter still observes its separate empty list. Attachments added after Delete All therefore do not appear in the grid.",
+          "recommendation": "Construct the replacement adapter with noteTmp.getAttachmentsList(), as initViewAttachments does.",
+          "suggested_test": "Delete all attachments, then add another attachment; assert that the grid displays the new attachment and the note contains it."
+        },
+        {
+          "severity": "medium",
+          "title": "Recording failures leave a recorder that Stop cannot safely stop",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+          "line": 1833,
+          "evidence": "          try {\n            audioRecordingTimeStart = Calendar.getInstance().getTimeInMillis();\n            mRecorder.prepare();\n            mRecorder.start();\n          } catch (IOException | IllegalStateException e) {\n            LogDelegate.e(\"prepare() failed\", e);\n            mainActivity.showMessage(R.string.error, ONStyle.ALERT);\n          }",
+          "explanation": "This is incomplete error recovery: isRecording is set before preparation, but this catch neither resets it nor releases mRecorder. If prepare fails, the next recording-button click calls stopRecording, whose unguarded mRecorder.stop() throws because recording never started. Stopping immediately after a successful start can also throw when insufficient audio has been captured.",
+          "recommendation": "Set isRecording only after start succeeds, release and clear the recorder on failure, and handle stop failures with cleanup in a finally block. Attach a recording only after a successful stop.",
+          "suggested_test": "Simulate prepare throwing IOException, then click the recording control again; assert no crash, a released recorder, and no invalid attachment."
+        },
+        {
+          "severity": "medium",
+          "title": "Completed playback abandons the MediaPlayer without releasing it",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+          "line": 1782,
+          "evidence": "      mPlayer.setOnCompletionListener(mp -> {\n        mPlayer = null;",
+          "explanation": "This is a resource leak. Each naturally completed playback clears the only field used by stopPlaying to release the player, without releasing mp. Repeatedly playing attachments accumulates native media resources until garbage collection and can exhaust playback resources.",
+          "recommendation": "Release mp in the completion callback before clearing the field, and release the player on preparation failures as well.",
+          "suggested_test": "Complete playback repeatedly with a mocked MediaPlayer; assert release is called exactly once for every created player."
+        },
+        {
+          "severity": "medium",
+          "title": "Changing a note's coordinates retains its previous address",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+          "line": 940,
+          "evidence": "      noteTmp.setLatitude(location.getLatitude());\n      noteTmp.setLongitude(location.getLongitude());\n      if (!TextUtils.isEmpty(noteTmp.getAddress())) {\n        binding.fragmentDetailContent.location.setVisibility(View.VISIBLE);\n        binding.fragmentDetailContent.location.setText(noteTmp.getAddress());",
+          "explanation": "When a note already has an address and the user retrieves a different location, the coordinates change but the old address suppresses reverse geocoding. The note displays and retains the old place while opening the map at the new place. Removing a location also leaves the address intact, so adding another location reproduces this mismatch.",
+          "recommendation": "Invalidate the cached address when coordinates change or are removed, then resolve the address for the new coordinates.",
+          "suggested_test": "Start with coordinates and address A, retrieve location B, and assert that address A is cleared and replaced by B's address or coordinates."
+        },
+        {
+          "severity": "medium",
+          "title": "Location cache selection ignores how old the fix is",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationManagerLocationProvider.java",
+          "line": 118,
+          "evidence": "      if (location != null && (bestLocation == null\n          || location.getAccuracy() < bestLocation.getAccuracy())) {\n        bestLocation = location;\n      }",
+          "explanation": "The provider selects cached fixes solely by accuracy and getLocation immediately returns the selected fix without requesting an update. An accurate GPS fix from a previous trip therefore beats a recent network fix and can be attached to a new note as the device's current position.",
+          "recommendation": "Reject fixes older than a defined freshness threshold using elapsed realtime, consider recency when comparing fixes, and request an update when no sufficiently fresh fix exists.",
+          "suggested_test": "Provide an old accurate GPS fix and a recent network fix; assert that the old fix is not returned as the current position."
+        }
+      ],
+      "limitations": [
+        "Review was limited to the supplied snapshot; no tools or execution were used.",
+        "BaseNote, DbHelper, adapter implementations, build configuration, and other referenced dependencies were not supplied, limiting conclusions about identity, copying, database behavior, and platform compatibility."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "knowledge_enrichment": {
+          "provider": "keenable",
+          "status": "ok",
+          "sources": [
+            {
+              "title": "Java Code Review Checklist: Best Practices and Common Pitfalls",
+              "url": "https://pullpanda.io/blog/java-code-review-checklist",
+              "snippet": "**Resource Management**\n- Resources closed with try-with-resources: `try (var stream = Files.lines(path))`\n- No manual `close()` calls in finally blocks\n- Streams properly closed, especially for file operations\n- Database connections, statements, and result sets in try-with-resources\n- Thread pools shut down properly: `executor.shutdown()`\n- No suppressed exceptions from automatic resource closing\n- Resources not assigned to fields without careful lifecycle management\n**Thread Safety & Concurrency**\n- Shared mutable state protected by synchronization\n- Volatile used for simple flags, not complex operations\n- Double-checked locking avoided or implemented correctly with volatile\n- Collections wrapped with `Collections.synchronized*()` if shared\n- `ConcurrentHashMap` used instead of `Hashtable` or synchronized HashMap\n- Thread-safe classes from `java.util.concurrent` preferred\n- Immutable objects used for sharing state between threads\n- No publishing partially constructed objects from constructors\n\nJava's try-with-resources statement, introduced in Java 7, provides the standard pattern for managing resources that need cleanup. When we see code opening files, database connections, or s"
+            },
+            {
+              "title": "claude-code-java/.claude/skills/java-code-review/SKILL.md at main · decebals/claude-code-java",
+              "url": "https://github.com/decebals/claude-code-java/blob/main/.claude/skills/java-code-review/SKILL.md",
+              "snippet": "### 1. Null Safety\n**Check for:**\n```\n// ❌ NPE risk\nString name = user.getName().toUpperCase();\n// ✅ Safe\nString name = Optional.ofNullable(user.getName())\n.map(String::toUpperCase)\n.orElse(\"\");\n// ✅ Also safe (early return)\nif (user.getName() == null) {\nreturn \"\";\n}\nreturn user.getName().toUpperCase();\n```\n**Flags:**\n- Chained method calls without null checks\n- Missing `@Nullable` / `@NonNull` annotations on public APIs\n- `Optional.get()` without `isPresent()` check\n- Returning `null` from methods that could return `Optional` or empty collection\n**Suggest:**\n- Use `Optional` for return types that may be absent\n- Use `Objects.requireNonNull()` for constructor/method params\n- Return empty collections instead of null: `Collections.emptyList()`\n### 2. Exception Handling\n**Check for:**\n```\n// ❌ Swallowing exceptions\ntry {\nprocess();\n} catch (Exception e) {\n// silently ignored\n}\n// ❌ Catching too broad\ncatch (Exception e) { }\ncatch (Throwable t) { }\n// ❌ Losing stack trace\ncatch (IOException e) {\nthrow new RuntimeException(e.getMessage());\n}\n// ✅ Proper handling\ncatch (IOException e) {\nlog.error(\"Failed to process file: {}\", filename, e);\nthrow new ProcessingException(\"File processing f"
+            },
+            {
+              "title": "Java Code Review Checklist | Engineering Guidelines",
+              "url": "https://guidelines.ryanharrison.co.uk/languages/java/java-code-review",
+              "snippet": "- Not using try-with-resources for `AutoCloseable` resources → [Resource leaks prevention](/languages/java/java-general)\n- Streams/readers/writers not closed properly\n- Database connections not returned to pool\n- File handles leaked in error paths\n- Thread pools not shut down in `finally` block\n```\n// GOOD: try-with-resources ensures cleanup try ( var stream = Files . lines ( path ) ) { stream . forEach ( System . out :: println ) ; } // BAD: Stream never closed if exception occurs var stream = Files . lines ( path ) ; stream . forEach ( System . out :: println ) ;\n```\n\n- Mutable static fields accessed by multiple threads → [Java Concurrency](/languages/java/java-concurrency-fundamentals)\n- Missing synchronization on shared mutable state\n- Double-checked locking without `volatile` (broken pattern)\n- Non-thread-safe collections (ArrayList, HashMap) shared between threads\n- Race conditions in check-then-act patterns\n```\n// BAD: Race condition - multiple threads can pass check if ( counter < MAX ) { counter ++ ; // Not atomic! } // GOOD: Atomic operation atomicCounter . getAndIncrement ( ) ;\n```\n- Pinning virtual threads with `synchronized` blocks doing I/O → Use `ReentrantLock` ([Vir"
+            },
+            {
+              "title": "code-review-skill/reference/java8.md at 4850184dfd7765ea7b3c5c4e9b6cf8e0815ee7cb · awesome-skills/code-review-skill",
+              "url": "https://github.com/awesome-skills/code-review-skill/blob/HEAD/reference/java8.md",
+              "snippet": "### Captured variables must be effectively final\n```\n// ❌ Mutating a captured variable → compile error (or Atomic/array hacks)\nint sum = 0;\nlist.forEach(n -> sum += n); // does not compile\n// ✅ Reduce with a stream, or use an explicit mutable accumulator type\nint sum = list.stream().mapToInt(Integer::intValue).sum();\n```\n\nBoot 2 does not treat Spring 6 `ProblemDetail` as a first-class citizen (that is a Boot 3 story). Use a shared `@ControllerAdvice` with clear HTTP statuses.\n```\n// ❌ Swallow exceptions, printStackTrace, return null to hide failure\ntry {\nuserService.create(user);\n} catch (Exception e) {\ne.printStackTrace();\nreturn null;\n}\n// ✅ Domain exceptions + global handler\n@RestControllerAdvice\npublic class GlobalExceptionHandler {\n@ExceptionHandler(UserNotFoundException.class)\npublic ResponseEntity<ApiError> handleNotFound(UserNotFoundException e) {\nreturn ResponseEntity.status(HttpStatus.NOT_FOUND)\n.body(new ApiError(\"USER_NOT_FOUND\", e.getMessage()));\n}\n}\n```\nClose resources with try-with-resources (Java 7+). Avoid hand-rolled `finally { close() }` that forgets null checks.\n\n- Lambdas stay short; prefer method references and standard functional interfaces\n- Streams used for"
+            },
+            {
+              "title": "software-engineering-skills/plugins/java/skills/java-code-review/SKILL.md at main · wesleyegberto/software-engineering-skills",
+              "url": "https://github.com/wesleyegberto/software-engineering-skills/blob/main/plugins/java/skills/java-code-review/SKILL.md",
+              "snippet": "### 1. Null Safety\n**Check for:**\n```\n// ❌ NPE risk\nString name = user.getName().toUpperCase();\n// ✅ Safe\nString name = Optional.ofNullable(user.getName())\n.map(String::toUpperCase)\n.orElse(\"\");\n// ✅ Also safe (early return)\nif (user.getName() == null) {\nreturn \"\";\n}\nreturn user.getName().toUpperCase();\n```\n**Flags:**\n- Chained method calls without null checks\n- Missing `@Nullable` / `@NonNull` annotations on public APIs\n- `Optional.get()` without `isPresent()` check\n- Returning `null` from methods that could return `Optional` or empty collection\n**Suggest:**\n- Use `Optional` for return types that may be absent\n- Use `Objects.requireNonNull()` for constructor/method params\n- Return empty collections instead of null: `Collections.emptyList()`\n### 2. Exception Handling\n**Check for:**\n```\n// ❌ Swallowing exceptions\ntry {\nprocess();\n} catch (Exception e) {\n// silently ignored\n}\n// ❌ Catching too broad\ncatch (Exception e) { }\ncatch (Throwable t) { }\n// ❌ Losing stack trace\ncatch (IOException e) {\nthrow new RuntimeException(e.getMessage());\n}\n// ✅ Proper handling\ncatch (IOException e) {\nlog.error(\"Failed to process file: {}\", filename, e);\nthrow new ProcessingException(\"File processing f"
+            },
+            {
+              "title": "code-review-best-practices/example-guidelines/languages/java.yaml at main · augmentcode/code-review-best-practices",
+              "url": "https://github.com/augmentcode/code-review-best-practices/blob/main/example-guidelines/languages/java.yaml",
+              "snippet": "Prefer immutable objects and collections. Make classes immutable when possible. Use final fields, no setters, and return defensive copies of mutable fields. Use List.of(), Set.of(), Map.of() for immutable collections.\n\n- id: java-try-with-resources\ndescription: |\nUse try-with-resources for AutoCloseable resources. Always use try-with-resources for streams, connections, readers, writers, and any AutoCloseable resource. This ensures proper cleanup even when exceptions occur.\nBAD: Manual try-finally with is.close() that may throw and hide original exception.\nGOOD: try (InputStream is = new FileInputStream(file)) { } for automatic cleanup.\nseverity: medium\n\nEnsure thread safety for shared mutable state. Protect shared mutable state with proper synchronization. Use thread-safe collections (ConcurrentHashMap, CopyOnWriteArrayList) or immutable objects. Document thread-safety guarantees.\nBAD: private Map<String, User> cache = new HashMap<>();\nGOOD: private final Map<String, User> cache = new ConcurrentHashMap<>();"
+            }
+          ],
+          "queries": [
+            "Java code review anti-patterns error handling mutable state resource management official documentation"
+          ]
+        },
+        "citation_corrections": [],
+        "duration_seconds": 54.118
+      }
+    },
+    {
+      "agent": "security",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "Encryption failures return plaintext as a successful result",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 66,
+          "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+          "explanation": "Any encryption exception returns the original sensitive value. For example, a password shorter than eight UTF-8 bytes causes DESKeySpec construction to fail. A caller that stores or transmits the returned result as ciphertext would expose plaintext without receiving a failure signal. Call sites are absent, so the affected data cannot be established.",
+          "recommendation": "Fail closed by propagating an encryption error or returning an explicit failure that callers must handle; never return plaintext as ciphertext.",
+          "suggested_test": "Encrypt a sensitive value with a password shorter than eight UTF-8 bytes and assert that the operation reports failure and never returns the input value."
+        },
+        {
+          "severity": "medium",
+          "title": "DES encryption provides only a 56-bit effective key",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 58,
+          "evidence": "                val keySpec = DESKeySpec(password.toByteArray(StandardCharsets.UTF_8))\n                val keyFactory = SecretKeyFactory.getInstance(\"DES\")\n                val key = keyFactory.generateSecret(keySpec)\n                val clearText = value.toByteArray(StandardCharsets.UTF_8)\n                // Cipher is not thread safe\n                val cipher = Cipher.getInstance(\"DES\")",
+          "explanation": "An attacker who obtains ciphertext produced by this helper can attack DES's 56-bit effective key offline. DESKeySpec also uses only the first eight password bytes, so longer passwords do not increase key strength. The snapshot does not show which data uses this helper.",
+          "recommendation": "Use authenticated encryption such as AES-GCM with a randomly generated nonce and a suitable password-based key derivation function. Version the ciphertext format to support migration.",
+          "suggested_test": "Verify that the replacement produces different ciphertext for repeated encryption of identical inputs, rejects tampering, and derives different keys when password bytes beyond the eighth byte change."
+        }
+      ],
+      "limitations": [
+        "Review was limited to the supplied snapshot; no tools or execution were used.",
+        "Encryption call sites, StorageHelper, MainActivity intent routing, notification formatting helpers, dependency versions, and FileProvider path configuration were not supplied, limiting assessment of reachability and downstream impact."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "citation_corrections": [],
+        "duration_seconds": 23.031
+      }
+    },
+    {
+      "agent": "tests",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "Queued alarms can overwrite a trashed note with stale data",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/receiver/AlarmReceiver.java",
+          "line": 55,
+          "evidence": "        if (isNoteGone(note)) {\n          LogDelegate.d(\"Reminder fired for a note that no longer exists, skipping\");\n          return;\n        }\n        createNotification(mContext, note);\n        SnoozeActivity.setNextRecurrentReminder(note);\n        updateNote(note);",
+          "explanation": "The guard only checks existence. A queued broadcast serialized before trashing still passes because the database row exists, then displays a notification and writes its old, untrashed state through updateNote(). The supplied receiver test covers deletion only, so it misses this path and stale edits to existing notes.",
+          "recommendation": "Load the current database note, reject trashed notes and obsolete alarms, and apply reminder changes to current data.",
+          "suggested_test": "Serialize an active reminded note, trash and save it, then deliver the original broadcast. Assert the database note remains trashed, no notification appears, and no recurrent alarm is scheduled. Also edit the title after serialization and assert delivery preserves the edit."
+        },
+        {
+          "severity": "medium",
+          "title": "Denied exact-alarm access launches settings from an application context",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/ReminderHelper.java",
+          "line": 63,
+          "evidence": "        if (!alarmManager.canScheduleExactAlarms()) {\n          Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);\n          context.startActivity(intent);\n          return;\n        }",
+          "explanation": "SaveNoteTask supplies OmniNotes.getAppContext(). When exact-alarm access is denied on Android 12+, startActivity() lacks FLAG_ACTIVITY_NEW_TASK and throws from that application context. The reminder tests assume scheduling succeeds and do not exercise denied access.",
+          "recommendation": "Handle permission requests through an activity, or add the required task flag when launching from an application context and provide a way to retry scheduling after access is granted.",
+          "suggested_test": "On API 31+, simulate canScheduleExactAlarms() returning false and call addReminder with an application context. Assert no exception, the settings intent has FLAG_ACTIVITY_NEW_TASK, and no alarm is scheduled before permission is granted."
+        },
+        {
+          "severity": "medium",
+          "title": "Location selection accepts arbitrarily stale cached fixes",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationManagerLocationProvider.java",
+          "line": 118,
+          "evidence": "      if (location != null && (bestLocation == null\n          || location.getAccuracy() < bestLocation.getAccuracy())) {\n        bestLocation = location;\n      }",
+          "explanation": "Cached locations are ranked only by accuracy, with no age check. getLocation() immediately returns the selected fix, so an old precise GPS fix can override a recent network fix and prevent requesting the current position. The supplied factory test only checks that a provider exists.",
+          "recommendation": "Reject expired fixes and consider recency when selecting among acceptable cached locations.",
+          "suggested_test": "Supply a day-old GPS fix with 5-meter accuracy and a recent network fix with 50-meter accuracy. Assert the recent fix is selected. With only expired fixes, assert fresh updates are requested and timeout produces exactly one failure callback."
+        },
+        {
+          "severity": "medium",
+          "title": "Refreshing coordinates retains the previous location's address",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+          "line": 940,
+          "evidence": "      noteTmp.setLatitude(location.getLatitude());\n      noteTmp.setLongitude(location.getLongitude());\n      if (!TextUtils.isEmpty(noteTmp.getAddress())) {\n        binding.fragmentDetailContent.location.setVisibility(View.VISIBLE);\n        binding.fragmentDetailContent.location.setText(noteTmp.getAddress());",
+          "explanation": "For a note with an existing address, retrieving a new location updates coordinates but reuses the old address and skips reverse geocoding. The displayed and persisted address can therefore describe a different place from the map destination.",
+          "recommendation": "Invalidate the cached address when coordinates change and resolve an address for the new coordinates.",
+          "suggested_test": "Open a note with coordinates and address A, then deliver location B. Assert reverse geocoding receives B and the displayed and saved address becomes B's address, or B's coordinates when lookup fails."
+        },
+        {
+          "severity": "medium",
+          "title": "The address migration discards every note's trash status",
+          "file": "omniNotes/src/main/assets/sql/upgrade-453.sql",
+          "line": 23,
+          "evidence": "INSERT INTO notes(note_id, creation, last_modification, title, content, archived, alarm, latitude, longitude, category_id, locked, checklist)\nSELECT note_id, creation, last_modification, title, content, archived, alarm, latitude, longitude, category_id, locked, checklist\nFROM notes_tmp;",
+          "explanation": "The replacement table declares trashed, but the copy omits it. Migrated rows receive NULL instead of their existing trash status, and dropping notes_tmp permanently loses that state. The supplied reminder tests create fresh rows and cannot detect migration damage.",
+          "recommendation": "Include trashed in both the INSERT and SELECT column lists.",
+          "suggested_test": "Seed the pre-migration table with trashed=1 and trashed=0 notes, run upgrade-453.sql, and assert both values and all existing note fields are preserved."
+        },
+        {
+          "severity": "low",
+          "title": "Google Play availability assertion cannot detect an incorrect result",
+          "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/MiscUtilsTest.kt",
+          "line": 29,
+          "evidence": "        assertTrue(MiscUtils.isGooglePlayAvailable(testContext) is Boolean)",
+          "explanation": "Checking the result's Boolean type does not verify availability behavior. An implementation that always returns true or always returns false can pass this test.",
+          "recommendation": "Control the availability dependency and assert the expected Boolean value for each relevant state.",
+          "suggested_test": "Arrange Google Play services as available and assert true; arrange services as missing or unavailable and assert false."
+        }
+      ],
+      "limitations": [
+        "Static review only; no tools were used and no tests were executed.",
+        "Database helpers, base models, location factory, several tested implementations, and shared test setup were not supplied. Their behavior and any additional tests could not be verified.",
+        "The migration finding applies when upgrade-453.sql is executed against an existing database."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "citation_corrections": [],
+        "duration_seconds": 39.444
+      }
+    }
+  ],
+  "actual_models": [
+    "gpt-6.1-sol"
+  ],
+  "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+  "schema_version": "1.0",
+  "run_id": "33d2d3ce-1dc7-4700-a8a9-7578b833010b",
+  "started_at": "2026-10-25T06:21:51.697353+00:00",
+  "completed_at": "2026-10-25T06:22:45.879882+00:00",
+  "duration_seconds": 54.183,
+  "backend": "codex",
+  "repository": "/Users/krishnakumar/Documents/github/Omni-Notes",
+  "snapshot_sha256": "6aaa820e067eac1ac09c05a6ae2c92bc4eb8556cfdfc97eff99d31b7910ee125",
+  "snapshot_bytes": 222756,
+  "requested_model": null,
+  "model": "gpt-6.1-sol",
+  "batch": 1,
+  "source_revision": "504253db6781a19d377ab04153f2f2cd75ef5494"
+}

@@ -1,0 +1,71 @@
+{
+  "variant": "single",
+  "case": "fail_open_encryption",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 1,
+    "matched": 1,
+    "unmatched_indices": [],
+    "valid_citations": 1,
+    "severity_acceptable": 1,
+    "test_suggestion_present": 1,
+    "semantic_duplicate_excess": 0,
+    "complete": true,
+    "duration_seconds": 8.639,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Encryption failures return plaintext for storage",
+        "file": "app.py",
+        "line": 5,
+        "evidence": "    except Exception:\n        return plaintext",
+        "explanation": "Any exception from cipher.encrypt causes the function to return the original plaintext as a successful result. A storage caller can therefore persist sensitive data unencrypted, violating the function's explicit contract.",
+        "recommendation": "Propagate the encryption exception or raise a dedicated error so callers cannot mistake plaintext for ciphertext.",
+        "suggested_test": "Use a cipher whose encrypt method raises an exception. Assert that encrypt_for_storage raises and does not return plaintext; in a storage integration test, assert that no write occurs after this failure."
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Encryption failures return plaintext for storage",
+            "file": "app.py",
+            "line": 5,
+            "evidence": "    except Exception:\n        return plaintext",
+            "explanation": "Any exception from cipher.encrypt causes the function to return the original plaintext as a successful result. A storage caller can therefore persist sensitive data unencrypted, violating the function's explicit contract.",
+            "recommendation": "Propagate the encryption exception or raise a dedicated error so callers cannot mistake plaintext for ciphertext.",
+            "suggested_test": "Use a cipher whose encrypt method raises an exception. Assert that encrypt_for_storage raises and does not return plaintext; in a storage integration test, assert that no write occurs after this failure."
+          }
+        ],
+        "limitations": [
+          "Only the supplied function was reviewed; callers, cipher implementation, and existing tests were not provided."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 8.604
+        }
+      }
+    ],
+    "duration_seconds": 8.639
+  }
+}

@@ -1,0 +1,324 @@
+{
+  "variant": "three_source",
+  "case": "sql_injection",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 7,
+    "matched": 6,
+    "unmatched_indices": [
+      6
+    ],
+    "valid_citations": 7,
+    "severity_acceptable": 3,
+    "test_suggestion_present": 6,
+    "semantic_duplicate_excess": 5,
+    "complete": true,
+    "duration_seconds": 7.72,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "app.py"
+    ],
+    "counts": {
+      "critical": 3,
+      "high": 0,
+      "medium": 3,
+      "low": 1,
+      "info": 0
+    },
+    "findings": [
+      {
+        "severity": "critical",
+        "title": "SQL injection via string concatenation of untrusted `name`",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+        "explanation": "`name` is documented as coming from an unauthenticated HTTP request (line 2) and is concatenated directly into the SQL statement with no escaping, quoting, or parameterization. An attacker can terminate the string literal and inject arbitrary SQL, e.g. `name = \"' OR '1'='1\"` yielding every user id, or `name = \"x'; DROP TABLE users; --\"` for destructive statements. Because the input is unauthenticated, the injection is remotely and anonymously reachable, and the resulting rows disclose all user identifiers (and enable further attacks such as boolean/union-based data extraction). The query also has no LIMIT, so a tautology payload returns the full result set.",
+        "recommendation": "Use a parameterized query instead of string concatenation, e.g. `db.execute(\"SELECT id FROM users WHERE name = ?\", (name,)).fetchall()` (or the driver's named-parameter form). Never interpolate request data into SQL text; if dynamic identifiers are ever needed, use an allow-list of validated values.",
+        "suggested_test": "Add a test that calls `find_user(db, \"' OR '1'='1\")` with a fake db object capturing the executed SQL and parameters, and assert that (a) the executed statement is a constant parameterized string containing no user-supplied text, and (b) the parameters tuple equals `(\"' OR '1'='1\",)`; a second test with `name = \"x'; DROP TABLE users; --\"` must assert the SQL text passed to `execute` contains neither `DROP` nor the injected literal.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "critical",
+        "title": "SQL injection via string-concatenated query",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+        "explanation": "The `name` parameter, documented on line 2 as coming from an unauthenticated HTTP request, is concatenated directly into the SQL string with no parameterization, escaping, or validation. An attacker can break out of the quoted literal (e.g. name = `' OR '1'='1`) and inject arbitrary SQL, enabling boolean-based blind extraction, UNION-based data exfiltration of other tables (credentials, tokens), or destructive statements depending on the driver. Because the request is unauthenticated, no credential is required to exploit it.",
+        "recommendation": "Use a parameterized query instead of string concatenation, e.g. `db.execute(\"SELECT id FROM users WHERE name = ?\", (name,)).fetchall()` (or the driver's named-parameter form `:name`). Do not attempt to fix this with escaping or blocklists alone. Additionally validate/length-limit the input and ensure the DB account has least privilege.",
+        "suggested_test": "Call find_user(db, \"' OR '1'='1\") and assert that the executed statement contains no attacker-controlled SQL text and that zero rows are returned rather than all users; also assert the query is issued via a parameterized call with the value bound separately.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "critical",
+        "title": "SQL injection via unsanitized string concatenation",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+        "explanation": "The `name` argument is documented as coming from an unauthenticated HTTP request and is concatenated directly into the SQL string. An attacker can supply `name` = `' OR '1'='1` to return every user id, or `'; DROP TABLE users; --` to alter/destroy data, depending on the driver's multi-statement support. Parameterization is not used at all, so every value reaching this function is an injection vector.",
+        "recommendation": "Use a parameterized query: `return db.execute(\"SELECT id FROM users WHERE name = ?\", (name,)).fetchall()` (or the placeholder style of the DB-API in use, e.g. `:name` / `%s`). Never build SQL by string concatenation; if dynamic identifiers are ever needed, use a strict allowlist.",
+        "suggested_test": "Call find_user with the name `x' OR '1'='1` against a fixture DB containing 3 users and assert the result set is empty (no rows returned for a non-existent user), then call it with an existing user's name and assert exactly one id is returned. A second test with `'; DROP TABLE users; --` should assert the users table still exists and the injected payload is treated as a literal string value.",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "No tests exist for `find_user`, including injection and edge-case paths",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def find_user(db, name):\n    \"\"\"name comes from an unauthenticated HTTP request.\"\"\"\n    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+        "explanation": "The snapshot contains only the production function; no test module is supplied for it. Consequently there is no regression barrier against the injection flaw above, no coverage of the empty-result path (name not found), no coverage of the quote/apostrophe-in-name path that triggers a SQL syntax error in the current implementation, and no coverage of a malicious payload's effect on the executed statement. Even after parameterization, a regression to string building could silently reintroduce the vulnerability without any failing test.",
+        "recommendation": "Create a `tests/test_app.py` (pytest) with a stub/fake `db` object that records the SQL string and parameters passed to `execute` and returns a stub cursor whose `fetchall()` returns a fixed list. Cover at minimum: normal lookup, not-found (empty list), name containing a single quote, name containing SQL metacharacters/`--`, empty string, and very long input.",
+        "suggested_test": "Expected assertions for the fake db: for `find_user(db, \"alice\")` assert `result == [(1,)]` (stubbed rows) and `db.calls[0].params == (\"alice\",)`; for `find_user(db, \"o'brien\")` assert the call was made without raising and `params == (\"o'brien\",)`; for `find_user(db, \"nope\")` assert `result == []`; and assert that for every input the SQL text passed to `execute` is identical (i.e. contains no interpolated input) so injection payloads are inert.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Unauthenticated request data reaches the data layer without validation",
+        "file": "app.py",
+        "line": 2,
+        "evidence": "    \"\"\"name comes from an unauthenticated HTTP request.\"\"\"",
+        "explanation": "The docstring confirms the input is attacker-controlled and unauthenticated, yet the function performs no type, length, or character validation before use. This widens the attack surface for the injection above (arbitrarily long payloads, driver-specific escape handling, null bytes) and is a defense-in-depth gap independent of the SQLi itself.",
+        "recommendation": "Validate the input at the trust boundary (reject non-string types, enforce a max length and an allowlist of permitted characters such as letters, digits, underscore and dash) in addition to parameterizing the query.",
+        "suggested_test": "Pass inputs of unexpected types (None, list, bytes) and over-length strings to find_user and assert they are rejected with a validation error before any database call is made.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Uncaught database exceptions propagate to the request layer",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+        "explanation": "There is no error handling around `db.execute`/`fetchall`. Operational errors (connection loss, invalid SQL after a malformed name, table missing) raise driver-specific exceptions that will surface as a raw 500 with a stack trace if not caught upstream, potentially leaking internal details and causing a DoS under repeated malformed input.",
+        "recommendation": "Wrap the call in a try/except for the driver's error type, log the failure with the parameter value, and return an empty result or a controlled error response. Keep the exception scope narrow rather than catching bare `Exception`.",
+        "suggested_test": "Simulate a driver raising a database error for the query and assert find_user returns an empty list (or raises a domain-specific error) without leaking a raw driver exception message.",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "severity": "low",
+        "title": "Unbounded query result set with no LIMIT and no error handling",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+        "explanation": "The function calls `fetchall()` on a query with no LIMIT and no uniqueness guarantee on `users.name`. If the injected payload matches all rows, or if many users share a name, the entire result set is materialized and returned to an unauthenticated caller, which is both an easy amplification/DoS vector and an information-disclosure amplifier (all user ids). There is also no handling of database errors, so a malformed value (e.g. containing an unmatched quote) raises an unhandled exception that likely surfaces as a 500 with a stack trace depending on the framework's debug configuration.",
+        "recommendation": "Add `LIMIT 1` (or use a unique-index lookup on `name`) and return at most one record; catch `db.execute` exceptions and map them to a safe response instead of propagating raw database errors to the request path.",
+        "suggested_test": "With a fake db, assert that the executed SQL contains a `LIMIT` clause and that `fetchall` is called at most once with a bounded result; add a test where the fake db raises an exception on `execute` and assert the function returns a controlled empty/None result or re-raises a domain-specific error rather than a raw driver exception.",
+        "agents": [
+          "tests"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "critical",
+            "title": "SQL injection via unsanitized string concatenation",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+            "explanation": "The `name` argument is documented as coming from an unauthenticated HTTP request and is concatenated directly into the SQL string. An attacker can supply `name` = `' OR '1'='1` to return every user id, or `'; DROP TABLE users; --` to alter/destroy data, depending on the driver's multi-statement support. Parameterization is not used at all, so every value reaching this function is an injection vector.",
+            "recommendation": "Use a parameterized query: `return db.execute(\"SELECT id FROM users WHERE name = ?\", (name,)).fetchall()` (or the placeholder style of the DB-API in use, e.g. `:name` / `%s`). Never build SQL by string concatenation; if dynamic identifiers are ever needed, use a strict allowlist.",
+            "suggested_test": "Call find_user with the name `x' OR '1'='1` against a fixture DB containing 3 users and assert the result set is empty (no rows returned for a non-existent user), then call it with an existing user's name and assert exactly one id is returned. A second test with `'; DROP TABLE users; --` should assert the users table still exists and the injected payload is treated as a literal string value."
+          },
+          {
+            "severity": "medium",
+            "title": "Uncaught database exceptions propagate to the request layer",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+            "explanation": "There is no error handling around `db.execute`/`fetchall`. Operational errors (connection loss, invalid SQL after a malformed name, table missing) raise driver-specific exceptions that will surface as a raw 500 with a stack trace if not caught upstream, potentially leaking internal details and causing a DoS under repeated malformed input.",
+            "recommendation": "Wrap the call in a try/except for the driver's error type, log the failure with the parameter value, and return an empty result or a controlled error response. Keep the exception scope narrow rather than catching bare `Exception`.",
+            "suggested_test": "Simulate a driver raising a database error for the query and assert find_user returns an empty list (or raises a domain-specific error) without leaking a raw driver exception message."
+          }
+        ],
+        "limitations": [
+          "Only a 3-line snippet was provided; the HTTP layer that supplies `name`, the `db` wrapper's own sanitization/parameterization behavior, and the DB driver are not visible. If `db.execute` internally escapes or parameterizes, the severity of the injection finding would be reduced, though nothing in the shown code indicates that.",
+          "No tests, configuration, or dependency versions were available for review."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 622,
+            "prompt_tokens": 958,
+            "total_tokens": 1580,
+            "completion_tokens_details": {
+              "reasoning_tokens": 7
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 7
+            }
+          },
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 3.641
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "critical",
+            "title": "SQL injection via string-concatenated query",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+            "explanation": "The `name` parameter, documented on line 2 as coming from an unauthenticated HTTP request, is concatenated directly into the SQL string with no parameterization, escaping, or validation. An attacker can break out of the quoted literal (e.g. name = `' OR '1'='1`) and inject arbitrary SQL, enabling boolean-based blind extraction, UNION-based data exfiltration of other tables (credentials, tokens), or destructive statements depending on the driver. Because the request is unauthenticated, no credential is required to exploit it.",
+            "recommendation": "Use a parameterized query instead of string concatenation, e.g. `db.execute(\"SELECT id FROM users WHERE name = ?\", (name,)).fetchall()` (or the driver's named-parameter form `:name`). Do not attempt to fix this with escaping or blocklists alone. Additionally validate/length-limit the input and ensure the DB account has least privilege.",
+            "suggested_test": "Call find_user(db, \"' OR '1'='1\") and assert that the executed statement contains no attacker-controlled SQL text and that zero rows are returned rather than all users; also assert the query is issued via a parameterized call with the value bound separately."
+          },
+          {
+            "severity": "medium",
+            "title": "Unauthenticated request data reaches the data layer without validation",
+            "file": "app.py",
+            "line": 2,
+            "evidence": "    \"\"\"name comes from an unauthenticated HTTP request.\"\"\"",
+            "explanation": "The docstring confirms the input is attacker-controlled and unauthenticated, yet the function performs no type, length, or character validation before use. This widens the attack surface for the injection above (arbitrarily long payloads, driver-specific escape handling, null bytes) and is a defense-in-depth gap independent of the SQLi itself.",
+            "recommendation": "Validate the input at the trust boundary (reject non-string types, enforce a max length and an allowlist of permitted characters such as letters, digits, underscore and dash) in addition to parameterizing the query.",
+            "suggested_test": "Pass inputs of unexpected types (None, list, bytes) and over-length strings to find_user and assert they are rejected with a validation error before any database call is made."
+          }
+        ],
+        "limitations": [
+          "Only a single three-line file was provided, so the surrounding web framework, database driver, and parameter handling could not be verified.",
+          "Whether the driver supports multiple statements (stacked-query injection) is unknown and depends on the deployment configuration."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 599,
+            "prompt_tokens": 913,
+            "total_tokens": 1512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 6
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 694
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 6
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 3.444
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "critical",
+            "title": "SQL injection via string concatenation of untrusted `name`",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+            "explanation": "`name` is documented as coming from an unauthenticated HTTP request (line 2) and is concatenated directly into the SQL statement with no escaping, quoting, or parameterization. An attacker can terminate the string literal and inject arbitrary SQL, e.g. `name = \"' OR '1'='1\"` yielding every user id, or `name = \"x'; DROP TABLE users; --\"` for destructive statements. Because the input is unauthenticated, the injection is remotely and anonymously reachable, and the resulting rows disclose all user identifiers (and enable further attacks such as boolean/union-based data extraction). The query also has no LIMIT, so a tautology payload returns the full result set.",
+            "recommendation": "Use a parameterized query instead of string concatenation, e.g. `db.execute(\"SELECT id FROM users WHERE name = ?\", (name,)).fetchall()` (or the driver's named-parameter form). Never interpolate request data into SQL text; if dynamic identifiers are ever needed, use an allow-list of validated values.",
+            "suggested_test": "Add a test that calls `find_user(db, \"' OR '1'='1\")` with a fake db object capturing the executed SQL and parameters, and assert that (a) the executed statement is a constant parameterized string containing no user-supplied text, and (b) the parameters tuple equals `(\"' OR '1'='1\",)`; a second test with `name = \"x'; DROP TABLE users; --\"` must assert the SQL text passed to `execute` contains neither `DROP` nor the injected literal."
+          },
+          {
+            "severity": "medium",
+            "title": "No tests exist for `find_user`, including injection and edge-case paths",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def find_user(db, name):\n    \"\"\"name comes from an unauthenticated HTTP request.\"\"\"\n    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+            "explanation": "The snapshot contains only the production function; no test module is supplied for it. Consequently there is no regression barrier against the injection flaw above, no coverage of the empty-result path (name not found), no coverage of the quote/apostrophe-in-name path that triggers a SQL syntax error in the current implementation, and no coverage of a malicious payload's effect on the executed statement. Even after parameterization, a regression to string building could silently reintroduce the vulnerability without any failing test.",
+            "recommendation": "Create a `tests/test_app.py` (pytest) with a stub/fake `db` object that records the SQL string and parameters passed to `execute` and returns a stub cursor whose `fetchall()` returns a fixed list. Cover at minimum: normal lookup, not-found (empty list), name containing a single quote, name containing SQL metacharacters/`--`, empty string, and very long input.",
+            "suggested_test": "Expected assertions for the fake db: for `find_user(db, \"alice\")` assert `result == [(1,)]` (stubbed rows) and `db.calls[0].params == (\"alice\",)`; for `find_user(db, \"o'brien\")` assert the call was made without raising and `params == (\"o'brien\",)`; for `find_user(db, \"nope\")` assert `result == []`; and assert that for every input the SQL text passed to `execute` is identical (i.e. contains no interpolated input) so injection payloads are inert."
+          },
+          {
+            "severity": "low",
+            "title": "Unbounded query result set with no LIMIT and no error handling",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+            "explanation": "The function calls `fetchall()` on a query with no LIMIT and no uniqueness guarantee on `users.name`. If the injected payload matches all rows, or if many users share a name, the entire result set is materialized and returned to an unauthenticated caller, which is both an easy amplification/DoS vector and an information-disclosure amplifier (all user ids). There is also no handling of database errors, so a malformed value (e.g. containing an unmatched quote) raises an unhandled exception that likely surfaces as a 500 with a stack trace depending on the framework's debug configuration.",
+            "recommendation": "Add `LIMIT 1` (or use a unique-index lookup on `name`) and return at most one record; catch `db.execute` exceptions and map them to a safe response instead of propagating raw database errors to the request path.",
+            "suggested_test": "With a fake db, assert that the executed SQL contains a `LIMIT` clause and that `fetchall` is called at most once with a bounded result; add a test where the fake db raises an exception on `execute` and assert the function returns a controlled empty/None result or re-raises a domain-specific error rather than a raw driver exception."
+          }
+        ],
+        "limitations": [
+          "Only `app.py` (3 lines) was supplied; the caller, the `db` implementation/driver, and the database schema (including whether `users.name` is unique) are unknown, so exploitability details such as multi-statement execution support and actual row counts cannot be confirmed.",
+          "No test files, test framework configuration, or CI setup were provided; the absence of tests for `find_user` is inferred from the snapshot only, and coverage in other parts of the repository cannot be assessed.",
+          "No tests were executed; all statements about behavior are based on static reading of the supplied source.",
+          "Whether the web framework enables debug/traceback output on database errors was not determinable from the snapshot."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 1396,
+            "prompt_tokens": 914,
+            "total_tokens": 2310,
+            "completion_tokens_details": {
+              "reasoning_tokens": 96
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 693
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 96
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 7.688
+        }
+      }
+    ],
+    "actual_models": [
+      "accounts/fireworks/models/minimax-m3p1-flash"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "092b7d33-0dff-4f8e-9b4c-ba2b0b97000a",
+    "started_at": "2026-10-25T06:50:48.188205+00:00",
+    "completed_at": "2026-10-25T06:50:55.908096+00:00",
+    "duration_seconds": 7.72,
+    "backend": "fireworks",
+    "repository": "/home/runner/work/Week1Project-GenAcademy/Week1Project-GenAcademy/.github/coding-review/eval-fixture",
+    "snapshot_sha256": "3a65620e9ce596cb77e8abba700da1fd29f388886c5198cb110e229105f54e53",
+    "snapshot_bytes": 169,
+    "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+    "model": "accounts/fireworks/models/minimax-m3p1-flash"
+  }
+}

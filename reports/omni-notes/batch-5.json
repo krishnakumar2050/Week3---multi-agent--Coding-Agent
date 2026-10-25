@@ -1,0 +1,765 @@
+{
+  "status": "complete",
+  "files_reviewed": [
+    "omniNotes/build.gradle",
+    "omniNotes/src/alpha/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessorTest.kt",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/db/DbHelperTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/exceptions/TestException.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/RetryableAssert.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/BaseEspressoTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/CategoryLifecycleTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/DrawerMenusEspressoTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabCameraNoteTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/RecurrenceRuleTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/GeocodeHelperTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/IntentCheckerTest.kt",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/VisibleViewMatcher.java",
+    "omniNotes/src/beta/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/foss/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/main/AndroidManifest.xml",
+    "omniNotes/src/main/assets/sql/upgrade-451.sql",
+    "omniNotes/src/main/java/it/feio/android/omninotes/BaseActivity.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/ShortcutActivity.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/SketchFragment.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/SnoozeActivity.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/CategoriesUpdatedEvent.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotesMergeEvent.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/PushbulletReplyEvent.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessorArchive.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessorDelete.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/db/SqlParser.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/DatabaseException.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/LogDelegate.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/date/RecurrenceHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationProvider.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroFragment.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/Attachment.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/category/CategoryViewHolder.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/holders/NoteViewHolder.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnDrawChangedListener.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnFabItemClickedListener.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/misc/PlayStoreMetadataFetcherResult.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/views/SketchView.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/ConstantsBase.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/IntentChecker.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/KeyboardUtils.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/MiscUtils.kt",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/Navigation.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/TextHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/date/DateUtils.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/date/ReminderPickers.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/widget/WidgetProvider.java",
+    "omniNotes/src/main/res/xml/searchable.xml",
+    "omniNotes/src/main/res/xml/settings_behaviors.xml",
+    "omniNotes/src/main/res/xml/settings_privacy.xml",
+    "omniNotes/src/main/res/xml/settings_sync_import_export.xml",
+    "omniNotes/src/play/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/test/java/it/feio/android/omninotes/NoteInfosActivityTest.java",
+    "omniNotes/src/test/java/it/feio/android/omninotes/helpers/NumberHelperTest.java"
+  ],
+  "counts": {
+    "critical": 0,
+    "high": 3,
+    "medium": 21,
+    "low": 1,
+    "info": 0
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Note parceling loses the database ID",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+      "line": 169,
+      "evidence": "  public void writeToParcel(Parcel parcel, int flags) {\n    parcel.writeString(String.valueOf(getCreation()));\n    parcel.writeString(String.valueOf(getLastModification()));",
+      "explanation": "Neither writeToParcel nor the parcel constructor preserves the note ID. Existing notes passed through an Intent or restored fragment arguments therefore lose their database identity. SnoozeActivity subsequently saves such notes or forwards note.get_id(), potentially updating the wrong identity or creating a duplicate.",
+      "recommendation": "Write the note ID into the parcel and read it back in the matching position.",
+      "suggested_test": "Round-trip a persisted note through Parcel and assert that its ID and all other persisted fields remain equal.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Encryption failure silently returns plaintext",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 66,
+      "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+      "explanation": "Encryption errors are reported as successful string results containing the original secret. For example, a password shorter than eight UTF-8 bytes cannot construct the DES key and takes this path. Callers cannot distinguish ciphertext from unencrypted content.",
+      "recommendation": "Return an explicit failure or throw an exception, and ensure callers do not persist the input when encryption fails.",
+      "suggested_test": "Call encrypt with value \"private note\" and password \"short\". Assert an explicit encryption failure and verify that the plaintext is never returned as an encrypted result or persisted.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Encryption failures return plaintext as successful output",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 66,
+      "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+      "explanation": "This is fail-open exception handling. A password shorter than eight UTF-8 bytes causes DESKeySpec construction to fail, and encrypt returns the original sensitive value. Callers cannot distinguish this from successful encryption and may store or export plaintext.",
+      "recommendation": "Propagate a specific encryption failure or return an explicit failure result; never return plaintext on encryption failure.",
+      "suggested_test": "Encrypt sensitive text with a short password and assert an explicit failure with no plaintext returned.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Upgrade assertion also passes if migration deletes attachments",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessorTest.kt",
+      "line": 41,
+      "evidence": "        UpgradeProcessor.process(624, 625)\n\n        assertTrue(dbHelper.allAttachments.stream().allMatch { a -> a.uri.scheme != \"content\" });",
+      "explanation": "allMatch returns true for an empty collection. The test therefore accepts loss of every attachment, and it does not establish that the migrated URI still points to the original data needed for backups.",
+      "recommendation": "Assert preservation of the note and attachment identities and count, then read the migrated attachment and compare its contents.",
+      "suggested_test": "Seed one content URI attachment with known bytes, migrate, reload its note, and assert exactly one attachment remains with the original identity, a usable file URI, and identical bytes.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Retry loop exits before the timeout",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/RetryableAssert.java",
+      "line": 54,
+      "evidence": "    while (System.currentTimeMillis() == endTime);",
+      "explanation": "The loop repeats only when the clock exactly equals the deadline. For a normal positive timeout it exits immediately, so asynchronous assertions fail before their allowed waiting period.",
+      "recommendation": "Retry while the deadline has not passed, return on success, and fail only after the timeout.",
+      "suggested_test": "Use a predicate that becomes true after 100 ms with a 1000 ms timeout and assert success. Also verify that an always-false predicate fails after the allowed interval.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "RetryableAssert does not wait for its timeout",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/RetryableAssert.java",
+      "line": 54,
+      "evidence": "    while (System.currentTimeMillis() == endTime);",
+      "explanation": "The equality condition is normally false immediately because endTime is in the future. An asynchronous condition that becomes true within the requested timeout still fails after only the initial attempt and final assertion.",
+      "recommendation": "Retry while the deadline has not passed, return immediately on success, and pause briefly between attempts using a monotonic clock.",
+      "suggested_test": "Supply a condition that becomes true after 100 ms with a 1-second timeout and assert success; verify an always-false condition fails after the timeout.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Camera assertions cannot both succeed and may never run",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabCameraNoteTest.java",
+      "line": 93,
+      "evidence": "    assertEquals(0, updatedNote.getAttachmentsList().size());\n    assertEquals(Constants.MIME_TYPE_IMAGE, updatedNote.getAttachmentsList().get(0).getMime_type());",
+      "explanation": "An empty attachment list cannot have element zero. Furthermore, these assertions exist only in an EventBus callback; the test body never asserts that the callback occurred or waits for its result. Missing events can therefore leave the camera behavior unverified.",
+      "recommendation": "Capture the event, await it with a bounded synchronization mechanism, and assert the expected attachment count and MIME type on the test thread. Release Intents and unregister the subscriber in teardown.",
+      "suggested_test": "Complete the stubbed camera capture and assert that an update arrives and contains exactly one image attachment. Suppress the update in a negative scenario and verify that the test fails on timeout.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Camera test contains mutually incompatible attachment assertions",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabCameraNoteTest.java",
+      "line": 93,
+      "evidence": "    assertEquals(0, updatedNote.getAttachmentsList().size());\n    assertEquals(Constants.MIME_TYPE_IMAGE, updatedNote.getAttachmentsList().get(0).getMime_type());",
+      "explanation": "No attachment list can satisfy both statements. A nonempty list fails the first assertion; an empty list passes it and then throws IndexOutOfBoundsException. Every delivered note-update event therefore fails this validation.",
+      "recommendation": "Assert the expected successful camera attachment count before inspecting its MIME type, and ensure the test waits for that event.",
+      "suggested_test": "Deliver an update containing one image attachment and assert that the camera test completes successfully.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "All preferences, including authentication data, are logged",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/BaseActivity.java",
+      "line": 76,
+      "evidence": "    LogDelegate.d(Prefs.getAll().toString());",
+      "explanation": "Every activity resume logs all preferences, which include password and recovery-answer entries defined in ConstantsBase. LogDelegate writes these messages to logcat or, when file logging is enabled, to public external storage. An attacker with access to those logs can obtain authentication material; other apps with shared-storage read access can read the public logs on applicable Android versions.",
+      "recommendation": "Remove the preference dump. Log only explicitly selected, nonsensitive diagnostic values.",
+      "suggested_test": "Populate password and recovery-answer preferences with sentinel values, resume the activity with file logging enabled, and assert neither sentinel appears in captured logs or log files.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Activity stops receiving events after its first stop",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+      "line": 162,
+      "evidence": "  @Override\n  protected void onStop() {\n    super.onStop();\n    EventBus.getDefault().unregister(this);\n  }",
+      "explanation": "Registration occurs only in onCreate, whereas onStop unregisters the activity. Returning to the same activity instance does not call onCreate, leaving its PasswordRemovedEvent and NotificationsGrantedEvent handlers disconnected. The supplied UI tests do not exercise this stop/start transition.",
+      "recommendation": "Pair registration and unregistration in matching lifecycle callbacks, such as onStart and onStop.",
+      "suggested_test": "Launch MainActivity, move it through stopped and started states without recreating it, and assert that it is registered and handles a posted NotificationsGrantedEvent after returning.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "MainActivity stops receiving events after its first stop",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+      "line": 162,
+      "evidence": "  @Override\n  protected void onStop() {\n    super.onStop();\n    EventBus.getDefault().unregister(this);\n  }",
+      "explanation": "Registration occurs only in onCreate. After opening another activity or backgrounding and returning, the same MainActivity resumes without registering again. Its PasswordRemovedEvent and NotificationsGrantedEvent handlers no longer run.",
+      "recommendation": "Pair registration in onStart with unregistration in onStop, or pair onCreate registration with onDestroy cleanup.",
+      "suggested_test": "Stop and restart the same activity, post NotificationsGrantedEvent, and assert that its handler still executes.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Malformed VIEW intents crash the activity",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+      "line": 439,
+      "evidence": "    if (Intent.ACTION_VIEW.equals(i.getAction()) && i.getDataString()\n        .startsWith(UrlCompleter.HASHTAG_SCHEME)) {",
+      "explanation": "An ACTION_VIEW intent without data dereferences null here. With data present, the subsequent shortcut branch also parses an absent or nonnumeric id without handling NumberFormatException. MainActivity is exported, so either malformed input can terminate it.",
+      "recommendation": "Validate the URI, scheme, host, and numeric ID before dispatching; reject malformed input without throwing.",
+      "suggested_test": "Deliver ACTION_VIEW with no data, an app URI without id, and id=abc; assert that none crashes or opens an unintended note.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Sharing multiple missing attachments crashes",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+      "line": 563,
+      "evidence": "      if (mimeTypes.size() > 1) {\n        shareIntent.setType(\"*/*\");\n      } else {\n        shareIntent.setType((String) mimeTypes.keySet().toArray()[0]);\n      }",
+      "explanation": "getShareableAttachmentUri returns null for missing files, and those entries are skipped. If all attachments are missing, mimeTypes is empty and indexing element zero throws instead of handling the failure.",
+      "recommendation": "Handle an empty set of shareable attachments explicitly before selecting a MIME type or launching the chooser.",
+      "suggested_test": "Share a note containing two attachments whose files are absent. Assert no exception and either a documented text-only share or an error with no chooser launch. Also test one missing and one valid attachment.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Sharing multiple missing attachments indexes an empty collection",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+      "line": 563,
+      "evidence": "      if (mimeTypes.size() > 1) {\n        shareIntent.setType(\"*/*\");\n      } else {\n        shareIntent.setType((String) mimeTypes.keySet().toArray()[0]);\n      }",
+      "explanation": "When a note has multiple attachments and every file is missing, getShareableAttachmentUri returns null for each and mimeTypes remains empty. This branch throws ArrayIndexOutOfBoundsException after displaying the missing-file messages.",
+      "recommendation": "Handle an empty URI collection explicitly by aborting sharing or falling back to text-only sharing.",
+      "suggested_test": "Share a note containing two missing attachment files and assert graceful handling without a crash.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Sketch save errors discard the drawing without informing the user",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/SketchFragment.java",
+      "line": 206,
+      "evidence": "      } catch (Exception e) {\n        LogDelegate.e(\"Error writing sketch image data\", e);\n      }",
+      "explanation": "This swallowed-exception pattern makes save return normally when opening or writing the file fails. MainActivity.handleBackPressed unconditionally pops the sketch immediately after save(), so a storage failure closes the editor and loses the user's drawing without a visible error.",
+      "recommendation": "Return a save result or propagate a specific failure, show an error, and navigate away only after confirmed successful writing. Check Bitmap.compress's result as well.",
+      "suggested_test": "Use an unwritable output path, press Back, and assert that an error appears and the sketch remains available for retry.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Postponing a recurring reminder skips the selected occurrence",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/SnoozeActivity.java",
+      "line": 137,
+      "evidence": "  public void onRecurrenceReminderPicked(String recurrenceRule) {\n    if (note != null) {\n      note.setRecurrenceRule(recurrenceRule);\n      setNextRecurrentReminder(note);",
+      "explanation": "ReminderPickers first calls onReminderPicked, which sets the alarm to the selected future time. This callback then calls setNextRecurrentReminder, whose helper searches after that alarm plus one minute. Selecting tomorrow at 09:00 with daily recurrence consequently saves the following day's 09:00 instead.",
+      "recommendation": "Save the selected alarm and recurrence directly when confirming the picker. Advance recurrence only when dismissing or completing a fired reminder.",
+      "suggested_test": "Postpone a daily reminder to tomorrow at 09:00 and assert that the saved alarm is tomorrow at 09:00.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Single-line SQL comments consume subsequent statements",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/db/SqlParser.java",
+      "line": 63,
+      "evidence": "            if (line.startsWith(\"/*\")) {\n              if (!line.endsWith(\"}\")) {\n                multiLineComment = \"/*\";\n              }",
+      "explanation": "The block-comment opener checks for a closing brace instead of */. A complete comment such as /* migration */ enters multiline-comment mode, and all following SQL is discarded until another line ends in */. A script can therefore silently omit its migration statements.",
+      "recommendation": "Recognize a closing */ on the opening line, preferably using a parser that tracks comment delimiters and preserves SQL outside them.",
+      "suggested_test": "Parse '/* migration */\\nCREATE TABLE example(id INTEGER);' and assert that the CREATE TABLE statement is returned.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Single-line SQL comments discard subsequent statements",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/db/SqlParser.java",
+      "line": 63,
+      "evidence": "            if (line.startsWith(\"/*\")) {\n              if (!line.endsWith(\"}\")) {\n                multiLineComment = \"/*\";\n              }",
+      "explanation": "The block-comment opener checks for a closing brace instead of */. A complete single-line comment consequently enters multiline-comment mode and causes following SQL statements to be discarded until another line ends with */.",
+      "recommendation": "Recognize the correct closing delimiter on the opening line and add parser regression tests.",
+      "suggested_test": "Parse \"/* migration */\\nCREATE TABLE example (id INTEGER);\" and assert exactly one statement containing the CREATE TABLE command. Retain a separate test for multiline comments like those in upgrade-451.sql.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Password-based encryption uses a truncated DES key",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 58,
+      "evidence": "                val keySpec = DESKeySpec(password.toByteArray(StandardCharsets.UTF_8))\n                val keyFactory = SecretKeyFactory.getInstance(\"DES\")\n                val key = keyFactory.generateSecret(keySpec)\n                val clearText = value.toByteArray(StandardCharsets.UTF_8)\n                // Cipher is not thread safe\n                val cipher = Cipher.getInstance(\"DES\")",
+      "explanation": "DES provides only a 56-bit effective key, and DESKeySpec uses only the first eight password bytes. An attacker who obtains ciphertext can attack this limited key space offline; longer password suffixes provide no additional protection. No password derivation salt or work factor is used. Actual callers and protected data are absent from the snapshot.",
+      "recommendation": "Use authenticated encryption such as AES-GCM with a random nonce and a key derived using a salted password KDF with an appropriate work factor. Provide a migration path for existing ciphertext.",
+      "suggested_test": "Verify the replacement uses distinct salts and nonces for repeated encryption, rejects modified ciphertext, and does not treat passwords sharing their first eight bytes as equivalent.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Encryption failures silently return plaintext",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 66,
+      "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+      "explanation": "encrypt returns the original secret as a successful result after any encryption error. For example, a password shorter than eight UTF-8 bytes causes DESKeySpec construction to fail. A caller storing or transmitting the returned value would then expose plaintext while expecting ciphertext. The snapshot does not show callers, so the affected persistence or transmission paths cannot be established.",
+      "recommendation": "Propagate encryption failures or return an explicit failure result, and require callers to abort storage or transmission.",
+      "suggested_test": "Call encrypt with sensitive text and a password shorter than eight bytes; assert it reports failure and never returns the original text.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Attachment copy failures are reported as success",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+      "line": 127,
+      "evidence": "      contentResolverInputStream = mContext.getContentResolver().openInputStream(uri);\n      contentResolverOutputStream = new FileOutputStream(file);\n      copyFile(contentResolverInputStream, contentResolverOutputStream);",
+      "explanation": "The copyFile overload catches IOException and returns false, but this caller ignores that result. A read failure or full storage therefore returns a partial file as a valid attachment, and the surrounding IOException fallback never runs for the copy failure.",
+      "recommendation": "Check the result or use a throwing copy operation. Delete partial output and return failure before constructing an Attachment.",
+      "suggested_test": "Use an input stream that throws after several bytes; assert that attachment creation fails and leaves no partial attachment file.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Attachment import ignores copy failures",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+      "line": 127,
+      "evidence": "      contentResolverInputStream = mContext.getContentResolver().openInputStream(uri);\n      contentResolverOutputStream = new FileOutputStream(file);\n      copyFile(contentResolverInputStream, contentResolverOutputStream);",
+      "explanation": "The stream copy helper catches IOException and returns false, but this caller ignores that result. A mid-copy failure therefore bypasses the fallback handling and returns the partial file as a successful import; createAttachmentFromUri can then construct an attachment for corrupted data.",
+      "recommendation": "Propagate or check copy failure, delete the partial destination, and return failure rather than constructing an attachment.",
+      "suggested_test": "Use a content provider whose stream emits a few bytes and then throws IOException. Assert createAttachmentFromUri returns null and leaves no partial attachment file.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Attachment names can collide within the same millisecond",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+      "line": 248,
+      "evidence": "  private static synchronized String createNewAttachmentName(String extension) {\n    Calendar now = Calendar.getInstance();\n    SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT_SORTABLE);\n    String name = sdf.format(now.getTime());\n    name += extension != null ? extension : \"\";\n    return name;\n  }",
+      "explanation": "Synchronization serializes calls but does not make timestamps unique. Two attachments with the same extension created within one millisecond receive the same path. FileOutputStream then truncates the earlier attachment, so both notes can reference the later file.",
+      "recommendation": "Reserve unique files atomically with File.createTempFile or use collision-resistant names with exclusive creation.",
+      "suggested_test": "Create multiple attachment files with a fixed clock and identical extensions; assert distinct paths and preserved contents.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Backup copying leaks its output stream and hides failure",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+      "line": 272,
+      "evidence": "    try {\n      copyFile(fileInputStream, new FileOutputStream(destination));\n    } catch (FileNotFoundException e) {\n      e.printStackTrace();\n    }\n    return destination;",
+      "explanation": "This resource-leak pattern opens a FileOutputStream that neither this method nor copyFile closes. Repeated backup copies can exhaust file descriptors. The ignored copy result and unconditional destination return also present incomplete or nonexistent backups as successful.",
+      "recommendation": "Own the output stream with try-with-resources and propagate copy/open failures or return an explicit failure after deleting partial output.",
+      "suggested_test": "Force a copy IOException and assert failure rather than a destination result; verify the output stream closes on success and failure.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "low",
+      "title": "Exception wrapper discards the original cause",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/exceptions/TestException.java",
+      "line": 26,
+      "evidence": "  public TestException(Exception e) {\n\n  }",
+      "explanation": "This lost-cause exception-wrapping pattern ignores the supplied exception. A wrapped setup or I/O failure loses its message and original stack trace, obscuring the reason the test failed.",
+      "recommendation": "Call super(e) or super(message, e) to preserve the cause.",
+      "suggested_test": "Construct TestException with an IOException and assert that getCause() returns that same exception.",
+      "agents": [
+        "quality"
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "agent": "quality",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Note parceling loses the database ID",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+          "line": 169,
+          "evidence": "  public void writeToParcel(Parcel parcel, int flags) {\n    parcel.writeString(String.valueOf(getCreation()));\n    parcel.writeString(String.valueOf(getLastModification()));",
+          "explanation": "Neither writeToParcel nor the parcel constructor preserves the note ID. Existing notes passed through an Intent or restored fragment arguments therefore lose their database identity. SnoozeActivity subsequently saves such notes or forwards note.get_id(), potentially updating the wrong identity or creating a duplicate.",
+          "recommendation": "Write the note ID into the parcel and read it back in the matching position.",
+          "suggested_test": "Round-trip a persisted note through Parcel and assert that its ID and all other persisted fields remain equal."
+        },
+        {
+          "severity": "high",
+          "title": "Encryption failures return plaintext as successful output",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 66,
+          "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+          "explanation": "This is fail-open exception handling. A password shorter than eight UTF-8 bytes causes DESKeySpec construction to fail, and encrypt returns the original sensitive value. Callers cannot distinguish this from successful encryption and may store or export plaintext.",
+          "recommendation": "Propagate a specific encryption failure or return an explicit failure result; never return plaintext on encryption failure.",
+          "suggested_test": "Encrypt sensitive text with a short password and assert an explicit failure with no plaintext returned."
+        },
+        {
+          "severity": "medium",
+          "title": "MainActivity stops receiving events after its first stop",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+          "line": 162,
+          "evidence": "  @Override\n  protected void onStop() {\n    super.onStop();\n    EventBus.getDefault().unregister(this);\n  }",
+          "explanation": "Registration occurs only in onCreate. After opening another activity or backgrounding and returning, the same MainActivity resumes without registering again. Its PasswordRemovedEvent and NotificationsGrantedEvent handlers no longer run.",
+          "recommendation": "Pair registration in onStart with unregistration in onStop, or pair onCreate registration with onDestroy cleanup.",
+          "suggested_test": "Stop and restart the same activity, post NotificationsGrantedEvent, and assert that its handler still executes."
+        },
+        {
+          "severity": "medium",
+          "title": "Malformed VIEW intents crash the activity",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+          "line": 439,
+          "evidence": "    if (Intent.ACTION_VIEW.equals(i.getAction()) && i.getDataString()\n        .startsWith(UrlCompleter.HASHTAG_SCHEME)) {",
+          "explanation": "An ACTION_VIEW intent without data dereferences null here. With data present, the subsequent shortcut branch also parses an absent or nonnumeric id without handling NumberFormatException. MainActivity is exported, so either malformed input can terminate it.",
+          "recommendation": "Validate the URI, scheme, host, and numeric ID before dispatching; reject malformed input without throwing.",
+          "suggested_test": "Deliver ACTION_VIEW with no data, an app URI without id, and id=abc; assert that none crashes or opens an unintended note."
+        },
+        {
+          "severity": "medium",
+          "title": "Sharing multiple missing attachments indexes an empty collection",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+          "line": 563,
+          "evidence": "      if (mimeTypes.size() > 1) {\n        shareIntent.setType(\"*/*\");\n      } else {\n        shareIntent.setType((String) mimeTypes.keySet().toArray()[0]);\n      }",
+          "explanation": "When a note has multiple attachments and every file is missing, getShareableAttachmentUri returns null for each and mimeTypes remains empty. This branch throws ArrayIndexOutOfBoundsException after displaying the missing-file messages.",
+          "recommendation": "Handle an empty URI collection explicitly by aborting sharing or falling back to text-only sharing.",
+          "suggested_test": "Share a note containing two missing attachment files and assert graceful handling without a crash."
+        },
+        {
+          "severity": "medium",
+          "title": "Attachment copy failures are reported as success",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+          "line": 127,
+          "evidence": "      contentResolverInputStream = mContext.getContentResolver().openInputStream(uri);\n      contentResolverOutputStream = new FileOutputStream(file);\n      copyFile(contentResolverInputStream, contentResolverOutputStream);",
+          "explanation": "The copyFile overload catches IOException and returns false, but this caller ignores that result. A read failure or full storage therefore returns a partial file as a valid attachment, and the surrounding IOException fallback never runs for the copy failure.",
+          "recommendation": "Check the result or use a throwing copy operation. Delete partial output and return failure before constructing an Attachment.",
+          "suggested_test": "Use an input stream that throws after several bytes; assert that attachment creation fails and leaves no partial attachment file."
+        },
+        {
+          "severity": "medium",
+          "title": "Attachment names can collide within the same millisecond",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+          "line": 248,
+          "evidence": "  private static synchronized String createNewAttachmentName(String extension) {\n    Calendar now = Calendar.getInstance();\n    SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT_SORTABLE);\n    String name = sdf.format(now.getTime());\n    name += extension != null ? extension : \"\";\n    return name;\n  }",
+          "explanation": "Synchronization serializes calls but does not make timestamps unique. Two attachments with the same extension created within one millisecond receive the same path. FileOutputStream then truncates the earlier attachment, so both notes can reference the later file.",
+          "recommendation": "Reserve unique files atomically with File.createTempFile or use collision-resistant names with exclusive creation.",
+          "suggested_test": "Create multiple attachment files with a fixed clock and identical extensions; assert distinct paths and preserved contents."
+        },
+        {
+          "severity": "medium",
+          "title": "Backup copying leaks its output stream and hides failure",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+          "line": 272,
+          "evidence": "    try {\n      copyFile(fileInputStream, new FileOutputStream(destination));\n    } catch (FileNotFoundException e) {\n      e.printStackTrace();\n    }\n    return destination;",
+          "explanation": "This resource-leak pattern opens a FileOutputStream that neither this method nor copyFile closes. Repeated backup copies can exhaust file descriptors. The ignored copy result and unconditional destination return also present incomplete or nonexistent backups as successful.",
+          "recommendation": "Own the output stream with try-with-resources and propagate copy/open failures or return an explicit failure after deleting partial output.",
+          "suggested_test": "Force a copy IOException and assert failure rather than a destination result; verify the output stream closes on success and failure."
+        },
+        {
+          "severity": "medium",
+          "title": "Postponing a recurring reminder skips the selected occurrence",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/SnoozeActivity.java",
+          "line": 137,
+          "evidence": "  public void onRecurrenceReminderPicked(String recurrenceRule) {\n    if (note != null) {\n      note.setRecurrenceRule(recurrenceRule);\n      setNextRecurrentReminder(note);",
+          "explanation": "ReminderPickers first calls onReminderPicked, which sets the alarm to the selected future time. This callback then calls setNextRecurrentReminder, whose helper searches after that alarm plus one minute. Selecting tomorrow at 09:00 with daily recurrence consequently saves the following day's 09:00 instead.",
+          "recommendation": "Save the selected alarm and recurrence directly when confirming the picker. Advance recurrence only when dismissing or completing a fired reminder.",
+          "suggested_test": "Postpone a daily reminder to tomorrow at 09:00 and assert that the saved alarm is tomorrow at 09:00."
+        },
+        {
+          "severity": "medium",
+          "title": "Sketch save errors discard the drawing without informing the user",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/SketchFragment.java",
+          "line": 206,
+          "evidence": "      } catch (Exception e) {\n        LogDelegate.e(\"Error writing sketch image data\", e);\n      }",
+          "explanation": "This swallowed-exception pattern makes save return normally when opening or writing the file fails. MainActivity.handleBackPressed unconditionally pops the sketch immediately after save(), so a storage failure closes the editor and loses the user's drawing without a visible error.",
+          "recommendation": "Return a save result or propagate a specific failure, show an error, and navigate away only after confirmed successful writing. Check Bitmap.compress's result as well.",
+          "suggested_test": "Use an unwritable output path, press Back, and assert that an error appears and the sketch remains available for retry."
+        },
+        {
+          "severity": "medium",
+          "title": "Single-line SQL comments consume subsequent statements",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/db/SqlParser.java",
+          "line": 63,
+          "evidence": "            if (line.startsWith(\"/*\")) {\n              if (!line.endsWith(\"}\")) {\n                multiLineComment = \"/*\";\n              }",
+          "explanation": "The block-comment opener checks for a closing brace instead of */. A complete comment such as /* migration */ enters multiline-comment mode, and all following SQL is discarded until another line ends in */. A script can therefore silently omit its migration statements.",
+          "recommendation": "Recognize a closing */ on the opening line, preferably using a parser that tracks comment delimiters and preserves SQL outside them.",
+          "suggested_test": "Parse '/* migration */\\nCREATE TABLE example(id INTEGER);' and assert that the CREATE TABLE statement is returned."
+        },
+        {
+          "severity": "medium",
+          "title": "RetryableAssert does not wait for its timeout",
+          "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/RetryableAssert.java",
+          "line": 54,
+          "evidence": "    while (System.currentTimeMillis() == endTime);",
+          "explanation": "The equality condition is normally false immediately because endTime is in the future. An asynchronous condition that becomes true within the requested timeout still fails after only the initial attempt and final assertion.",
+          "recommendation": "Retry while the deadline has not passed, return immediately on success, and pause briefly between attempts using a monotonic clock.",
+          "suggested_test": "Supply a condition that becomes true after 100 ms with a 1-second timeout and assert success; verify an always-false condition fails after the timeout."
+        },
+        {
+          "severity": "medium",
+          "title": "Camera test contains mutually incompatible attachment assertions",
+          "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabCameraNoteTest.java",
+          "line": 93,
+          "evidence": "    assertEquals(0, updatedNote.getAttachmentsList().size());\n    assertEquals(Constants.MIME_TYPE_IMAGE, updatedNote.getAttachmentsList().get(0).getMime_type());",
+          "explanation": "No attachment list can satisfy both statements. A nonempty list fails the first assertion; an empty list passes it and then throws IndexOutOfBoundsException. Every delivered note-update event therefore fails this validation.",
+          "recommendation": "Assert the expected successful camera attachment count before inspecting its MIME type, and ensure the test waits for that event.",
+          "suggested_test": "Deliver an update containing one image attachment and assert that the camera test completes successfully."
+        },
+        {
+          "severity": "low",
+          "title": "Exception wrapper discards the original cause",
+          "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/exceptions/TestException.java",
+          "line": 26,
+          "evidence": "  public TestException(Exception e) {\n\n  }",
+          "explanation": "This lost-cause exception-wrapping pattern ignores the supplied exception. A wrapped setup or I/O failure loses its message and original stack trace, obscuring the reason the test failed.",
+          "recommendation": "Call super(e) or super(message, e) to preserve the cause.",
+          "suggested_test": "Construct TestException with an IOException and assert that getCause() returns that same exception."
+        }
+      ],
+      "limitations": [
+        "Static review only; no tools, execution, or external verification were used.",
+        "Missing superclass implementations, helper implementations, build properties, and merged manifests limit verification of downstream behavior and platform compatibility."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "knowledge_enrichment": {
+          "provider": "keenable",
+          "status": "ok",
+          "sources": [
+            {
+              "title": "Java Code Review Checklist: Best Practices and Common Pitfalls",
+              "url": "https://pullpanda.io/blog/java-code-review-checklist",
+              "snippet": "**Resource Management**\n- Resources closed with try-with-resources: `try (var stream = Files.lines(path))`\n- No manual `close()` calls in finally blocks\n- Streams properly closed, especially for file operations\n- Database connections, statements, and result sets in try-with-resources\n- Thread pools shut down properly: `executor.shutdown()`\n- No suppressed exceptions from automatic resource closing\n- Resources not assigned to fields without careful lifecycle management\n**Thread Safety & Concurrency**\n- Shared mutable state protected by synchronization\n- Volatile used for simple flags, not complex operations\n- Double-checked locking avoided or implemented correctly with volatile\n- Collections wrapped with `Collections.synchronized*()` if shared\n- `ConcurrentHashMap` used instead of `Hashtable` or synchronized HashMap\n- Thread-safe classes from `java.util.concurrent` preferred\n- Immutable objects used for sharing state between threads\n- No publishing partially constructed objects from constructors\n\nJava's try-with-resources statement, introduced in Java 7, provides the standard pattern for managing resources that need cleanup. When we see code opening files, database connections, or s"
+            },
+            {
+              "title": "claude-code-java/.claude/skills/java-code-review/SKILL.md at main · decebals/claude-code-java",
+              "url": "https://github.com/decebals/claude-code-java/blob/main/.claude/skills/java-code-review/SKILL.md",
+              "snippet": "### 1. Null Safety\n**Check for:**\n```\n// ❌ NPE risk\nString name = user.getName().toUpperCase();\n// ✅ Safe\nString name = Optional.ofNullable(user.getName())\n.map(String::toUpperCase)\n.orElse(\"\");\n// ✅ Also safe (early return)\nif (user.getName() == null) {\nreturn \"\";\n}\nreturn user.getName().toUpperCase();\n```\n**Flags:**\n- Chained method calls without null checks\n- Missing `@Nullable` / `@NonNull` annotations on public APIs\n- `Optional.get()` without `isPresent()` check\n- Returning `null` from methods that could return `Optional` or empty collection\n**Suggest:**\n- Use `Optional` for return types that may be absent\n- Use `Objects.requireNonNull()` for constructor/method params\n- Return empty collections instead of null: `Collections.emptyList()`\n### 2. Exception Handling\n**Check for:**\n```\n// ❌ Swallowing exceptions\ntry {\nprocess();\n} catch (Exception e) {\n// silently ignored\n}\n// ❌ Catching too broad\ncatch (Exception e) { }\ncatch (Throwable t) { }\n// ❌ Losing stack trace\ncatch (IOException e) {\nthrow new RuntimeException(e.getMessage());\n}\n// ✅ Proper handling\ncatch (IOException e) {\nlog.error(\"Failed to process file: {}\", filename, e);\nthrow new ProcessingException(\"File processing f"
+            },
+            {
+              "title": "Java Code Review Checklist | Engineering Guidelines",
+              "url": "https://guidelines.ryanharrison.co.uk/languages/java/java-code-review",
+              "snippet": "- Not using try-with-resources for `AutoCloseable` resources → [Resource leaks prevention](/languages/java/java-general)\n- Streams/readers/writers not closed properly\n- Database connections not returned to pool\n- File handles leaked in error paths\n- Thread pools not shut down in `finally` block\n```\n// GOOD: try-with-resources ensures cleanup try ( var stream = Files . lines ( path ) ) { stream . forEach ( System . out :: println ) ; } // BAD: Stream never closed if exception occurs var stream = Files . lines ( path ) ; stream . forEach ( System . out :: println ) ;\n```\n\n- Mutable static fields accessed by multiple threads → [Java Concurrency](/languages/java/java-concurrency-fundamentals)\n- Missing synchronization on shared mutable state\n- Double-checked locking without `volatile` (broken pattern)\n- Non-thread-safe collections (ArrayList, HashMap) shared between threads\n- Race conditions in check-then-act patterns\n```\n// BAD: Race condition - multiple threads can pass check if ( counter < MAX ) { counter ++ ; // Not atomic! } // GOOD: Atomic operation atomicCounter . getAndIncrement ( ) ;\n```\n- Pinning virtual threads with `synchronized` blocks doing I/O → Use `ReentrantLock` ([Vir"
+            },
+            {
+              "title": "code-review-skill/reference/java8.md at 4850184dfd7765ea7b3c5c4e9b6cf8e0815ee7cb · awesome-skills/code-review-skill",
+              "url": "https://github.com/awesome-skills/code-review-skill/blob/HEAD/reference/java8.md",
+              "snippet": "### Captured variables must be effectively final\n```\n// ❌ Mutating a captured variable → compile error (or Atomic/array hacks)\nint sum = 0;\nlist.forEach(n -> sum += n); // does not compile\n// ✅ Reduce with a stream, or use an explicit mutable accumulator type\nint sum = list.stream().mapToInt(Integer::intValue).sum();\n```\n\nBoot 2 does not treat Spring 6 `ProblemDetail` as a first-class citizen (that is a Boot 3 story). Use a shared `@ControllerAdvice` with clear HTTP statuses.\n```\n// ❌ Swallow exceptions, printStackTrace, return null to hide failure\ntry {\nuserService.create(user);\n} catch (Exception e) {\ne.printStackTrace();\nreturn null;\n}\n// ✅ Domain exceptions + global handler\n@RestControllerAdvice\npublic class GlobalExceptionHandler {\n@ExceptionHandler(UserNotFoundException.class)\npublic ResponseEntity<ApiError> handleNotFound(UserNotFoundException e) {\nreturn ResponseEntity.status(HttpStatus.NOT_FOUND)\n.body(new ApiError(\"USER_NOT_FOUND\", e.getMessage()));\n}\n}\n```\nClose resources with try-with-resources (Java 7+). Avoid hand-rolled `finally { close() }` that forgets null checks.\n\n- Lambdas stay short; prefer method references and standard functional interfaces\n- Streams used for"
+            },
+            {
+              "title": "software-engineering-skills/plugins/java/skills/java-code-review/SKILL.md at main · wesleyegberto/software-engineering-skills",
+              "url": "https://github.com/wesleyegberto/software-engineering-skills/blob/main/plugins/java/skills/java-code-review/SKILL.md",
+              "snippet": "### 1. Null Safety\n**Check for:**\n```\n// ❌ NPE risk\nString name = user.getName().toUpperCase();\n// ✅ Safe\nString name = Optional.ofNullable(user.getName())\n.map(String::toUpperCase)\n.orElse(\"\");\n// ✅ Also safe (early return)\nif (user.getName() == null) {\nreturn \"\";\n}\nreturn user.getName().toUpperCase();\n```\n**Flags:**\n- Chained method calls without null checks\n- Missing `@Nullable` / `@NonNull` annotations on public APIs\n- `Optional.get()` without `isPresent()` check\n- Returning `null` from methods that could return `Optional` or empty collection\n**Suggest:**\n- Use `Optional` for return types that may be absent\n- Use `Objects.requireNonNull()` for constructor/method params\n- Return empty collections instead of null: `Collections.emptyList()`\n### 2. Exception Handling\n**Check for:**\n```\n// ❌ Swallowing exceptions\ntry {\nprocess();\n} catch (Exception e) {\n// silently ignored\n}\n// ❌ Catching too broad\ncatch (Exception e) { }\ncatch (Throwable t) { }\n// ❌ Losing stack trace\ncatch (IOException e) {\nthrow new RuntimeException(e.getMessage());\n}\n// ✅ Proper handling\ncatch (IOException e) {\nlog.error(\"Failed to process file: {}\", filename, e);\nthrow new ProcessingException(\"File processing f"
+            },
+            {
+              "title": "code-review-best-practices/example-guidelines/languages/java.yaml at main · augmentcode/code-review-best-practices",
+              "url": "https://github.com/augmentcode/code-review-best-practices/blob/main/example-guidelines/languages/java.yaml",
+              "snippet": "Prefer immutable objects and collections. Make classes immutable when possible. Use final fields, no setters, and return defensive copies of mutable fields. Use List.of(), Set.of(), Map.of() for immutable collections.\n\n- id: java-try-with-resources\ndescription: |\nUse try-with-resources for AutoCloseable resources. Always use try-with-resources for streams, connections, readers, writers, and any AutoCloseable resource. This ensures proper cleanup even when exceptions occur.\nBAD: Manual try-finally with is.close() that may throw and hide original exception.\nGOOD: try (InputStream is = new FileInputStream(file)) { } for automatic cleanup.\nseverity: medium\n\nEnsure thread safety for shared mutable state. Protect shared mutable state with proper synchronization. Use thread-safe collections (ConcurrentHashMap, CopyOnWriteArrayList) or immutable objects. Document thread-safety guarantees.\nBAD: private Map<String, User> cache = new HashMap<>();\nGOOD: private final Map<String, User> cache = new ConcurrentHashMap<>();"
+            }
+          ],
+          "queries": [
+            "Java code review anti-patterns error handling mutable state resource management official documentation"
+          ]
+        },
+        "citation_corrections": [],
+        "duration_seconds": 68.526
+      }
+    },
+    {
+      "agent": "security",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "All preferences, including authentication data, are logged",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/BaseActivity.java",
+          "line": 76,
+          "evidence": "    LogDelegate.d(Prefs.getAll().toString());",
+          "explanation": "Every activity resume logs all preferences, which include password and recovery-answer entries defined in ConstantsBase. LogDelegate writes these messages to logcat or, when file logging is enabled, to public external storage. An attacker with access to those logs can obtain authentication material; other apps with shared-storage read access can read the public logs on applicable Android versions.",
+          "recommendation": "Remove the preference dump. Log only explicitly selected, nonsensitive diagnostic values.",
+          "suggested_test": "Populate password and recovery-answer preferences with sentinel values, resume the activity with file logging enabled, and assert neither sentinel appears in captured logs or log files."
+        },
+        {
+          "severity": "medium",
+          "title": "Encryption failures silently return plaintext",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 66,
+          "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+          "explanation": "encrypt returns the original secret as a successful result after any encryption error. For example, a password shorter than eight UTF-8 bytes causes DESKeySpec construction to fail. A caller storing or transmitting the returned value would then expose plaintext while expecting ciphertext. The snapshot does not show callers, so the affected persistence or transmission paths cannot be established.",
+          "recommendation": "Propagate encryption failures or return an explicit failure result, and require callers to abort storage or transmission.",
+          "suggested_test": "Call encrypt with sensitive text and a password shorter than eight bytes; assert it reports failure and never returns the original text."
+        },
+        {
+          "severity": "medium",
+          "title": "Password-based encryption uses a truncated DES key",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 58,
+          "evidence": "                val keySpec = DESKeySpec(password.toByteArray(StandardCharsets.UTF_8))\n                val keyFactory = SecretKeyFactory.getInstance(\"DES\")\n                val key = keyFactory.generateSecret(keySpec)\n                val clearText = value.toByteArray(StandardCharsets.UTF_8)\n                // Cipher is not thread safe\n                val cipher = Cipher.getInstance(\"DES\")",
+          "explanation": "DES provides only a 56-bit effective key, and DESKeySpec uses only the first eight password bytes. An attacker who obtains ciphertext can attack this limited key space offline; longer password suffixes provide no additional protection. No password derivation salt or work factor is used. Actual callers and protected data are absent from the snapshot.",
+          "recommendation": "Use authenticated encryption such as AES-GCM with a random nonce and a key derived using a salted password KDF with an appropriate work factor. Provide a migration path for existing ciphertext.",
+          "suggested_test": "Verify the replacement uses distinct salts and nonces for repeated encryption, rejects modified ciphertext, and does not treat passwords sharing their first eight bytes as equivalent."
+        }
+      ],
+      "limitations": [
+        "Review was limited to the supplied snapshot; no tools or execution were used.",
+        "Password storage format, encryption callers, DetailFragment authorization, and FileProvider path configuration were not supplied.",
+        "Dependency vulnerability status and resolved transitive versions could not be verified."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "citation_corrections": [],
+        "duration_seconds": 27.932
+      }
+    },
+    {
+      "agent": "tests",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "Retry loop exits before the timeout",
+          "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/RetryableAssert.java",
+          "line": 54,
+          "evidence": "    while (System.currentTimeMillis() == endTime);",
+          "explanation": "The loop repeats only when the clock exactly equals the deadline. For a normal positive timeout it exits immediately, so asynchronous assertions fail before their allowed waiting period.",
+          "recommendation": "Retry while the deadline has not passed, return on success, and fail only after the timeout.",
+          "suggested_test": "Use a predicate that becomes true after 100 ms with a 1000 ms timeout and assert success. Also verify that an always-false predicate fails after the allowed interval."
+        },
+        {
+          "severity": "medium",
+          "title": "Camera assertions cannot both succeed and may never run",
+          "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabCameraNoteTest.java",
+          "line": 93,
+          "evidence": "    assertEquals(0, updatedNote.getAttachmentsList().size());\n    assertEquals(Constants.MIME_TYPE_IMAGE, updatedNote.getAttachmentsList().get(0).getMime_type());",
+          "explanation": "An empty attachment list cannot have element zero. Furthermore, these assertions exist only in an EventBus callback; the test body never asserts that the callback occurred or waits for its result. Missing events can therefore leave the camera behavior unverified.",
+          "recommendation": "Capture the event, await it with a bounded synchronization mechanism, and assert the expected attachment count and MIME type on the test thread. Release Intents and unregister the subscriber in teardown.",
+          "suggested_test": "Complete the stubbed camera capture and assert that an update arrives and contains exactly one image attachment. Suppress the update in a negative scenario and verify that the test fails on timeout."
+        },
+        {
+          "severity": "medium",
+          "title": "Upgrade assertion also passes if migration deletes attachments",
+          "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessorTest.kt",
+          "line": 41,
+          "evidence": "        UpgradeProcessor.process(624, 625)\n\n        assertTrue(dbHelper.allAttachments.stream().allMatch { a -> a.uri.scheme != \"content\" });",
+          "explanation": "allMatch returns true for an empty collection. The test therefore accepts loss of every attachment, and it does not establish that the migrated URI still points to the original data needed for backups.",
+          "recommendation": "Assert preservation of the note and attachment identities and count, then read the migrated attachment and compare its contents.",
+          "suggested_test": "Seed one content URI attachment with known bytes, migrate, reload its note, and assert exactly one attachment remains with the original identity, a usable file URI, and identical bytes."
+        },
+        {
+          "severity": "medium",
+          "title": "Activity stops receiving events after its first stop",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+          "line": 162,
+          "evidence": "  @Override\n  protected void onStop() {\n    super.onStop();\n    EventBus.getDefault().unregister(this);\n  }",
+          "explanation": "Registration occurs only in onCreate, whereas onStop unregisters the activity. Returning to the same activity instance does not call onCreate, leaving its PasswordRemovedEvent and NotificationsGrantedEvent handlers disconnected. The supplied UI tests do not exercise this stop/start transition.",
+          "recommendation": "Pair registration and unregistration in matching lifecycle callbacks, such as onStart and onStop.",
+          "suggested_test": "Launch MainActivity, move it through stopped and started states without recreating it, and assert that it is registered and handles a posted NotificationsGrantedEvent after returning."
+        },
+        {
+          "severity": "medium",
+          "title": "Sharing multiple missing attachments crashes",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+          "line": 563,
+          "evidence": "      if (mimeTypes.size() > 1) {\n        shareIntent.setType(\"*/*\");\n      } else {\n        shareIntent.setType((String) mimeTypes.keySet().toArray()[0]);\n      }",
+          "explanation": "getShareableAttachmentUri returns null for missing files, and those entries are skipped. If all attachments are missing, mimeTypes is empty and indexing element zero throws instead of handling the failure.",
+          "recommendation": "Handle an empty set of shareable attachments explicitly before selecting a MIME type or launching the chooser.",
+          "suggested_test": "Share a note containing two attachments whose files are absent. Assert no exception and either a documented text-only share or an error with no chooser launch. Also test one missing and one valid attachment."
+        },
+        {
+          "severity": "medium",
+          "title": "Attachment import ignores copy failures",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+          "line": 127,
+          "evidence": "      contentResolverInputStream = mContext.getContentResolver().openInputStream(uri);\n      contentResolverOutputStream = new FileOutputStream(file);\n      copyFile(contentResolverInputStream, contentResolverOutputStream);",
+          "explanation": "The stream copy helper catches IOException and returns false, but this caller ignores that result. A mid-copy failure therefore bypasses the fallback handling and returns the partial file as a successful import; createAttachmentFromUri can then construct an attachment for corrupted data.",
+          "recommendation": "Propagate or check copy failure, delete the partial destination, and return failure rather than constructing an attachment.",
+          "suggested_test": "Use a content provider whose stream emits a few bytes and then throws IOException. Assert createAttachmentFromUri returns null and leaves no partial attachment file."
+        },
+        {
+          "severity": "medium",
+          "title": "Single-line SQL comments discard subsequent statements",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/db/SqlParser.java",
+          "line": 63,
+          "evidence": "            if (line.startsWith(\"/*\")) {\n              if (!line.endsWith(\"}\")) {\n                multiLineComment = \"/*\";\n              }",
+          "explanation": "The block-comment opener checks for a closing brace instead of */. A complete single-line comment consequently enters multiline-comment mode and causes following SQL statements to be discarded until another line ends with */.",
+          "recommendation": "Recognize the correct closing delimiter on the opening line and add parser regression tests.",
+          "suggested_test": "Parse \"/* migration */\\nCREATE TABLE example (id INTEGER);\" and assert exactly one statement containing the CREATE TABLE command. Retain a separate test for multiline comments like those in upgrade-451.sql."
+        },
+        {
+          "severity": "high",
+          "title": "Encryption failure silently returns plaintext",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 66,
+          "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+          "explanation": "Encryption errors are reported as successful string results containing the original secret. For example, a password shorter than eight UTF-8 bytes cannot construct the DES key and takes this path. Callers cannot distinguish ciphertext from unencrypted content.",
+          "recommendation": "Return an explicit failure or throw an exception, and ensure callers do not persist the input when encryption fails.",
+          "suggested_test": "Call encrypt with value \"private note\" and password \"short\". Assert an explicit encryption failure and verify that the plaintext is never returned as an encrypted result or persisted."
+        }
+      ],
+      "limitations": [
+        "Review was limited to the supplied snapshot; no tools were called and no tests were executed.",
+        "Several production dependencies and test fixtures, including DbHelper, BaseAndroidTestCase, FileProviderHelper, and the commons models, were not supplied, limiting verification of their behavior."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "citation_corrections": [],
+        "duration_seconds": 47.945
+      }
+    }
+  ],
+  "actual_models": [
+    "gpt-6.1-sol"
+  ],
+  "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+  "schema_version": "1.0",
+  "run_id": "4d788c4f-69b4-4215-aaa5-8dd84184a656",
+  "started_at": "2026-10-25T06:25:28.081647+00:00",
+  "completed_at": "2026-10-25T06:26:36.659687+00:00",
+  "duration_seconds": 68.58,
+  "backend": "codex",
+  "repository": "/Users/krishnakumar/Documents/github/Omni-Notes",
+  "snapshot_sha256": "f7e9b3df6a8593a8682cb90d25d3b11d840cda87ad7bf8fdd5546f8aa24ebb7e",
+  "snapshot_bytes": 222769,
+  "requested_model": null,
+  "model": "gpt-6.1-sol",
+  "batch": 5,
+  "source_revision": "504253db6781a19d377ab04153f2f2cd75ef5494"
+}

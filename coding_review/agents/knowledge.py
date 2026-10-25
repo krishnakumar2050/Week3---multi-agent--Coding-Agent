@@ -13,6 +13,8 @@ LANGUAGES = {
     ".ts": "TypeScript",
     ".tsx": "TypeScript",
     ".java": "Java",
+    ".kt": "Kotlin",
+    ".kts": "Kotlin",
     ".go": "Go",
     ".rs": "Rust",
 }

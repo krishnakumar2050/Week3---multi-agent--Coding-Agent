@@ -1,0 +1,2069 @@
+{
+  "scope": {
+    "repository": "/Users/krishnakumar/Documents/github/Omni-Notes",
+    "revision": "504253db6781a19d377ab04153f2f2cd75ef5494",
+    "files": [
+      "build.gradle",
+      "omniNotes/build.gradle",
+      "omniNotes/src/alpha/java/it/feio/android/omninotes/utils/Constants.java",
+      "omniNotes/src/alpha/res/xml/shortcuts.xml",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/async/notes/NoteRemindersTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessorTest.kt",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/db/DbHelperTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/exceptions/TestException.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/AppVersionHelperTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/BackupHelperTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/DocumentFileHelperTest.kt",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/IntentHelperTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/LanguageHelperTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/LocationProviderFactoryTest.kt",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/TagOpenerHelperTest.kt",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/count/CountFactoryTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/BaseAndroidTestCase.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/NoRealDeviceTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/RetryableAssert.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/AutoBackupTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/BackNavigationTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/BaseEspressoTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/CategoryLifecycleTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/CategoryMenuFooterTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/DrawerMenusEspressoTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabCameraNoteTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabLifecycleTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/MrJingleLifecycleTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/NoteLifecycleTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/NoteListMenuTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/NoteLocationTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/RecurrenceRuleTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/RemindersLifecycleTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/SearchTagBackArrowTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/SettingsActivityTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/BitmapHelperTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/ClickWithoutDisplayConstraint.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/FileProviderHelperTest.kt",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/GeocodeHelperTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/IntentCheckerTest.kt",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/IsEqualTrimmingAndIgnoringCase.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/MiscUtilsTest.kt",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/ParcelableUtilTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/ReminderHelperTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/SecurityTest.kt",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/ShortcutHelperTest.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/StorageHelperTest.kt",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/VisibleViewMatcher.java",
+      "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/date/RecurrenceHelperTest.java",
+      "omniNotes/src/beta/java/it/feio/android/omninotes/utils/Constants.java",
+      "omniNotes/src/foss/java/it/feio/android/omninotes/utils/Constants.java",
+      "omniNotes/src/foss/res/xml/shortcuts.xml",
+      "omniNotes/src/main/AndroidManifest.xml",
+      "omniNotes/src/main/assets/sql/create.sql",
+      "omniNotes/src/main/assets/sql/upgrade-390.sql",
+      "omniNotes/src/main/assets/sql/upgrade-391.sql",
+      "omniNotes/src/main/assets/sql/upgrade-394.sql",
+      "omniNotes/src/main/assets/sql/upgrade-410.sql",
+      "omniNotes/src/main/assets/sql/upgrade-414.sql",
+      "omniNotes/src/main/assets/sql/upgrade-450.sql",
+      "omniNotes/src/main/assets/sql/upgrade-451.sql",
+      "omniNotes/src/main/assets/sql/upgrade-453.sql",
+      "omniNotes/src/main/assets/sql/upgrade-481.sql",
+      "omniNotes/src/main/assets/sql/upgrade-482.sql",
+      "omniNotes/src/main/assets/sql/upgrade-501.sql",
+      "omniNotes/src/main/java/it/feio/android/omninotes/AboutActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/BaseActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/BaseFragment.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/CategoryActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/GalleryActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/NavigationDrawerFragment.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/NoteInfosActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/OmniNotes.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/PasswordActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/SettingsActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/SettingsFragment.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/ShortcutActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/SketchFragment.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/SnoozeActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/StatsActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/AlarmRestoreOnRebootService.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/AttachmentTask.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/CategoryMenuTask.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/DataBackupIntentService.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/MainMenuTask.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/ReverseGeocodeTask.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/TextWorkerTask.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/UpdateWidgetsTask.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/CategoriesUpdatedEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/DynamicNavigationReadyEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NavigationUpdatedEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NavigationUpdatedNavDrawerClosedEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotesDeletedEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotesLoadedEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotesMergeEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotesUpdatedEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotificationRemovedEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotificationsGrantedEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/PasswordRemovedEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/PushbulletReplyEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/SwitchFragmentEvent.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteLoaderTask.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessor.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessorArchive.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessorCategorize.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessorDelete.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessorTrash.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/SaveNoteTask.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessor.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/db/DbHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/db/SqlParser.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/BackupException.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/DatabaseException.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/GenericException.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/NotesLoadingException.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/checked/BackupAttachmentException.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/checked/ContentSecurityException.kt",
+      "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/checked/ExternalStorageProviderException.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/checked/UnhandledIntentException.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/unchecked/ExternalDirectoryCreationException.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/extensions/ONDashClockExtension.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/extensions/PushBulletExtension.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/factory/MediaStoreFactory.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/AppVersionHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/AttachmentsHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BuildHelper.kt",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/ChangelogHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/DocumentFileHelper.kt",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/IntentHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/LanguageHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/LogDelegate.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/NotesHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/NumberHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/PermissionsHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/TagOpenerHelper.kt",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/CountFactory.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/DefaultWordCounter.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/IdeogramsWordCounter.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/WordCounter.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/date/DateHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/date/RecurrenceHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/GeocodeHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationManagerLocationProvider.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationProvider.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationProviderFactory.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/notifications/NotificationChannel.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/notifications/NotificationChannels.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/helpers/notifications/NotificationsHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroFragment.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide1.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide2.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide3.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide4.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide5.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide6.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/Attachment.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/Category.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/NavigationItem.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/ONStyle.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/PasswordValidator.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/PushBulletMessage.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/Stats.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/StatsSingleNote.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/Tag.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/UndoBarController.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/AttachmentAdapter.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/CategoryBaseAdapter.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/CategoryRecyclerViewAdapter.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/NavDrawerAdapter.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/NoteAdapter.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/category/CategoryViewHolder.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/holders/ImageAndTextItem.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/holders/NoteViewHolder.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnAttachingFileListener.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnCABItemClickedListener.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnDrawChangedListener.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnFabItemClickedListener.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnGeoUtilResultListener.kt",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnPermissionRequestedListener.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnReminderPickedListener.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnViewTouchedListener.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/RecyclerViewItemClickSupport.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/misc/DynamicNavigationLookupTable.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/misc/PlayStoreMetadataFetcherResult.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/views/ExpandableHeightGridView.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/views/Fab.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/views/InterceptorFrameLayout.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/views/InterceptorLinearLayout.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/views/NonScrollableListView.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/views/RecyclerViewEmptySupport.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/views/SketchView.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/views/SquareImageView.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/views/VerticalSeekBar.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/receiver/AlarmReceiver.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/receiver/BootCompleteReceiver.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/services/NotificationListener.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/AlphaManager.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/AnimationsHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/AssetUtils.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/BitmapHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/ColorsUtil.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/ConstantsBase.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/Display.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/FileHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/FileProviderHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/IntentChecker.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/KeyboardUtils.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/MiscUtils.kt",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/Navigation.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/ParcelableUtil.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/PasswordHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/RandomUtils.kt",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/ReminderHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/ResourcesUtils.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/ShortcutHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/SystemHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/TagsHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/TextHelper.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/date/DateUtils.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/date/ReminderPickers.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/date/SublimePickerFragment.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/widget/ListRemoteViewsFactory.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/widget/ListWidgetProvider.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/widget/ListWidgetService.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/widget/SimpleWidgetProvider.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/widget/WidgetConfigurationActivity.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/widget/WidgetProvider.java",
+      "omniNotes/src/main/res/xml/appwidget_list.xml",
+      "omniNotes/src/main/res/xml/appwidget_simple.xml",
+      "omniNotes/src/main/res/xml/file_provider_paths.xml",
+      "omniNotes/src/main/res/xml/searchable.xml",
+      "omniNotes/src/main/res/xml/settings.xml",
+      "omniNotes/src/main/res/xml/settings_behaviors.xml",
+      "omniNotes/src/main/res/xml/settings_data.xml",
+      "omniNotes/src/main/res/xml/settings_interface.xml",
+      "omniNotes/src/main/res/xml/settings_navigation.xml",
+      "omniNotes/src/main/res/xml/settings_notifications.xml",
+      "omniNotes/src/main/res/xml/settings_privacy.xml",
+      "omniNotes/src/main/res/xml/settings_sync_import_export.xml",
+      "omniNotes/src/main/res/xml/shortcuts.xml",
+      "omniNotes/src/play/java/it/feio/android/omninotes/utils/Constants.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/BaseUnitTest.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/NoteInfosActivityTest.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/ResourceAwareTest.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/helpers/NotesHelperTest.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/helpers/NumberHelperTest.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/helpers/count/DefaultWordCounterTest.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/helpers/count/IdeogramsWordCounterTest.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/helpers/location/GeocodeHelperTest.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/models/listeners/RecyclerViewItemClickSupportTest.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/utils/RandomUtilsTest.kt",
+      "omniNotes/src/test/java/it/feio/android/omninotes/utils/TagsHelperTest.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/utils/date/DateUtilsTest.java",
+      "omniNotes/src/test/java/it/feio/android/omninotes/utils/date/RecurrenceHelperTest.java",
+      "settings.gradle"
+    ],
+    "unique_bytes": 1007422,
+    "shared_files": [
+      "omniNotes/src/alpha/java/it/feio/android/omninotes/utils/Constants.java",
+      "omniNotes/src/beta/java/it/feio/android/omninotes/utils/Constants.java",
+      "omniNotes/src/foss/java/it/feio/android/omninotes/utils/Constants.java",
+      "omniNotes/src/main/AndroidManifest.xml",
+      "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+      "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "omniNotes/src/play/java/it/feio/android/omninotes/utils/Constants.java"
+    ],
+    "batches": [
+      {
+        "id": 1,
+        "bytes": 222756,
+        "files": [
+          "omniNotes/src/alpha/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/async/notes/NoteRemindersTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/AppVersionHelperTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/LanguageHelperTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/LocationProviderFactoryTest.kt",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/count/CountFactoryTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/CategoryMenuFooterTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/MiscUtilsTest.kt",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/ShortcutHelperTest.java",
+          "omniNotes/src/beta/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/foss/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/main/AndroidManifest.xml",
+          "omniNotes/src/main/assets/sql/upgrade-453.sql",
+          "omniNotes/src/main/assets/sql/upgrade-481.sql",
+          "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/NoteInfosActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/AlarmRestoreOnRebootService.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/AttachmentTask.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NavigationUpdatedNavDrawerClosedEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotesLoadedEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessorTrash.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/SaveNoteTask.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/BackupException.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/factory/MediaStoreFactory.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationManagerLocationProvider.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide4.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide5.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/Category.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/PushBulletMessage.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/UndoBarController.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnAttachingFileListener.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnCABItemClickedListener.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnReminderPickedListener.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/misc/DynamicNavigationLookupTable.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/views/InterceptorLinearLayout.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/views/NonScrollableListView.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/views/SquareImageView.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/receiver/AlarmReceiver.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/ParcelableUtil.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/ReminderHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/ResourcesUtils.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/ShortcutHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/widget/SimpleWidgetProvider.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/widget/WidgetConfigurationActivity.java",
+          "omniNotes/src/main/res/xml/settings_navigation.xml",
+          "omniNotes/src/main/res/xml/shortcuts.xml",
+          "omniNotes/src/play/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/BaseUnitTest.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/helpers/count/DefaultWordCounterTest.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/models/listeners/RecyclerViewItemClickSupportTest.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/utils/date/RecurrenceHelperTest.java"
+        ]
+      },
+      {
+        "id": 2,
+        "bytes": 222724,
+        "files": [
+          "omniNotes/src/alpha/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/BackupHelperTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/NoRealDeviceTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/MrJingleLifecycleTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/NoteLifecycleTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/NoteLocationTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/IsEqualTrimmingAndIgnoringCase.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/ReminderHelperTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/StorageHelperTest.kt",
+          "omniNotes/src/beta/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/foss/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/main/AndroidManifest.xml",
+          "omniNotes/src/main/assets/sql/create.sql",
+          "omniNotes/src/main/assets/sql/upgrade-482.sql",
+          "omniNotes/src/main/java/it/feio/android/omninotes/CategoryActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/TextWorkerTask.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/UpdateWidgetsTask.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/DynamicNavigationReadyEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NavigationUpdatedEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotificationRemovedEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteLoaderTask.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessor.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/checked/ContentSecurityException.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/checked/ExternalStorageProviderException.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BuildHelper.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/LanguageHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/TagOpenerHelper.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/CountFactory.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/WordCounter.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/NavigationItem.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/Tag.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/CategoryRecyclerViewAdapter.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/holders/ImageAndTextItem.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnViewTouchedListener.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/RecyclerViewItemClickSupport.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/views/RecyclerViewEmptySupport.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/receiver/BootCompleteReceiver.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/services/NotificationListener.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/AssetUtils.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/BitmapHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/FileHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/FileProviderHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/RandomUtils.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/widget/ListWidgetProvider.java",
+          "omniNotes/src/main/res/xml/appwidget_list.xml",
+          "omniNotes/src/main/res/xml/settings_data.xml",
+          "omniNotes/src/main/res/xml/settings_interface.xml",
+          "omniNotes/src/main/res/xml/settings_notifications.xml",
+          "omniNotes/src/play/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/helpers/NotesHelperTest.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/helpers/count/IdeogramsWordCounterTest.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/utils/TagsHelperTest.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/utils/date/DateUtilsTest.java"
+        ]
+      },
+      {
+        "id": 3,
+        "bytes": 222712,
+        "files": [
+          "omniNotes/src/alpha/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/NoteListMenuTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/RemindersLifecycleTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/SearchTagBackArrowTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/SettingsActivityTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/ClickWithoutDisplayConstraint.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/SecurityTest.kt",
+          "omniNotes/src/beta/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/foss/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/foss/res/xml/shortcuts.xml",
+          "omniNotes/src/main/AndroidManifest.xml",
+          "omniNotes/src/main/assets/sql/upgrade-501.sql",
+          "omniNotes/src/main/java/it/feio/android/omninotes/BaseFragment.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/GalleryActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/DataBackupIntentService.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/MainMenuTask.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/ReverseGeocodeTask.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotesDeletedEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotificationsGrantedEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/PasswordRemovedEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessorCategorize.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/db/DbHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/checked/BackupAttachmentException.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/extensions/PushBulletExtension.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/AppVersionHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/DocumentFileHelper.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/IntentHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/PermissionsHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/GeocodeHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/notifications/NotificationChannels.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/notifications/NotificationsHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide1.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide2.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide6.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/ONStyle.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/Stats.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/StatsSingleNote.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/NoteAdapter.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnGeoUtilResultListener.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnPermissionRequestedListener.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/views/InterceptorFrameLayout.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/AlphaManager.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/ColorsUtil.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/Display.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/PasswordHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/SystemHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/TagsHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/date/SublimePickerFragment.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/widget/ListRemoteViewsFactory.java",
+          "omniNotes/src/main/res/xml/appwidget_simple.xml",
+          "omniNotes/src/main/res/xml/file_provider_paths.xml",
+          "omniNotes/src/main/res/xml/settings.xml",
+          "omniNotes/src/play/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/ResourceAwareTest.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/helpers/location/GeocodeHelperTest.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/utils/RandomUtilsTest.kt",
+          "settings.gradle"
+        ]
+      },
+      {
+        "id": 4,
+        "bytes": 222733,
+        "files": [
+          "build.gradle",
+          "omniNotes/src/alpha/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/alpha/res/xml/shortcuts.xml",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/DocumentFileHelperTest.kt",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/IntentHelperTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/TagOpenerHelperTest.kt",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/BaseAndroidTestCase.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/AutoBackupTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/BackNavigationTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabLifecycleTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/BitmapHelperTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/FileProviderHelperTest.kt",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/ParcelableUtilTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/date/RecurrenceHelperTest.java",
+          "omniNotes/src/beta/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/foss/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/main/AndroidManifest.xml",
+          "omniNotes/src/main/assets/sql/upgrade-390.sql",
+          "omniNotes/src/main/assets/sql/upgrade-391.sql",
+          "omniNotes/src/main/assets/sql/upgrade-394.sql",
+          "omniNotes/src/main/assets/sql/upgrade-410.sql",
+          "omniNotes/src/main/assets/sql/upgrade-414.sql",
+          "omniNotes/src/main/assets/sql/upgrade-450.sql",
+          "omniNotes/src/main/java/it/feio/android/omninotes/AboutActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/NavigationDrawerFragment.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/OmniNotes.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/PasswordActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/SettingsActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/SettingsFragment.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/StatsActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/CategoryMenuTask.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotesUpdatedEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/SwitchFragmentEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessor.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/GenericException.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/NotesLoadingException.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/checked/UnhandledIntentException.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/unchecked/ExternalDirectoryCreationException.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/extensions/ONDashClockExtension.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/AttachmentsHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/ChangelogHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/NotesHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/NumberHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/DefaultWordCounter.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/IdeogramsWordCounter.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/date/DateHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationProviderFactory.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/notifications/NotificationChannel.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide3.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/PasswordValidator.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/AttachmentAdapter.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/CategoryBaseAdapter.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/NavDrawerAdapter.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/views/ExpandableHeightGridView.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/views/Fab.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/views/VerticalSeekBar.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/AnimationsHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/widget/ListWidgetService.java",
+          "omniNotes/src/play/java/it/feio/android/omninotes/utils/Constants.java"
+        ]
+      },
+      {
+        "id": 5,
+        "bytes": 222769,
+        "files": [
+          "omniNotes/build.gradle",
+          "omniNotes/src/alpha/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessorTest.kt",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/db/DbHelperTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/exceptions/TestException.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/RetryableAssert.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/BaseEspressoTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/CategoryLifecycleTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/DrawerMenusEspressoTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabCameraNoteTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/RecurrenceRuleTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/GeocodeHelperTest.java",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/IntentCheckerTest.kt",
+          "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/VisibleViewMatcher.java",
+          "omniNotes/src/beta/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/foss/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/main/AndroidManifest.xml",
+          "omniNotes/src/main/assets/sql/upgrade-451.sql",
+          "omniNotes/src/main/java/it/feio/android/omninotes/BaseActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/ShortcutActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/SketchFragment.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/SnoozeActivity.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/CategoriesUpdatedEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotesMergeEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/PushbulletReplyEvent.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessorArchive.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessorDelete.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/db/SqlParser.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/DatabaseException.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/LogDelegate.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/date/RecurrenceHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationProvider.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroFragment.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/Attachment.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/category/CategoryViewHolder.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/holders/NoteViewHolder.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnDrawChangedListener.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/listeners/OnFabItemClickedListener.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/misc/PlayStoreMetadataFetcherResult.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/models/views/SketchView.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/ConstantsBase.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/IntentChecker.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/KeyboardUtils.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/MiscUtils.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/Navigation.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/TextHelper.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/date/DateUtils.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/utils/date/ReminderPickers.java",
+          "omniNotes/src/main/java/it/feio/android/omninotes/widget/WidgetProvider.java",
+          "omniNotes/src/main/res/xml/searchable.xml",
+          "omniNotes/src/main/res/xml/settings_behaviors.xml",
+          "omniNotes/src/main/res/xml/settings_privacy.xml",
+          "omniNotes/src/main/res/xml/settings_sync_import_export.xml",
+          "omniNotes/src/play/java/it/feio/android/omninotes/utils/Constants.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/NoteInfosActivityTest.java",
+          "omniNotes/src/test/java/it/feio/android/omninotes/helpers/NumberHelperTest.java"
+        ]
+      }
+    ]
+  },
+  "review_status": "complete",
+  "raw_counts": {
+    "critical": 0,
+    "high": 19,
+    "medium": 72,
+    "low": 4,
+    "info": 0
+  },
+  "consolidated_source_supported_counts": {
+    "critical": 0,
+    "high": 9,
+    "medium": 47,
+    "low": 3,
+    "info": 0
+  },
+  "groups": [
+    {
+      "id": "ON-01",
+      "priority": "P1",
+      "severity": "high",
+      "status": "source_supported_static_assessment",
+      "title": "Migration errors are swallowed before destructive statements continue",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/db/DbHelper.java",
+      "line": 283,
+      "raw_finding_ids": [
+        6,
+        7
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "Source inspection confirms execSqlFile logs an exception and continues. The data-loss example concerns legacy migration paths such as upgrade-501; an ordinary launch without that migration does not itself reproduce this failure.",
+      "explanation": "This is the swallowed-exception anti-pattern. In upgrade-501.sql, if copying notes fails because two existing notes share a creation timestamp, execution still reaches DROP TABLE notes_tmp. The upgrade can then complete and commit after deleting the original notes.",
+      "recommendation": "Propagate SQL failures so SQLiteOpenHelper rolls back the upgrade transaction and preserves the original database.",
+      "suggested_test": "Upgrade a database containing duplicate creation timestamps; assert the upgrade fails and all original notes remain available.",
+      "evidence": "      try {\n        db.execSQL(sqlInstruction);\n      } catch (Exception e) {\n        LogDelegate.e(\"Error executing command: \" + sqlInstruction, e);\n      }"
+    },
+    {
+      "id": "ON-02",
+      "priority": "P1",
+      "severity": "high",
+      "status": "source_supported_static_assessment",
+      "title": "Application password protection can be disabled without authentication",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/SettingsFragment.java",
+      "line": 335,
+      "raw_finding_ids": [
+        1,
+        2,
+        3
+      ],
+      "agents": [
+        "quality",
+        "security",
+        "tests"
+      ],
+      "batches": [
+        4
+      ],
+      "assessment_note": "Source inspection confirms the preference-change listener returns true before its asynchronous authentication callback. The threat requires access to an already open settings session; no initial remote authentication bypass was demonstrated.",
+      "explanation": "Returning true accepts and persists the switch change immediately, independently of the password callback. Someone with access to an open application session can disable application password protection and cancel or fail the password prompt; the unsuccessful callback does not restore the setting.",
+      "recommendation": "Return false and change the persisted switch state only after successful password validation.",
+      "suggested_test": "With application password protection enabled, toggle it off and cancel or fail authentication. Assert that the switch and persisted preference remain enabled after reopening settings.",
+      "evidence": "      passwordAccess.setOnPreferenceChangeListener((preference, newValue) -> {\n        PasswordHelper.requestPassword(getActivity(), passwordConfirmed -> {\n          if (passwordConfirmed.equals(Result.SUCCEED)) {\n            passwordAccess.setChecked((Boolean) newValue);\n          }\n        });\n        return true;\n      });"
+    },
+    {
+      "id": "ON-03",
+      "priority": "P1",
+      "severity": "high",
+      "status": "source_supported_static_assessment",
+      "title": "Stored password verifier also serves as the note decryption key",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/db/DbHelper.java",
+      "line": 473,
+      "raw_finding_ids": [
+        9
+      ],
+      "agents": [
+        "security"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "Source inspection confirms DbHelper decrypts using PREF_PASSWORD. This is a local data-at-rest threat requiring access to preferences and the database, not a demonstrated remote compromise.",
+      "explanation": "PasswordHelper verifies passwords against the MD5 value in PREF_PASSWORD, but this stored value is also passed directly to encryption and decryption. An attacker obtaining the preferences and database can decrypt locked notes without recovering the password. Security additionally uses DES, which limits effective key strength to 56 bits.",
+      "recommendation": "Use authenticated encryption with a key protected by Android Keystore or derived from the entered password using a salted password KDF. Keep the authentication verifier separate and migrate existing ciphertext.",
+      "suggested_test": "Verify that copying the database and password-verifier preferences does not provide sufficient material to decrypt a locked note.",
+      "evidence": "          // Eventual decryption of content\n          if (Boolean.TRUE.equals(note.isLocked())) {\n            note.setContent(\n                Security.decrypt(note.getContent(), Prefs.getString(PREF_PASSWORD, \"\")));\n          }"
+    },
+    {
+      "id": "ON-04",
+      "priority": "P1",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "All preferences, including authentication data, are logged",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/BaseActivity.java",
+      "line": 76,
+      "raw_finding_ids": [
+        32
+      ],
+      "agents": [
+        "security"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "Source inspection confirms BaseActivity logs Prefs.getAll(). The visibility and destination of those logs depend on logging configuration, build, and Android storage/access controls.",
+      "explanation": "Every activity resume logs all preferences, which include password and recovery-answer entries defined in ConstantsBase. LogDelegate writes these messages to logcat or, when file logging is enabled, to public external storage. An attacker with access to those logs can obtain authentication material; other apps with shared-storage read access can read the public logs on applicable Android versions.",
+      "recommendation": "Remove the preference dump. Log only explicitly selected, nonsensitive diagnostic values.",
+      "suggested_test": "Populate password and recovery-answer preferences with sentinel values, resume the activity with file logging enabled, and assert neither sentinel appears in captured logs or log files.",
+      "evidence": "    LogDelegate.d(Prefs.getAll().toString());"
+    },
+    {
+      "id": "ON-05",
+      "priority": "P1",
+      "severity": "high",
+      "status": "source_supported_static_assessment",
+      "title": "Cryptographic failures silently return unprocessed content",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 66,
+      "raw_finding_ids": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        82,
+        83,
+        84,
+        85
+      ],
+      "agents": [
+        "quality",
+        "security",
+        "tests"
+      ],
+      "batches": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "assessment_note": "Encryption and decryption catch exceptions and return their input. DbHelper and BackupHelper use the result. The usual password preference contains a long hash; the short-key example requires a missing/corrupt preference or direct invalid input, while provider failures are another possible trigger. The defect is failure reporting, not a claim that all ordinary saves are plaintext.",
+      "explanation": "This is fail-open exception handling. Encryption failure returns plaintext as though encryption succeeded, allowing exportNote to write unencrypted content for a locked note. The corresponding decrypt catch also returns its input, so a backup encrypted with another password can be persisted by importNote as ciphertext instead of being rejected.",
+      "recommendation": "Return an explicit cryptographic failure or throw a dedicated exception from both operations. Abort the affected export or import before writing content when encryption or decryption fails.",
+      "suggested_test": "Force encryption failure and assert that no plaintext backup is written. Import a locked backup with an incorrect password and assert that no note is persisted.",
+      "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }"
+    },
+    {
+      "id": "ON-06",
+      "priority": "P1",
+      "severity": "high",
+      "status": "source_supported_static_assessment",
+      "title": "Backup encryption truncates the password hash to a weak DES key",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 58,
+      "raw_finding_ids": [
+        12,
+        13,
+        80,
+        81
+      ],
+      "agents": [
+        "security"
+      ],
+      "batches": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "assessment_note": "DES use and first-eight-byte key handling are visible in source. A hexadecimal password verifier is used at call sites. Do not interpret this static result as a successful brute-force attack or a measured attack cost.",
+      "explanation": "BackupHelper.exportNote passes PREF_PASSWORD into this function, and PasswordActivity stores that value as hexadecimal MD5. DESKeySpec uses only the first eight bytes, so the encryption key has at most 32 bits of input entropy from eight hexadecimal characters, further reduced by DES parity bits. An attacker who obtains a locked-note backup can brute-force this small key space offline regardless of the original password's strength.",
+      "recommendation": "Use authenticated encryption such as AES-GCM with a random nonce and a properly salted password derivation function. Version the backup format and retain legacy decryption only for migration.",
+      "suggested_test": "Verify that two password inputs sharing their first eight characters cannot decrypt each other's new-format ciphertext, repeated encryption produces different ciphertext, and modified ciphertext is rejected.",
+      "evidence": "                val keySpec = DESKeySpec(password.toByteArray(StandardCharsets.UTF_8))\n                val keyFactory = SecretKeyFactory.getInstance(\"DES\")\n                val key = keyFactory.generateSecret(keySpec)\n                val clearText = value.toByteArray(StandardCharsets.UTF_8)\n                // Cipher is not thread safe\n                val cipher = Cipher.getInstance(\"DES\")"
+    },
+    {
+      "id": "ON-07",
+      "priority": "P1",
+      "severity": "high",
+      "status": "source_supported_static_assessment",
+      "title": "Duplicate-creation migration can preserve duplicates and update multiple notes",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessor.java",
+      "line": 171,
+      "raw_finding_ids": [
+        4
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        2
+      ],
+      "assessment_note": "The update predicate is not a unique row identifier and can change several duplicate rows together. This should be tested with legacy databases before modifying released migration logic.",
+      "explanation": "Two notes sharing creation, title, and content both match this UPDATE and receive the same new creation value, so they remain duplicates. Even for distinct content, the random offset can be zero or collide with another creation. This fails the migration's uniqueness requirement before creation becomes the primary key, potentially preventing the transition.",
+      "recommendation": "Update each row by its existing unique ID and allocate a deterministic unused creation value, tracking newly assigned values.",
+      "suggested_test": "Migrate two identical notes with the same creation plus nearby occupied timestamps; assert that every row survives and all resulting creation values are unique.",
+      "evidence": "        ContentValues values = new ContentValues();\n        values.put(DbHelper.KEY_CREATION, note.getCreation() + (long) (Math.random() * 999));\n        DbHelper.getInstance().getDatabase()\n            .update(DbHelper.TABLE_NOTES, values, DbHelper.KEY_TITLE +\n                    \" = ? AND \" + DbHelper.KEY_CREATION + \" = ? AND \" + DbHelper.KEY_CONTENT + \" = ?\",\n                new String[]{note\n                    .getTitle(), String.valueOf(note.getCreation()), note.getContent()});"
+    },
+    {
+      "id": "ON-08",
+      "priority": "P1",
+      "severity": "high",
+      "status": "source_supported_static_assessment",
+      "title": "Millisecond attachment IDs can overwrite other attachments",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/db/DbHelper.java",
+      "line": 306,
+      "raw_finding_ids": [
+        8
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "Source inspection confirms millisecond-derived IDs with CONFLICT_REPLACE. Collision risk requires multiple inserts with matching timestamps; no on-device collision was reproduced.",
+      "explanation": "Two new attachments saved in the same millisecond receive the same primary key. The CONFLICT_REPLACE insertion at line 314 then deletes the earlier attachment row. The generated ID is also never assigned back to the attachment, so saving the same new object again can insert another row.",
+      "recommendation": "Let SQLite generate IDs for new attachments, capture the inserted row ID, and assign it to the attachment. Preserve explicit IDs only for existing rows.",
+      "suggested_test": "Save multiple attachments with a fixed clock, then save them again; assert every attachment has a distinct persisted ID and the row count remains unchanged on the second save.",
+      "evidence": "    valuesAttachments.put(KEY_ATTACHMENT_ID,\n        attachment.getId() != null ? attachment.getId() : Calendar.getInstance().getTimeInMillis());"
+    },
+    {
+      "id": "ON-09",
+      "priority": "P1",
+      "severity": "high",
+      "status": "source_supported_static_assessment",
+      "title": "Note updates leave transactions open when an operation throws",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/db/DbHelper.java",
+      "line": 266,
+      "raw_finding_ids": [
+        5
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "Source inspection confirms beginTransaction/endTransaction are not paired with finally. Exceptions during the intervening work can skip cleanup.",
+      "explanation": "The transaction begun at line 227 has no finally cleanup. An exception during attachment processing, such as dereferencing a null attachment URI at line 309, skips endTransaction(), retaining the transaction and potentially blocking subsequent database operations.",
+      "recommendation": "Wrap the transaction body in try/finally, mark success only after all writes succeed, and always call endTransaction() in finally.",
+      "suggested_test": "Force an attachment write to throw; assert the note update rolls back and another thread can subsequently write to the database.",
+      "evidence": "    db.setTransactionSuccessful();\n    db.endTransaction();"
+    },
+    {
+      "id": "ON-10",
+      "priority": "P1",
+      "severity": "high",
+      "status": "source_supported_static_assessment",
+      "title": "Persistable folder permission flags always evaluate to zero",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "line": 273,
+      "raw_finding_ids": [
+        10,
+        68
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        4
+      ],
+      "assessment_note": "Source inspection confirms READ & WRITE evaluates to zero. Correct the grant mask using the actual granted intent flags. The precise exception/provider behavior requires Android instrumentation; do not limit the regression to reboot only.",
+      "explanation": "Read and write permission flags are distinct bits, so their bitwise AND is zero. The selected backup folder therefore receives no persisted read or write grant, leaving later backup operations without access once the temporary grant expires.",
+      "recommendation": "Mask intent.getFlags() with the bitwise OR of the read and write flags, and persist the granted permissions.",
+      "suggested_test": "Select a backup folder, restart the device, and assert that its persisted URI permission includes read and write access and a backup can complete.",
+      "evidence": "    final int takeFlags = FLAG_GRANT_READ_URI_PERMISSION & FLAG_GRANT_WRITE_URI_PERMISSION;\n    context.getContentResolver().takePersistableUriPermission(intent.getData(), takeFlags);"
+    },
+    {
+      "id": "ON-11",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Widget fill-in intents expose decrypted locked notes to the host",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/widget/ListRemoteViewsFactory.java",
+      "line": 127,
+      "raw_finding_ids": [
+        91
+      ],
+      "agents": [
+        "security"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "This depends on locked notes being returned to a widget and a host able to inspect RemoteViews. Source inspection confirms full Note parceling, but no malicious host extraction was executed.",
+      "explanation": "DbHelper.getNotes decrypts locked content before returning notes. This code embeds the entire note in RemoteViews delivered to the widget host, and Note.writeToParcel includes its content. If a locked note is included in the widget query, a malicious widget host can inspect its plaintext even when the displayed text is masked.",
+      "recommendation": "Put only the note identifier in widget fill-in intents. Retrieve the note inside the app and require authentication before exposing locked content.",
+      "suggested_test": "Include a locked note in a widget and inspect the delivered RemoteViews intent extras; assert that neither plaintext content nor the full Note parcel is present.",
+      "evidence": "    Bundle extras = new Bundle();\n    extras.putParcelable(INTENT_NOTE, note);\n    Intent fillInIntent = new Intent();\n    fillInIntent.putExtras(extras);\n    // Make it possible to distinguish the individual on-click\n    // action of a given item\n    row.setOnClickFillInIntent(R.id.root, fillInIntent);"
+    },
+    {
+      "id": "ON-12",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Attachments belonging to locked notes are exported without encryption",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "line": 140,
+      "raw_finding_ids": [
+        65
+      ],
+      "agents": [
+        "security"
+      ],
+      "batches": [
+        4
+      ],
+      "assessment_note": "The backup attachment copy is plaintext. Whether users expect attachment encryption alongside locked text should be documented; the report does not claim all app storage is encrypted.",
+      "explanation": "exportAttachments obtains all database attachments and copies their original bytes into the backup directory without checking note protection. Although exportNote encrypts locked-note content, its images, recordings, and other attachments remain readable to anyone who obtains access to the backup folder or its storage provider.",
+      "recommendation": "Encrypt attachments associated with protected notes using authenticated encryption, and record the encryption metadata needed for restoration.",
+      "suggested_test": "Export a locked note with an attachment containing a known marker. Assert that the backup attachment does not expose the original bytes and can be restored only with the correct secret.",
+      "evidence": "  private static void exportAttachment(DocumentFileCompat attachmentsDestination, Attachment attachment)\n      throws BackupAttachmentException {\n    try {\n      var destinationAttachment = attachmentsDestination.createFile(\"\",\n          attachment.getUri().getLastPathSegment());\n      DocumentFileHelper.copyFileTo(getAppContext(), new File(attachment.getUri().getPath()),\n          destinationAttachment);"
+    },
+    {
+      "id": "ON-13",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Note export failures are swallowed",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "line": 78,
+      "raw_finding_ids": [
+        64
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        4
+      ],
+      "assessment_note": "",
+      "explanation": "This is the swallowed-exception anti-pattern. If storage fills or the provider fails while writing a note, exportNote returns normally and exportNotes continues without any failure result. Callers cannot distinguish a complete backup from one missing note contents.",
+      "recommendation": "Propagate the write failure or return an explicit result that exportNotes aggregates and reports as an incomplete backup.",
+      "suggested_test": "Make a note write throw IOException and assert that the overall export reports failure and identifies the affected note.",
+      "evidence": "    try {\n      DocumentFileHelper.write(getAppContext(), noteFile, note.toJSON());\n    } catch (IOException e) {\n      LogDelegate.e(String.format(\"Error on note %s backup: %s\",  note.get_id(), e.getMessage()));\n    }"
+    },
+    {
+      "id": "ON-14",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Unreadable backup notes become empty notes during import",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "line": 187,
+      "raw_finding_ids": [
+        66
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        4
+      ],
+      "assessment_note": "",
+      "explanation": "This is the error-as-success-value anti-pattern. An unreadable JSON file produces a non-null empty Note, which passes importNotes' non-null filter and reaches updateNote in importNote. An empty file likewise returns the newly constructed Note. Failed reads are consequently treated as successful note imports.",
+      "recommendation": "Reject empty content and propagate a descriptive import failure, or return null and explicitly report skipped files before any database update.",
+      "suggested_test": "Import an empty file and a file whose read throws IOException. Assert that neither creates a database note and both are reported as failed.",
+      "evidence": "    } catch (IOException e) {\n      LogDelegate.e(\"Error parsing note json\");\n      return new Note();\n    }"
+    },
+    {
+      "id": "ON-15",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Missing attachment directory crashes restore",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "line": 199,
+      "raw_finding_ids": [
+        67
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        4
+      ],
+      "assessment_note": "",
+      "explanation": "findFile can return null when the backup contains no attachment directory, such as an incomplete or manually copied backup. Calling exists on that result throws NullPointerException instead of returning the intended failure result.",
+      "recommendation": "Check for null and verify that the entry is a directory before accessing its contents.",
+      "suggested_test": "Restore from a backup without an attachment directory and assert that importAttachments returns false without throwing.",
+      "evidence": "    var backupAttachmentsDir = backupDir.findFile(attachmentsDir.getName());\n    if (!backupAttachmentsDir.exists()) {\n      return false;\n    }"
+    },
+    {
+      "id": "ON-16",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "The address migration discards every note's trash status",
+      "file": "omniNotes/src/main/assets/sql/upgrade-453.sql",
+      "line": 23,
+      "raw_finding_ids": [
+        29,
+        30
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        1
+      ],
+      "assessment_note": "",
+      "explanation": "The replacement table declares trashed, but the copy omits it. Migrated rows receive NULL instead of their existing trash status, and dropping notes_tmp permanently loses that state. The supplied reminder tests create fresh rows and cannot detect migration damage.",
+      "recommendation": "Include trashed in both the INSERT and SELECT column lists.",
+      "suggested_test": "Seed the pre-migration table with trashed=1 and trashed=0 notes, run upgrade-453.sql, and assert both values and all existing note fields are preserved.",
+      "evidence": "INSERT INTO notes(note_id, creation, last_modification, title, content, archived, alarm, latitude, longitude, category_id, locked, checklist)\nSELECT note_id, creation, last_modification, title, content, archived, alarm, latitude, longitude, category_id, locked, checklist\nFROM notes_tmp;"
+    },
+    {
+      "id": "ON-17",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Reminder migration compares milliseconds against seconds",
+      "file": "omniNotes/src/main/assets/sql/upgrade-482.sql",
+      "line": 31,
+      "raw_finding_ids": [
+        31
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        2
+      ],
+      "assessment_note": "",
+      "explanation": "The supplied reminder tests store alarm timestamps in milliseconds, whereas strftime('%s', 'now') returns seconds. Adding 1000 does not convert units. Ordinary past reminders therefore fail this predicate and are not marked fired during migration.",
+      "recommendation": "Multiply the Unix timestamp by 1000 before comparing it with alarm.",
+      "suggested_test": "Migrate notes with alarms one minute before and after the current time; assert that only the past alarm is marked fired.",
+      "evidence": "UPDATE notes\nSET reminder_fired = 1\nWHERE alarm < (SELECT strftime('%s', 'now') + 1000);"
+    },
+    {
+      "id": "ON-18",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Tag search interpolates input into executable SQL",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/db/DbHelper.java",
+      "line": 763,
+      "raw_finding_ids": [
+        58,
+        59,
+        60
+      ],
+      "agents": [
+        "quality",
+        "security",
+        "tests"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "Treat SQL construction with untrusted text as a code defect. Reachability and exploitability depend on allowed tag inputs and call sites; no extraction, arbitrary statement execution, or remote attack was demonstrated.",
+      "explanation": "Tag values are inserted into SQL string literals without escaping or binding, and getNotes executes the resulting query with rawQuery. If an attacker can influence a searched tag, an apostrophe can cause an uncaught SQL error, while crafted SQL can alter the selection. The later regex filter runs only after SQL execution and cannot prevent injection.",
+      "recommendation": "Bind tag patterns through selection arguments, escaping LIKE metacharacters when literal matching is intended.",
+      "suggested_test": "Search for tags containing apostrophes and SQL syntax; assert that they are treated literally, do not throw, and do not broaden the SQL selection.",
+      "evidence": "      whereCondition.append(String.format(\"((%s IS 1 AND %s LIKE '%%%s%%') OR (%s is NOT 1 AND (%s LIKE '%%%s%%' OR %s LIKE '%%%s%%')))\"\n          , KEY_LOCKED, KEY_TITLE, tags[i], KEY_LOCKED, KEY_CONTENT, tags[i], KEY_TITLE, tags[i]));"
+    },
+    {
+      "id": "ON-19",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Single-line SQL comments consume subsequent statements",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/db/SqlParser.java",
+      "line": 63,
+      "raw_finding_ids": [
+        61,
+        62
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "The block-comment opener checks for a closing brace instead of */. A complete comment such as /* migration */ enters multiline-comment mode, and all following SQL is discarded until another line ends in */. A script can therefore silently omit its migration statements.",
+      "recommendation": "Recognize a closing */ on the opening line, preferably using a parser that tracks comment delimiters and preserves SQL outside them.",
+      "suggested_test": "Parse '/* migration */\\nCREATE TABLE example(id INTEGER);' and assert that the CREATE TABLE statement is returned.",
+      "evidence": "            if (line.startsWith(\"/*\")) {\n              if (!line.endsWith(\"}\")) {\n                multiLineComment = \"/*\";\n              }"
+    },
+    {
+      "id": "ON-20",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Attachment copy failures are reported as success",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+      "line": 127,
+      "raw_finding_ids": [
+        86,
+        87
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "The copyFile overload catches IOException and returns false, but this caller ignores that result. A read failure or full storage therefore returns a partial file as a valid attachment, and the surrounding IOException fallback never runs for the copy failure.",
+      "recommendation": "Check the result or use a throwing copy operation. Delete partial output and return failure before constructing an Attachment.",
+      "suggested_test": "Use an input stream that throws after several bytes; assert that attachment creation fails and leaves no partial attachment file.",
+      "evidence": "      contentResolverInputStream = mContext.getContentResolver().openInputStream(uri);\n      contentResolverOutputStream = new FileOutputStream(file);\n      copyFile(contentResolverInputStream, contentResolverOutputStream);"
+    },
+    {
+      "id": "ON-21",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Attachment names can collide within the same millisecond",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+      "line": 248,
+      "raw_finding_ids": [
+        88
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "Synchronization serializes calls but does not make timestamps unique. Two attachments with the same extension created within one millisecond receive the same path. FileOutputStream then truncates the earlier attachment, so both notes can reference the later file.",
+      "recommendation": "Reserve unique files atomically with File.createTempFile or use collision-resistant names with exclusive creation.",
+      "suggested_test": "Create multiple attachment files with a fixed clock and identical extensions; assert distinct paths and preserved contents.",
+      "evidence": "  private static synchronized String createNewAttachmentName(String extension) {\n    Calendar now = Calendar.getInstance();\n    SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT_SORTABLE);\n    String name = sdf.format(now.getTime());\n    name += extension != null ? extension : \"\";\n    return name;\n  }"
+    },
+    {
+      "id": "ON-22",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Backup copying leaks its output stream and hides failure",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/StorageHelper.java",
+      "line": 272,
+      "raw_finding_ids": [
+        89
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "This resource-leak pattern opens a FileOutputStream that neither this method nor copyFile closes. Repeated backup copies can exhaust file descriptors. The ignored copy result and unconditional destination return also present incomplete or nonexistent backups as successful.",
+      "recommendation": "Own the output stream with try-with-resources and propagate copy/open failures or return an explicit failure after deleting partial output.",
+      "suggested_test": "Force a copy IOException and assert failure rather than a destination result; verify the output stream closes on success and failure.",
+      "evidence": "    try {\n      copyFile(fileInputStream, new FileOutputStream(destination));\n    } catch (FileNotFoundException e) {\n      e.printStackTrace();\n    }\n    return destination;"
+    },
+    {
+      "id": "ON-23",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Queued alarms can overwrite a trashed note with stale data",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/receiver/AlarmReceiver.java",
+      "line": 55,
+      "raw_finding_ids": [
+        76
+      ],
+      "agents": [
+        "tests"
+      ],
+      "batches": [
+        1
+      ],
+      "assessment_note": "",
+      "explanation": "The guard only checks existence. A queued broadcast serialized before trashing still passes because the database row exists, then displays a notification and writes its old, untrashed state through updateNote(). The supplied receiver test covers deletion only, so it misses this path and stale edits to existing notes.",
+      "recommendation": "Load the current database note, reject trashed notes and obsolete alarms, and apply reminder changes to current data.",
+      "suggested_test": "Serialize an active reminded note, trash and save it, then deliver the original broadcast. Assert the database note remains trashed, no notification appears, and no recurrent alarm is scheduled. Also edit the title after serialization and assert delivery preserves the edit.",
+      "evidence": "        if (isNoteGone(note)) {\n          LogDelegate.d(\"Reminder fired for a note that no longer exists, skipping\");\n          return;\n        }\n        createNotification(mContext, note);\n        SnoozeActivity.setNextRecurrentReminder(note);\n        updateNote(note);"
+    },
+    {
+      "id": "ON-24",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Denied exact-alarm access launches settings from an application context",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/ReminderHelper.java",
+      "line": 63,
+      "raw_finding_ids": [
+        78,
+        79
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        1
+      ],
+      "assessment_note": "",
+      "explanation": "SaveNoteTask supplies OmniNotes.getAppContext(). When exact-alarm access is denied on Android 12+, startActivity() lacks FLAG_ACTIVITY_NEW_TASK and throws from that application context. The reminder tests assume scheduling succeeds and do not exercise denied access.",
+      "recommendation": "Handle permission requests through an activity, or add the required task flag when launching from an application context and provide a way to retry scheduling after access is granted.",
+      "suggested_test": "On API 31+, simulate canScheduleExactAlarms() returning false and call addReminder with an application context. Assert no exception, the settings intent has FLAG_ACTIVITY_NEW_TASK, and no alarm is scheduled before permission is granted.",
+      "evidence": "        if (!alarmManager.canScheduleExactAlarms()) {\n          Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);\n          context.startActivity(intent);\n          return;\n        }"
+    },
+    {
+      "id": "ON-25",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Postponing a recurring reminder skips the selected occurrence",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/SnoozeActivity.java",
+      "line": 137,
+      "raw_finding_ids": [
+        54
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "ReminderPickers first calls onReminderPicked, which sets the alarm to the selected future time. This callback then calls setNextRecurrentReminder, whose helper searches after that alarm plus one minute. Selecting tomorrow at 09:00 with daily recurrence consequently saves the following day's 09:00 instead.",
+      "recommendation": "Save the selected alarm and recurrence directly when confirming the picker. Advance recurrence only when dismissing or completing a fired reminder.",
+      "suggested_test": "Postpone a daily reminder to tomorrow at 09:00 and assert that the saved alarm is tomorrow at 09:00.",
+      "evidence": "  public void onRecurrenceReminderPicked(String recurrenceRule) {\n    if (note != null) {\n      note.setRecurrenceRule(recurrenceRule);\n      setNextRecurrentReminder(note);"
+    },
+    {
+      "id": "ON-26",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Today's reminders are selected using UTC dates",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/db/DbHelper.java",
+      "line": 653,
+      "raw_finding_ids": [
+        57
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "",
+      "explanation": "SQLite evaluates both dates in UTC. In a non-UTC timezone, reminders near midnight can fall on a different local day, so getTodayReminders omits reminders due today and includes reminders due yesterday or tomorrow.",
+      "recommendation": "Compute the local day's start and next day's start in the application timezone and query the timestamp interval.",
+      "suggested_test": "In Australia/Melbourne, query reminders around local midnight and assert only timestamps within the current local calendar day are returned.",
+      "evidence": "        \" WHERE DATE(\" + KEY_REMINDER + \"/1000, 'unixepoch') = DATE('now') AND \" +\n            KEY_TRASHED + \" IS NOT 1\";"
+    },
+    {
+      "id": "ON-27",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Tomorrow reminders are classified by elapsed hours instead of calendar date",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/extensions/ONDashClockExtension.java",
+      "line": 133,
+      "raw_finding_ids": [
+        63
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        4
+      ],
+      "assessment_note": "",
+      "explanation": "At 08:00 today, a reminder at 20:00 tomorrow is excluded because it is 36 hours away. Conversely, an unfired reminder from yesterday has a negative difference and is labeled tomorrow. Elapsed hours do not identify the next calendar day.",
+      "recommendation": "Compare the alarm's local calendar date with a Calendar advanced by one day, using a single captured current time.",
+      "suggested_test": "Assert that tomorrow evening is included when now is this morning, yesterday is excluded, and classification remains correct across daylight-saving transitions.",
+      "evidence": "        } else if (\n            (Long.valueOf(note.getAlarm()) - Calendar.getInstance().getTimeInMillis()) / (1000 * 60\n                *\n                60) < 24) {\n          tomorrow.add(note);\n        }"
+    },
+    {
+      "id": "ON-28",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Activity stops receiving events after its first stop",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+      "line": 162,
+      "raw_finding_ids": [
+        46,
+        47
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "Registration occurs only in onCreate, whereas onStop unregisters the activity. Returning to the same activity instance does not call onCreate, leaving its PasswordRemovedEvent and NotificationsGrantedEvent handlers disconnected. The supplied UI tests do not exercise this stop/start transition.",
+      "recommendation": "Pair registration and unregistration in matching lifecycle callbacks, such as onStart and onStop.",
+      "suggested_test": "Launch MainActivity, move it through stopped and started states without recreating it, and assert that it is registered and handles a posted NotificationsGrantedEvent after returning.",
+      "evidence": "  @Override\n  protected void onStop() {\n    super.onStop();\n    EventBus.getDefault().unregister(this);\n  }"
+    },
+    {
+      "id": "ON-29",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Malformed VIEW intents crash the activity",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+      "line": 439,
+      "raw_finding_ids": [
+        48
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "An ACTION_VIEW intent without data dereferences null here. With data present, the subsequent shortcut branch also parses an absent or nonnumeric id without handling NumberFormatException. MainActivity is exported, so either malformed input can terminate it.",
+      "recommendation": "Validate the URI, scheme, host, and numeric ID before dispatching; reject malformed input without throwing.",
+      "suggested_test": "Deliver ACTION_VIEW with no data, an app URI without id, and id=abc; assert that none crashes or opens an unintended note.",
+      "evidence": "    if (Intent.ACTION_VIEW.equals(i.getAction()) && i.getDataString()\n        .startsWith(UrlCompleter.HASHTAG_SCHEME)) {"
+    },
+    {
+      "id": "ON-30",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Sharing multiple missing attachments crashes",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/MainActivity.java",
+      "line": 563,
+      "raw_finding_ids": [
+        49,
+        50
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "getShareableAttachmentUri returns null for missing files, and those entries are skipped. If all attachments are missing, mimeTypes is empty and indexing element zero throws instead of handling the failure.",
+      "recommendation": "Handle an empty set of shareable attachments explicitly before selecting a MIME type or launching the chooser.",
+      "suggested_test": "Share a note containing two attachments whose files are absent. Assert no exception and either a documented text-only share or an error with no chooser launch. Also test one missing and one valid attachment.",
+      "evidence": "      if (mimeTypes.size() > 1) {\n        shareIntent.setType(\"*/*\");\n      } else {\n        shareIntent.setType((String) mimeTypes.keySet().toArray()[0]);\n      }"
+    },
+    {
+      "id": "ON-31",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Sketch save errors discard the drawing without informing the user",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/SketchFragment.java",
+      "line": 206,
+      "raw_finding_ids": [
+        53
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "This swallowed-exception pattern makes save return normally when opening or writing the file fails. MainActivity.handleBackPressed unconditionally pops the sketch immediately after save(), so a storage failure closes the editor and loses the user's drawing without a visible error.",
+      "recommendation": "Return a save result or propagate a specific failure, show an error, and navigate away only after confirmed successful writing. Check Bitmap.compress's result as well.",
+      "suggested_test": "Use an unwritable output path, press Back, and assert that an error appears and the sketch remains available for retry.",
+      "evidence": "      } catch (Exception e) {\n        LogDelegate.e(\"Error writing sketch image data\", e);\n      }"
+    },
+    {
+      "id": "ON-32",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Recording failures leave a recorder that Stop cannot safely stop",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "line": 1833,
+      "raw_finding_ids": [
+        38
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        1
+      ],
+      "assessment_note": "",
+      "explanation": "This is incomplete error recovery: isRecording is set before preparation, but this catch neither resets it nor releases mRecorder. If prepare fails, the next recording-button click calls stopRecording, whose unguarded mRecorder.stop() throws because recording never started. Stopping immediately after a successful start can also throw when insufficient audio has been captured.",
+      "recommendation": "Set isRecording only after start succeeds, release and clear the recorder on failure, and handle stop failures with cleanup in a finally block. Attach a recording only after a successful stop.",
+      "suggested_test": "Simulate prepare throwing IOException, then click the recording control again; assert no crash, a released recorder, and no invalid attachment.",
+      "evidence": "          try {\n            audioRecordingTimeStart = Calendar.getInstance().getTimeInMillis();\n            mRecorder.prepare();\n            mRecorder.start();\n          } catch (IOException | IllegalStateException e) {\n            LogDelegate.e(\"prepare() failed\", e);\n            mainActivity.showMessage(R.string.error, ONStyle.ALERT);\n          }"
+    },
+    {
+      "id": "ON-33",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Completed playback abandons the MediaPlayer without releasing it",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "line": 1782,
+      "raw_finding_ids": [
+        37
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        1
+      ],
+      "assessment_note": "",
+      "explanation": "This is a resource leak. Each naturally completed playback clears the only field used by stopPlaying to release the player, without releasing mp. Repeatedly playing attachments accumulates native media resources until garbage collection and can exhaust playback resources.",
+      "recommendation": "Release mp in the completion callback before clearing the field, and release the player on preparation failures as well.",
+      "suggested_test": "Complete playback repeatedly with a mocked MediaPlayer; assert release is called exactly once for every created player.",
+      "evidence": "      mPlayer.setOnCompletionListener(mp -> {\n        mPlayer = null;"
+    },
+    {
+      "id": "ON-34",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Process Text reads a CharSequence extra as a String",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "line": 532,
+      "raw_finding_ids": [
+        34
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        1
+      ],
+      "assessment_note": "",
+      "explanation": "EXTRA_PROCESS_TEXT carries a CharSequence, which can be a styled text object rather than a String. getStringExtra can return null for that valid payload, and the immediate toString call then crashes the activity. A missing extra also crashes.",
+      "recommendation": "Read the value with getCharSequenceExtra and convert it to a String only after checking for null.",
+      "suggested_test": "Launch ACTION_PROCESS_TEXT with a SpannableString payload and assert that its text becomes the note content without a crash.",
+      "evidence": "      if (Intent.ACTION_PROCESS_TEXT.equals(i.getAction())){\n        content = i.getStringExtra(Intent.EXTRA_PROCESS_TEXT).toString();"
+    },
+    {
+      "id": "ON-35",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Downloads URI parsing assumes document IDs are numeric",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/FileHelper.java",
+      "line": 67,
+      "raw_finding_ids": [
+        77
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        2
+      ],
+      "assessment_note": "",
+      "explanation": "Downloads document IDs can contain prefixes such as raw: or msf:. Passing such a valid document URI to getPath throws NumberFormatException before reaching getDataColumn's error handling, interrupting file selection.",
+      "recommendation": "Handle supported document-ID forms explicitly and use ContentResolver streams when a document has no usable filesystem path.",
+      "suggested_test": "Pass Downloads document URIs with numeric, raw:, and msf: IDs; assert that supported forms resolve and unsupported forms return a controlled result without throwing.",
+      "evidence": "        final Uri contentUri = ContentUris\n            .withAppendedId(Uri.parse(\"content://downloads/public_downloads\"),\n                parseLong(DocumentsContract.getDocumentId(uri)));"
+    },
+    {
+      "id": "ON-36",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Gallery initialization indexes an explicitly permitted empty list",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/GalleryActivity.java",
+      "line": 163,
+      "raw_finding_ids": [
+        40
+      ],
+      "agents": [
+        "tests"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "",
+      "explanation": "initData defaults missing GALLERY_IMAGES to Collections.emptyList(), then unconditionally indexes it here. Missing or empty images therefore crash initialization. Negative or out-of-range GALLERY_CLICKED_IMAGE values also crash, even if ViewPager clamps its own current item.",
+      "recommendation": "Handle empty images before configuring the gallery and validate the requested index before accessing the list.",
+      "suggested_test": "Launch GalleryActivity with missing images, an empty image list, and a single image with indices -1 and 1. Assert graceful completion or a defined fallback without IndexOutOfBoundsException.",
+      "evidence": "    if (images.get(clickedImage).getMime_type().equals(MIME_TYPE_VIDEO)) {\n      viewMedia();\n    }"
+    },
+    {
+      "id": "ON-37",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Opening media crashes when no viewer is installed",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/GalleryActivity.java",
+      "line": 190,
+      "raw_finding_ids": [
+        41
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "",
+      "explanation": "A device without an activity supporting the attachment's MIME type throws ActivityNotFoundException. Videos invoke this path automatically during gallery initialization, so simply opening such a video crashes the gallery.",
+      "recommendation": "Catch ActivityNotFoundException and display a clear message while keeping the gallery usable.",
+      "suggested_test": "Open a video with no matching external viewer installed; assert the gallery remains open and reports that no viewer is available.",
+      "evidence": "      Intent intent = new Intent(Intent.ACTION_VIEW);\n      intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);\n      intent.setDataAndType(shareableAttachmentUri, getMimeType(this, attachment.getUri()));\n      startActivity(intent);"
+    },
+    {
+      "id": "ON-38",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Temporary category navigation can crash new-note creation",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+      "line": 938,
+      "raw_finding_ids": [
+        42
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        2
+      ],
+      "assessment_note": "",
+      "explanation": "Java evaluates both arguments before calling defaultIfNull. When a widget supplies navigationTmp while the persistent navigation has no category, Navigation.getCategory().toString() can throw NullPointerException even though the temporary category is available. The surrounding catch handles only NumberFormatException.",
+      "recommendation": "Select the category ID with a conditional expression so Navigation.getCategory() is evaluated only when needed, and handle an absent category.",
+      "suggested_test": "Open a category widget while persistent navigation is Notes, then create a note; assert that creation succeeds with the widget category.",
+      "evidence": "        if (checkNavigation(Navigation.CATEGORY) || !isEmpty(mainActivity.navigationTmp)) {\n          String categoryId = ObjectUtils.defaultIfNull(mainActivity.navigationTmp,\n              Navigation.getCategory().toString());"
+    },
+    {
+      "id": "ON-39",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Activity weak reference is dereferenced before the lifecycle guard",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/async/MainMenuTask.java",
+      "line": 61,
+      "raw_finding_ids": [
+        55,
+        56
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "",
+      "explanation": "If the activity is destroyed and collected while the background task runs, mainActivity.get() returns null and onPostExecute crashes before reaching isAlive().",
+      "recommendation": "Resolve weak references once into local variables, validate the activity and fragment lifecycle first, and only then access the drawer.",
+      "suggested_test": "Destroy the hosting activity before task completion and clear its weak reference; assert completion exits without accessing views or throwing.",
+      "evidence": "    navDrawer = mainActivity.get().findViewById(R.id.drawer_nav_list);\n    if (isAlive()) {"
+    },
+    {
+      "id": "ON-40",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Asynchronous deletion events refresh drawer views on a worker thread",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/NavigationDrawerFragment.java",
+      "line": 150,
+      "raw_finding_ids": [
+        51
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        4
+      ],
+      "assessment_note": "",
+      "explanation": "EventBus runs onEventAsync on a background thread. refreshMenus calls mDrawerToggle.syncState and executes CategoryMenuTask, whose onPreExecute immediately accesses drawer views and can add a footer. These UI operations therefore run off the main thread during note deletion, risking thread violations and inconsistent drawer updates.",
+      "recommendation": "Handle this event with onEventMainThread, keeping database work inside the tasks' background phases.",
+      "suggested_test": "Post NotesDeletedEvent and assert that drawer synchronization and CategoryMenuTask.onPreExecute execute on the main looper.",
+      "evidence": "  public void onEventAsync(NotesDeletedEvent event) {\n    refreshMenus();\n  }"
+    },
+    {
+      "id": "ON-41",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Note updates always skip the final list item",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+      "line": 1190,
+      "raw_finding_ids": [
+        43,
+        44
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        2
+      ],
+      "assessment_note": "",
+      "explanation": "IntStream.range excludes its upper bound, so the final note is never updated. With one note, no items are examined. NoteLocationTest posts a CategoriesUpdatedEvent after NotesUpdatedEvent, causing a full reload that masks this defect.",
+      "recommendation": "Use the list size as the exclusive upper bound and test NotesUpdatedEvent without a subsequent full reload.",
+      "suggested_test": "Load a single note, post only NotesUpdatedEvent with changed title and location, and assert the adapter and displayed row contain the new values. Repeat for the last item of a multi-note list.",
+      "evidence": "    notesUpdatedEvent.getNotes().stream().forEach(updatedNote ->\n        IntStream.range(0, listAdapter.getNotes().size() - 1)\n            .filter(i -> listAdapter.getItem(i).get_id().equals(updatedNote.get_id()))"
+    },
+    {
+      "id": "ON-42",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Undoing trash does not restore the canceled reminder",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/ListFragment.java",
+      "line": 1304,
+      "raw_finding_ids": [
+        45
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        2
+      ],
+      "assessment_note": "",
+      "explanation": "Trashing cancels reminders before the operation is committed. onUndo restores adapter items and clears the pending state without rescheduling their reminders. Trashing a note with a future reminder and pressing Undo therefore leaves the note active but its alarm canceled.",
+      "recommendation": "Defer reminder cancellation until trash is committed, or explicitly reschedule reminders when undoing trash.",
+      "suggested_test": "Schedule a future reminder, trash the note, and undo; assert that the note remains active and its reminder is still scheduled.",
+      "evidence": "      trackModifiedNotes(getSelectedNotes());\n      for (Note note : getSelectedNotes()) {\n        listAdapter.remove(note);\n        ReminderHelper.removeReminder(OmniNotes.getAppContext(), note);\n      }"
+    },
+    {
+      "id": "ON-43",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Removing all attachments disconnects the adapter from subsequent additions",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "line": 2018,
+      "raw_finding_ids": [
+        39
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        1
+      ],
+      "assessment_note": "",
+      "explanation": "The note and adapter receive different empty lists. Subsequent attachment callbacks add to noteTmp and notify the adapter, but the adapter still observes its separate empty list. Attachments added after Delete All therefore do not appear in the grid.",
+      "recommendation": "Construct the replacement adapter with noteTmp.getAttachmentsList(), as initViewAttachments does.",
+      "suggested_test": "Delete all attachments, then add another attachment; assert that the grid displays the new attachment and the note contains it.",
+      "evidence": "  private void removeAllAttachments() {\n    noteTmp.setAttachmentsList(new ArrayList<>());\n    mAttachmentAdapter = new AttachmentAdapter(mainActivity, new ArrayList<>());\n    mGridView.invalidateViews();\n    mGridView.setAdapter(mAttachmentAdapter);\n  }"
+    },
+    {
+      "id": "ON-44",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Changing a note's coordinates retains its previous address",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java",
+      "line": 940,
+      "raw_finding_ids": [
+        35,
+        36
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        1
+      ],
+      "assessment_note": "",
+      "explanation": "When a note already has an address and the user retrieves a different location, the coordinates change but the old address suppresses reverse geocoding. The note displays and retains the old place while opening the map at the new place. Removing a location also leaves the address intact, so adding another location reproduces this mismatch.",
+      "recommendation": "Invalidate the cached address when coordinates change or are removed, then resolve the address for the new coordinates.",
+      "suggested_test": "Start with coordinates and address A, retrieve location B, and assert that address A is cleared and replaced by B's address or coordinates.",
+      "evidence": "      noteTmp.setLatitude(location.getLatitude());\n      noteTmp.setLongitude(location.getLongitude());\n      if (!TextUtils.isEmpty(noteTmp.getAddress())) {\n        binding.fragmentDetailContent.location.setVisibility(View.VISIBLE);\n        binding.fragmentDetailContent.location.setText(noteTmp.getAddress());"
+    },
+    {
+      "id": "ON-45",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Location cache selection ignores how old the fix is",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationManagerLocationProvider.java",
+      "line": 118,
+      "raw_finding_ids": [
+        69,
+        70
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        1
+      ],
+      "assessment_note": "",
+      "explanation": "The provider selects cached fixes solely by accuracy and getLocation immediately returns the selected fix without requesting an update. An accurate GPS fix from a previous trip therefore beats a recent network fix and can be attached to a new note as the device's current position.",
+      "recommendation": "Reject fixes older than a defined freshness threshold using elapsed realtime, consider recency when comparing fixes, and request an update when no sufficiently fresh fix exists.",
+      "suggested_test": "Provide an old accurate GPS fix and a recent network fix; assert that the old fix is not returned as the current position.",
+      "evidence": "      if (location != null && (bestLocation == null\n          || location.getAccuracy() < bestLocation.getAccuracy())) {\n        bestLocation = location;\n      }"
+    },
+    {
+      "id": "ON-46",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Notification cancellation does not match the identity used by show",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/notifications/NotificationsHelper.java",
+      "line": 207,
+      "raw_finding_ids": [
+        71,
+        72
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "",
+      "explanation": "show(long) posts notifications with a string tag and numeric ID 0, but cancel(int) and cancel() use the untagged cancellation overload. Consequently, show(42) followed by cancel(42), or show() followed by cancel(), leaves the posted notification active.",
+      "recommendation": "Use consistent tag and ID pairs for posting and cancellation, while preserving the separate untagged progress notification behavior if needed.",
+      "suggested_test": "Post with show(42), cancel that notification, and assert its tagged entry is absent from active notifications. Repeat with show() and cancel(), and verify cancellation leaves an unrelated notification intact.",
+      "evidence": "    mNotificationManager.notify(String.valueOf(id), 0, mBuilder.build());"
+    },
+    {
+      "id": "ON-47",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Empty-state observer ignores granular insertions and removals",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/models/views/RecyclerViewEmptySupport.java",
+      "line": 32,
+      "raw_finding_ids": [
+        74,
+        75
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        2
+      ],
+      "assessment_note": "",
+      "explanation": "The observer implements only onChanged. RecyclerView notifications such as notifyItemRemoved and notifyItemInserted invoke separate callbacks, so removing the last item or inserting the first item through these notifications leaves the empty-state visibility stale. Existing lifecycle tests largely exercise paths that explicitly call notifyDataSetChanged.",
+      "recommendation": "Recalculate empty-state visibility from range insertion and removal callbacks as well as onChanged.",
+      "suggested_test": "Attach an adapter containing one item, remove it and call only notifyItemRemoved(0); assert the empty view is visible and the list is gone. Insert the first item with only notifyItemInserted(0) and assert the inverse.",
+      "evidence": "    @Override\n    public void onChanged() {\n      Adapter<?> adapter = getAdapter();"
+    },
+    {
+      "id": "ON-48",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Category color selection is lost on activity recreation",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/CategoryActivity.java",
+      "line": 82,
+      "raw_finding_ids": [
+        33
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        2
+      ],
+      "assessment_note": "",
+      "explanation": "onColorSelection updates selectedColor but does not update category. Only category is saved, and onCreate restores selectedColor from category.getColor(). Rotating after choosing a color therefore discards that choice, and saving persists the old color.",
+      "recommendation": "Save and restore selectedColor explicitly or update the category's color when the selection changes.",
+      "suggested_test": "Choose a different category color, recreate the activity, and save; assert that the chosen color remains displayed and is persisted.",
+      "evidence": "  @Override\n  public void onSaveInstanceState(Bundle outState) {\n    outState.putParcelable(\"category\", category);\n    super.onSaveInstanceState(outState);\n  }"
+    },
+    {
+      "id": "ON-49",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Settings recreation overwrites restored navigation",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/SettingsActivity.java",
+      "line": 64,
+      "raw_finding_ids": [
+        52
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        4
+      ],
+      "assessment_note": "",
+      "explanation": "After rotation or process recreation, FragmentManager restores the current settings fragment and its back stack. This unconditional replacement overwrites that restored screen with the root settings fragment while leaving the restored back stack in place, losing the user's location and making subsequent back navigation inconsistent.",
+      "recommendation": "Install the initial SettingsFragment only when savedInstanceState is null and otherwise retain FragmentManager's restored state.",
+      "suggested_test": "Open a nested settings screen, recreate the activity, and assert that the same screen remains visible and Back returns to its parent.",
+      "evidence": "    initUI();\n    getSupportFragmentManager().beginTransaction()\n        .replace(R.id.content_frame, new SettingsFragment()).commit();"
+    },
+    {
+      "id": "ON-50",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Widget display preferences are shared globally and lost on restart",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/widget/ListRemoteViewsFactory.java",
+      "line": 65,
+      "raw_finding_ids": [
+        90
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        3
+      ],
+      "assessment_note": "",
+      "explanation": "This is hidden shared mutable state: thumbnail and timestamp settings are static fields used by every widget, while only the SQL condition is persisted per widget. Configuring a second widget changes the first widget's display, and process restart resets both settings to true.",
+      "recommendation": "Persist both display settings under widget-specific keys and load them into instance fields for each factory.",
+      "suggested_test": "Configure two widgets with opposite display settings, recreate their factories, and assert each retains its own settings.",
+      "evidence": "  static void updateConfiguration(int mAppWidgetId, String sqlCondition, boolean thumbnails, boolean timestamps) {\n    LogDelegate.d(\"Widget configuration updated\");\n    Prefs.edit().putString(PREF_WIDGET_PREFIX + mAppWidgetId, sqlCondition).apply();\n    showThumbnails = thumbnails;\n    showTimestamps = timestamps;\n  }"
+    },
+    {
+      "id": "ON-51",
+      "priority": "P2",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "DashClock and Pushbullet cannot bind to their extension services",
+      "file": "omniNotes/src/main/AndroidManifest.xml",
+      "line": 287,
+      "raw_finding_ids": [
+        27,
+        28
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        2,
+        4
+      ],
+      "assessment_note": "Both declarations are exported=false. Restoring third-party integrations requires reviewing intended bindings and permission protection; do not simply export services without that assessment.",
+      "explanation": "DashClock runs under another application's UID and cannot bind to a service marked exported=false, even with the declared permission. PushBulletExtension has the same configuration at lines 308\u2013311, preventing that integration as well.",
+      "recommendation": "Export the extension services intended for external applications while retaining their permission restrictions.",
+      "suggested_test": "From clients holding the respective extension permissions, assert that both services can be discovered and bound.",
+      "evidence": "    <service\n      android:name=\".extensions.ONDashClockExtension\"\n      android:icon=\"@drawable/ic_stat_literal_icon\"\n      android:label=\"@string/app_name\"\n      android:permission=\"com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA\"\n      android:exported=\"false\">"
+    },
+    {
+      "id": "ON-52",
+      "priority": "P3",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Retry loop exits before the timeout",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/RetryableAssert.java",
+      "line": 54,
+      "raw_finding_ids": [
+        21,
+        22
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "The loop repeats only when the clock exactly equals the deadline. For a normal positive timeout it exits immediately, so asynchronous assertions fail before their allowed waiting period.",
+      "recommendation": "Retry while the deadline has not passed, return on success, and fail only after the timeout.",
+      "suggested_test": "Use a predicate that becomes true after 100 ms with a 1000 ms timeout and assert success. Also verify that an always-false predicate fails after the allowed interval.",
+      "evidence": "    while (System.currentTimeMillis() == endTime);"
+    },
+    {
+      "id": "ON-53",
+      "priority": "P3",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Camera assertions cannot both succeed and may never run",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabCameraNoteTest.java",
+      "line": 93,
+      "raw_finding_ids": [
+        23,
+        24
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "An empty attachment list cannot have element zero. Furthermore, these assertions exist only in an EventBus callback; the test body never asserts that the callback occurred or waits for its result. Missing events can therefore leave the camera behavior unverified.",
+      "recommendation": "Capture the event, await it with a bounded synchronization mechanism, and assert the expected attachment count and MIME type on the test thread. Release Intents and unregister the subscriber in teardown.",
+      "suggested_test": "Complete the stubbed camera capture and assert that an update arrives and contains exactly one image attachment. Suppress the update in a negative scenario and verify that the test fails on timeout.",
+      "evidence": "    assertEquals(0, updatedNote.getAttachmentsList().size());\n    assertEquals(Constants.MIME_TYPE_IMAGE, updatedNote.getAttachmentsList().get(0).getMime_type());"
+    },
+    {
+      "id": "ON-54",
+      "priority": "P3",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "FAB action assertions never resolve the matched views",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabLifecycleTest.java",
+      "line": 69,
+      "raw_finding_ids": [
+        25,
+        93
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        4
+      ],
+      "assessment_note": "",
+      "explanation": "Espresso onView returns a ViewInteraction without resolving the matcher. Checking that interaction for null therefore passes even when the checklist action is missing or hidden. The camera assertion has the same problem, so fabActionsTest does not verify either action's visibility.",
+      "recommendation": "Execute check(matches(isDisplayed())) on both interactions and verify collapse hides the actions.",
+      "suggested_test": "Expand the FAB and assert checklist and camera views are displayed using Espresso checks. Collapse it and assert they are not displayed. Verify the expanded-state assertion fails if either action is hidden.",
+      "evidence": "            isDisplayed()));\n    assertNotNull(checklistFabAction);"
+    },
+    {
+      "id": "ON-55",
+      "priority": "P3",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Create-note UI test never verifies that the note was saved",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/NoteLifecycleTest.java",
+      "line": 74,
+      "raw_finding_ids": [
+        26
+      ],
+      "agents": [
+        "tests"
+      ],
+      "batches": [
+        2
+      ],
+      "assessment_note": "",
+      "explanation": "The test ends after navigation without asserting any saved state. A regression that silently discards the title, content, or entire note can pass as long as the editing controls and navigation still work.",
+      "recommendation": "Assert the resulting note appears in the list and retains its values when reopened.",
+      "suggested_test": "Create a note with title \"Note title\" and content \"Note content\", navigate up, assert exactly one saved note with those values, then reopen it and assert both editor fields.",
+      "evidence": "    onView(withId(R.id.detail_content))\n        .perform(scrollTo(), replaceText(content), closeSoftKeyboard());\n\n    navigateUp();\n  }"
+    },
+    {
+      "id": "ON-56",
+      "priority": "P3",
+      "severity": "medium",
+      "status": "source_supported_static_assessment",
+      "title": "Upgrade assertion also passes if migration deletes attachments",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/async/upgrade/UpgradeProcessorTest.kt",
+      "line": 41,
+      "raw_finding_ids": [
+        20
+      ],
+      "agents": [
+        "tests"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "allMatch returns true for an empty collection. The test therefore accepts loss of every attachment, and it does not establish that the migrated URI still points to the original data needed for backups.",
+      "recommendation": "Assert preservation of the note and attachment identities and count, then read the migrated attachment and compare its contents.",
+      "suggested_test": "Seed one content URI attachment with known bytes, migrate, reload its note, and assert exactly one attachment remains with the original identity, a usable file URI, and identical bytes.",
+      "evidence": "        UpgradeProcessor.process(624, 625)\n\n        assertTrue(dbHelper.allAttachments.stream().allMatch { a -> a.uri.scheme != \"content\" });"
+    },
+    {
+      "id": "ON-57",
+      "priority": "P3",
+      "severity": "low",
+      "status": "source_supported_static_assessment",
+      "title": "Exception wrapper discards the original cause",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/exceptions/TestException.java",
+      "line": 26,
+      "raw_finding_ids": [
+        92
+      ],
+      "agents": [
+        "quality"
+      ],
+      "batches": [
+        5
+      ],
+      "assessment_note": "",
+      "explanation": "This lost-cause exception-wrapping pattern ignores the supplied exception. A wrapped setup or I/O failure loses its message and original stack trace, obscuring the reason the test failed.",
+      "recommendation": "Call super(e) or super(message, e) to preserve the cause.",
+      "suggested_test": "Construct TestException with an IOException and assert that getCause() returns that same exception.",
+      "evidence": "  public TestException(Exception e) {\n\n  }"
+    },
+    {
+      "id": "ON-58",
+      "priority": "P3",
+      "severity": "low",
+      "status": "source_supported_static_assessment",
+      "title": "Google Play availability assertion cannot detect an incorrect result",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/MiscUtilsTest.kt",
+      "line": 29,
+      "raw_finding_ids": [
+        94
+      ],
+      "agents": [
+        "tests"
+      ],
+      "batches": [
+        1
+      ],
+      "assessment_note": "",
+      "explanation": "Checking the result's Boolean type does not verify availability behavior. An implementation that always returns true or always returns false can pass this test.",
+      "recommendation": "Control the availability dependency and assert the expected Boolean value for each relevant state.",
+      "suggested_test": "Arrange Google Play services as available and assert true; arrange services as missing or unavailable and assert false.",
+      "evidence": "        assertTrue(MiscUtils.isGooglePlayAvailable(testContext) is Boolean)"
+    },
+    {
+      "id": "ON-59",
+      "priority": "P3",
+      "severity": "low",
+      "status": "source_supported_static_assessment",
+      "title": "Comma-tag test supplies an invalid selection and checks unchanged input",
+      "file": "omniNotes/src/test/java/it/feio/android/omninotes/utils/TagsHelperTest.java",
+      "line": 123,
+      "raw_finding_ids": [
+        95
+      ],
+      "agents": [
+        "tests"
+      ],
+      "batches": [
+        2
+      ],
+      "assessment_note": "",
+      "explanation": "The selection includes index 1 although the list contains only index 0. Also, the returned tag text is never applied to the note before retrieval, so the final absence assertion checks a note that never contained the comma tag. It does not establish comma parsing behavior.",
+      "recommendation": "Select only index 0 and apply the returned text to the note before checking retrieval.",
+      "suggested_test": "Add \"#comma,comma\" using selection {0}, append the returned text to the note, and assert the exact intended parsed tag set. Test invalid selection indices separately if supported.",
+      "evidence": "    List<Tag> tags = new ArrayList<>();\n    tags.add(new Tag(newTag, 1));\n    Pair<String, List<Tag>> newTags = TagsHelper.addTagToNote(tags, new Integer[]{0, 1}, note);\n    Map<String, Integer> tags1 = TagsHelper.retrieveTags(note);"
+    },
+    {
+      "id": "ON-60",
+      "priority": "VERIFY",
+      "severity": "high",
+      "status": "requires_dependency_verification",
+      "title": "Note parceling loses the database ID",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+      "line": 169,
+      "raw_finding_ids": [
+        11,
+        73
+      ],
+      "agents": [
+        "quality",
+        "tests"
+      ],
+      "batches": [
+        4,
+        5
+      ],
+      "assessment_note": "Deferred, not a confirmed defect: Note extends an external BaseNote whose identity semantics were not present in the snapshot. setCreation may restore the identity used by get_id. Confirm the dependency implementation and perform a real Parcel round-trip before accepting the agent\u2019s high-severity claim.",
+      "explanation": "Neither writeToParcel nor the parcel constructor preserves the note ID. Existing notes passed through an Intent or restored fragment arguments therefore lose their database identity. SnoozeActivity subsequently saves such notes or forwards note.get_id(), potentially updating the wrong identity or creating a duplicate.",
+      "recommendation": "Write the note ID into the parcel and read it back in the matching position.",
+      "suggested_test": "Round-trip a persisted note through Parcel and assert that its ID and all other persisted fields remain equal.",
+      "evidence": "  public void writeToParcel(Parcel parcel, int flags) {\n    parcel.writeString(String.valueOf(getCreation()));\n    parcel.writeString(String.valueOf(getLastModification()));"
+    }
+  ]
+}

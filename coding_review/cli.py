@@ -5,7 +5,7 @@ import logging
 import sys
 from pathlib import Path
 
-from coding_review.config import ReviewConfig
+from coding_review.config import DEFAULT_BACKEND, ReviewConfig
 from coding_review.errors import diagnose, error_summary, safe_text
 from coding_review.exceptions import ConfigurationError
 from coding_review.reporting.writer import write_report
@@ -21,7 +21,7 @@ def build_parser():
     parser.add_argument(
         "--backend",
         choices=["fireworks", "codex", "openai"],
-        default="fireworks",
+        default=DEFAULT_BACKEND,
         help="fireworks uses MiniMax M3.1 Flash (default); codex uses ChatGPT login; openai uses API billing",
     )
     parser.add_argument(

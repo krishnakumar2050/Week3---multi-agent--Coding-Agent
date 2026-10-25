@@ -1,0 +1,108 @@
+{
+  "variant": "single",
+  "case": "sql_injection",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 2,
+    "matched": 2,
+    "unmatched_indices": [],
+    "valid_citations": 2,
+    "severity_acceptable": 0,
+    "test_suggestion_present": 2,
+    "semantic_duplicate_excess": 1,
+    "complete": true,
+    "duration_seconds": 3.305,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "findings": [
+      {
+        "severity": "critical",
+        "title": "SQL injection via string concatenation of untrusted request parameter",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+        "explanation": "The `name` argument is documented on line 2 as coming from an unauthenticated HTTP request and is concatenated directly into the SQL string with no escaping or parameterization. An attacker can supply `name` = `' OR '1'='1` (or `'; DROP TABLE users; --`) to alter the query semantics, read arbitrary rows, bypass intended filtering, or inject destructive statements if the driver allows multiple statements. The query also exposes a second-order risk if the driver's `execute` rejects multiple statements only after partially executing them.",
+        "recommendation": "Use a parameterized query, e.g. `db.execute(\"SELECT id FROM users WHERE name = ?\", (name,)).fetchall()` with the placeholder syntax of the actual driver, and pass `name` as a bound parameter. Never build SQL by string concatenation. Also validate/length-limit `name` before use as defense in depth.",
+        "suggested_test": "Call `find_user(db, \"' OR '1'='1\")` against a test DB containing users alice and bob and assert the result set contains only the row whose name literally equals that string (zero rows) rather than all rows. Add a test that the executed statement is parameterized (e.g. inspect the driver's query log to confirm the name value is bound, not interpolated)."
+      },
+      {
+        "severity": "low",
+        "title": "Function lacks input validation for user-supplied name",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def find_user(db, name):",
+        "explanation": "There is no check that `name` is a string, non-empty, or within a reasonable length, so malformed or oversized input reaches the database layer. This is a secondary concern compared with the injection, but it permits wasteful queries and complicates error handling.",
+        "recommendation": "Validate that `name` is a non-empty string of bounded length before querying, and return a clear error/empty result for invalid input.",
+        "suggested_test": "Call `find_user(db, \"\")` and `find_user(db, \"x\" * 10000)` and assert the function returns an empty result or raises a defined validation error without issuing an unbounded query."
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "critical",
+            "title": "SQL injection via string concatenation of untrusted request parameter",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+            "explanation": "The `name` argument is documented on line 2 as coming from an unauthenticated HTTP request and is concatenated directly into the SQL string with no escaping or parameterization. An attacker can supply `name` = `' OR '1'='1` (or `'; DROP TABLE users; --`) to alter the query semantics, read arbitrary rows, bypass intended filtering, or inject destructive statements if the driver allows multiple statements. The query also exposes a second-order risk if the driver's `execute` rejects multiple statements only after partially executing them.",
+            "recommendation": "Use a parameterized query, e.g. `db.execute(\"SELECT id FROM users WHERE name = ?\", (name,)).fetchall()` with the placeholder syntax of the actual driver, and pass `name` as a bound parameter. Never build SQL by string concatenation. Also validate/length-limit `name` before use as defense in depth.",
+            "suggested_test": "Call `find_user(db, \"' OR '1'='1\")` against a test DB containing users alice and bob and assert the result set contains only the row whose name literally equals that string (zero rows) rather than all rows. Add a test that the executed statement is parameterized (e.g. inspect the driver's query log to confirm the name value is bound, not interpolated)."
+          },
+          {
+            "severity": "low",
+            "title": "Function lacks input validation for user-supplied name",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def find_user(db, name):",
+            "explanation": "There is no check that `name` is a string, non-empty, or within a reasonable length, so malformed or oversized input reaches the database layer. This is a secondary concern compared with the injection, but it permits wasteful queries and complicates error handling.",
+            "recommendation": "Validate that `name` is a non-empty string of bounded length before querying, and return a clear error/empty result for invalid input.",
+            "suggested_test": "Call `find_user(db, \"\")` and `find_user(db, \"x\" * 10000)` and assert the function returns an empty result or raises a defined validation error without issuing an unbounded query."
+          }
+        ],
+        "limitations": [
+          "Only a single 3-line file was provided; surrounding application code, the DB driver used, and its parameter-placeholder syntax could not be verified.",
+          "No test files, configuration, or dependency manifest were included, so existing test coverage cannot be assessed.",
+          "Whether the underlying driver permits multiple statements (affecting the severity of stacked-query injection) could not be determined from the snapshot."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 620,
+            "prompt_tokens": 897,
+            "total_tokens": 1517,
+            "completion_tokens_details": {
+              "reasoning_tokens": 6
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 690
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 6
+            }
+          },
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 3.286
+        }
+      }
+    ],
+    "duration_seconds": 3.305
+  }
+}

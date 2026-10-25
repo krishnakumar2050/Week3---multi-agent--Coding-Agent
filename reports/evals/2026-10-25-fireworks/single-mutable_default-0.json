@@ -1,0 +1,87 @@
+{
+  "variant": "single",
+  "case": "mutable_default",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 1,
+    "matched": 1,
+    "unmatched_indices": [],
+    "valid_citations": 1,
+    "severity_acceptable": 1,
+    "test_suggestion_present": 1,
+    "semantic_duplicate_excess": 0,
+    "complete": true,
+    "duration_seconds": 2.683,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Mutable default argument causes shared state across calls (leaked customer IDs)",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+        "explanation": "The default value `customer_ids=[]` is evaluated once at function-definition time, so the same list object is reused for every call that omits the argument. Each call appends to and returns the same growing list, so results from earlier requests are visible in later ones \u2014 directly contradicting the docstring claim that IDs belong 'only to this independent request'. In a web service handling concurrent or sequential requests, request A's IDs leak into request B's response, and the list grows without bound (memory leak). This is a classic data-isolation/IDOR-style defect for per-request context.",
+        "recommendation": "Use `customer_ids=None` and create a fresh list inside the function (`customer_ids = [] if customer_ids is None else customer_ids`), or accept `None` and build a new list per call. If the intent is a per-request accumulator, pass the list explicitly per request instead of via a default argument. Also avoid returning the mutable internal list directly; return a copy (`list(customer_ids)`).",
+        "suggested_test": "Call `record_customer('a')` and assert the result is `['a']`; then call `record_customer('b')` and assert the result is exactly `['b']` and does NOT contain `'a'`. Under the current implementation the second assertion fails (result is `['a', 'b']`). Additionally assert that the two returned objects are not the same object."
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Mutable default argument causes shared state across calls (leaked customer IDs)",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def record_customer(customer_id, customer_ids=[]):\n    \"\"\"Return IDs belonging only to this independent request.\"\"\"\n    customer_ids.append(customer_id)\n    return customer_ids",
+            "explanation": "The default value `customer_ids=[]` is evaluated once at function-definition time, so the same list object is reused for every call that omits the argument. Each call appends to and returns the same growing list, so results from earlier requests are visible in later ones \u2014 directly contradicting the docstring claim that IDs belong 'only to this independent request'. In a web service handling concurrent or sequential requests, request A's IDs leak into request B's response, and the list grows without bound (memory leak). This is a classic data-isolation/IDOR-style defect for per-request context.",
+            "recommendation": "Use `customer_ids=None` and create a fresh list inside the function (`customer_ids = [] if customer_ids is None else customer_ids`), or accept `None` and build a new list per call. If the intent is a per-request accumulator, pass the list explicitly per request instead of via a default argument. Also avoid returning the mutable internal list directly; return a copy (`list(customer_ids)`).",
+            "suggested_test": "Call `record_customer('a')` and assert the result is `['a']`; then call `record_customer('b')` and assert the result is exactly `['b']` and does NOT contain `'a'`. Under the current implementation the second assertion fails (result is `['a', 'b']`). Additionally assert that the two returned objects are not the same object."
+          }
+        ],
+        "limitations": [
+          "Only a single 4-line file was supplied; other call sites of `record_customer` were not visible, so the actual exposure of the shared list could not be confirmed.",
+          "Thread-safety of concurrent access to the shared default list could not be assessed beyond the data-leak behavior."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 462,
+            "prompt_tokens": 898,
+            "total_tokens": 1360,
+            "completion_tokens_details": {
+              "reasoning_tokens": 9
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 690
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 9
+            }
+          },
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 2.665
+        }
+      }
+    ],
+    "duration_seconds": 2.683
+  }
+}

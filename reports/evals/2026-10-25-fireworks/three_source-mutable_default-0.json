@@ -1,0 +1,330 @@
+{
+  "variant": "three_source",
+  "case": "mutable_default",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 7,
+    "matched": 7,
+    "unmatched_indices": [],
+    "valid_citations": 7,
+    "severity_acceptable": 6,
+    "test_suggestion_present": 7,
+    "semantic_duplicate_excess": 6,
+    "complete": true,
+    "duration_seconds": 5.577,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "app.py"
+    ],
+    "counts": {
+      "critical": 0,
+      "high": 3,
+      "medium": 3,
+      "low": 1,
+      "info": 0
+    },
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Mutable default argument leaks customer IDs across requests",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def record_customer(customer_id, customer_ids=[]):",
+        "explanation": "The default list is created once at function-definition time and is shared by every call that omits `customer_ids`. Each call appends to and returns the same list object, so customer IDs recorded for one independent request remain visible in subsequent, unrelated requests. This is a cross-request data-leak / IDOR-class flaw: a caller with no prior access to customer A can observe customer A's ID by making their own call and inspecting the returned list. The docstring explicitly claims IDs belong 'only to this independent request', which the implementation contradicts.",
+        "recommendation": "Never use a mutable default. Use `customer_ids=None` and initialize inside the function (`customer_ids = [] if customer_ids is None else customer_ids`), and return a copy (e.g. `return list(customer_ids)`) so callers cannot mutate internal state.",
+        "suggested_test": "Call `record_customer(1)`, then call `record_customer(2)` in a separate 'request'. Assert the second call's result does not contain `1` (should be `[2]`). Under the current code the second result is `[1, 2]`.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "high",
+        "title": "Mutable default argument shares customer_ids list across calls",
+        "file": "app.py",
+        "line": 1,
+        "evidence": "def record_customer(customer_id, customer_ids=[]):",
+        "explanation": "The default value for customer_ids is a single list object created once at function-definition time. Every call that omits customer_ids mutates and returns that same list, so IDs from one request leak into subsequent independent requests. This directly contradicts the docstring claim that the result contains only IDs belonging to 'this independent request'. The leakage is unbounded and grows for the lifetime of the process, so it also acts as an unbounded memory growth vector for long-running workers.",
+        "recommendation": "Use an immutable default (None) and allocate a fresh list per call: `def record_customer(customer_id, customer_ids=None):` then `customer_ids = [] if customer_ids is None else customer_ids`. If the intent is to always return a new list, copy the incoming list before appending.",
+        "suggested_test": "Call record_customer(1) and then record_customer(2) with no explicit list. Assert the first call's result is [1] and the second is [2] (not [1, 2]), and assert record_customer(1) is not record_customer(2).",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "high",
+        "title": "No test suite present in the snapshot to cover the documented behavior",
+        "file": "app.py",
+        "line": 2,
+        "evidence": "    \"\"\"Return IDs belonging only to this independent request.\"\"\"",
+        "explanation": "The snapshot contains only app.py; there is no test file exercising record_customer. The function's stated contract (per-request isolation of IDs) is exactly the contract broken by the mutable default, and nothing in the repository would catch that regression. There is also no coverage of the explicit-customer_ids argument path, of duplicate IDs, or of the empty/falsy-ID edge case.",
+        "recommendation": "Add a test module (e.g. tests/test_record_customer.py) with pytest covering: (a) isolation between successive default-argument calls, (b) explicit customer_ids argument is honored and appended to, (c) returned list is not aliased to the default or to the argument, (d) duplicate customer_id values are appended (documented behavior) rather than deduplicated.",
+        "suggested_test": "pytest tests/test_record_customer.py -q with cases: `assert record_customer('a') == ['a']`; `assert record_customer('b') == ['b']`; `assert record_customer('c', ['a']) == ['a', 'c']`; `x = record_customer('d'); x.append('e'); assert record_customer('f') == ['f']`.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Returned list is the shared internal object, enabling external mutation",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    customer_ids.append(customer_id)\n    return customer_ids",
+        "explanation": "The function returns the same list object it mutates, with no copy. Any caller can append to, remove from, or clear it, thereby influencing what other callers (and, because of the shared default, other requests) observe. Combined with the shared default this makes state tampering trivial and the leak persistent.",
+        "recommendation": "Return a copy: `return list(customer_ids)` (and keep the parameter local per call).",
+        "suggested_test": "Call `record_customer(1)`, mutate the returned list with `.append(99)`, then call `record_customer(2)` and assert the result contains no `1` or `99`.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Function returns internal mutable list, exposing hidden mutable state",
+        "file": "app.py",
+        "line": 4,
+        "evidence": "    return customer_ids",
+        "explanation": "The function returns the same list object it mutated, giving the caller direct access to internal state. Any caller mutation (append, clear, sort) silently alters the module-level default list for all subsequent calls, creating cross-request data corruption and making the function unsafe to use concurrently.",
+        "recommendation": "Return a copy (`return list(customer_ids)`) so callers cannot mutate internal state, or build a fresh list locally and return that.",
+        "suggested_test": "r1 = record_customer(\"a\"); r1.append(\"x\"); assert record_customer(\"b\") == [\"b\"] (i.e. caller's mutation does not leak into later calls).",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Returned list is the caller's own mutable object, allowing cross-call contamination via the return value",
+        "file": "app.py",
+        "line": 4,
+        "evidence": "    return customer_ids",
+        "explanation": "The function returns the same list object it mutated (the shared default or the caller-supplied argument). Any caller that mutates the returned list \u2014 e.g. appending, clearing, or sorting in place \u2014 mutates the module-level default list, silently corrupting the state observed by later calls even after the default-argument bug is fixed for the common path.",
+        "recommendation": "Return a copy: `return list(customer_ids)`, or build a new list internally and return that.",
+        "suggested_test": "a = record_customer(1); a.append(999); b = record_customer(2); assert b == [2] and 999 not in b. Repeat with an explicitly passed list to confirm the caller's list is not aliased in the result.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "low",
+        "title": "Unbounded growth of the shared default list (memory leak)",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    customer_ids.append(customer_id)",
+        "explanation": "Because the default list is never cleared, every invocation of record_customer without an explicit argument grows it without bound, retaining customer IDs for the lifetime of the process. In a long-running service this is an unbounded memory growth / data-retention issue and may leak customer data across request boundaries.",
+        "recommendation": "With the fix above (fresh list per call, default None), the list is short-lived and garbage collected; avoid any design that accumulates into a module- or definition-scoped container.",
+        "suggested_test": "After the fix, call record_customer in a loop of N calls and assert the module has no growing container (e.g. `record_customer.__defaults__[0] is None` or that returned lists are length 1).",
+        "agents": [
+          "quality"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "medium",
+            "title": "Function returns internal mutable list, exposing hidden mutable state",
+            "file": "app.py",
+            "line": 4,
+            "evidence": "    return customer_ids",
+            "explanation": "The function returns the same list object it mutated, giving the caller direct access to internal state. Any caller mutation (append, clear, sort) silently alters the module-level default list for all subsequent calls, creating cross-request data corruption and making the function unsafe to use concurrently.",
+            "recommendation": "Return a copy (`return list(customer_ids)`) so callers cannot mutate internal state, or build a fresh list locally and return that.",
+            "suggested_test": "r1 = record_customer(\"a\"); r1.append(\"x\"); assert record_customer(\"b\") == [\"b\"] (i.e. caller's mutation does not leak into later calls)."
+          },
+          {
+            "severity": "low",
+            "title": "Unbounded growth of the shared default list (memory leak)",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    customer_ids.append(customer_id)",
+            "explanation": "Because the default list is never cleared, every invocation of record_customer without an explicit argument grows it without bound, retaining customer IDs for the lifetime of the process. In a long-running service this is an unbounded memory growth / data-retention issue and may leak customer data across request boundaries.",
+            "recommendation": "With the fix above (fresh list per call, default None), the list is short-lived and garbage collected; avoid any design that accumulates into a module- or definition-scoped container.",
+            "suggested_test": "After the fix, call record_customer in a loop of N calls and assert the module has no growing container (e.g. `record_customer.__defaults__[0] is None` or that returned lists are length 1)."
+          }
+        ],
+        "limitations": [
+          "Only a single 4-line function was provided; intent of the accumulation parameter and call sites are unknown, so the desired accumulation semantics could not be verified.",
+          "Discarded unverified finding: Mutable default argument causes shared state across calls"
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 751,
+            "prompt_tokens": 959,
+            "total_tokens": 1710,
+            "completion_tokens_details": {
+              "reasoning_tokens": 5
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 5
+            }
+          },
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 4.268
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Mutable default argument leaks customer IDs across requests",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def record_customer(customer_id, customer_ids=[]):",
+            "explanation": "The default list is created once at function-definition time and is shared by every call that omits `customer_ids`. Each call appends to and returns the same list object, so customer IDs recorded for one independent request remain visible in subsequent, unrelated requests. This is a cross-request data-leak / IDOR-class flaw: a caller with no prior access to customer A can observe customer A's ID by making their own call and inspecting the returned list. The docstring explicitly claims IDs belong 'only to this independent request', which the implementation contradicts.",
+            "recommendation": "Never use a mutable default. Use `customer_ids=None` and initialize inside the function (`customer_ids = [] if customer_ids is None else customer_ids`), and return a copy (e.g. `return list(customer_ids)`) so callers cannot mutate internal state.",
+            "suggested_test": "Call `record_customer(1)`, then call `record_customer(2)` in a separate 'request'. Assert the second call's result does not contain `1` (should be `[2]`). Under the current code the second result is `[1, 2]`."
+          },
+          {
+            "severity": "medium",
+            "title": "Returned list is the shared internal object, enabling external mutation",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    customer_ids.append(customer_id)\n    return customer_ids",
+            "explanation": "The function returns the same list object it mutates, with no copy. Any caller can append to, remove from, or clear it, thereby influencing what other callers (and, because of the shared default, other requests) observe. Combined with the shared default this makes state tampering trivial and the leak persistent.",
+            "recommendation": "Return a copy: `return list(customer_ids)` (and keep the parameter local per call).",
+            "suggested_test": "Call `record_customer(1)`, mutate the returned list with `.append(99)`, then call `record_customer(2)` and assert the result contains no `1` or `99`."
+          }
+        ],
+        "limitations": [
+          "Only a single 4-line file was provided; no callers, routes, or persistence layer were visible, so the concrete exposure path (e.g. per-request handler) could not be confirmed.",
+          "Whether `customer_ids` is ever passed explicitly in real usage could not be determined from this snapshot.",
+          "Corrected 1 source citation(s) using unambiguous matches in the cited file; exact source excerpts retained."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 584,
+            "prompt_tokens": 914,
+            "total_tokens": 1498,
+            "completion_tokens_details": {
+              "reasoning_tokens": 34
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 34
+            }
+          },
+          "citation_corrections": [
+            {
+              "title": "Returned list is the shared internal object, enabling external mutation",
+              "file": "app.py",
+              "original_line": 4,
+              "line": 3,
+              "method": "relocated_exact"
+            }
+          ],
+          "duration_seconds": 3.395
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Mutable default argument shares customer_ids list across calls",
+            "file": "app.py",
+            "line": 1,
+            "evidence": "def record_customer(customer_id, customer_ids=[]):",
+            "explanation": "The default value for customer_ids is a single list object created once at function-definition time. Every call that omits customer_ids mutates and returns that same list, so IDs from one request leak into subsequent independent requests. This directly contradicts the docstring claim that the result contains only IDs belonging to 'this independent request'. The leakage is unbounded and grows for the lifetime of the process, so it also acts as an unbounded memory growth vector for long-running workers.",
+            "recommendation": "Use an immutable default (None) and allocate a fresh list per call: `def record_customer(customer_id, customer_ids=None):` then `customer_ids = [] if customer_ids is None else customer_ids`. If the intent is to always return a new list, copy the incoming list before appending.",
+            "suggested_test": "Call record_customer(1) and then record_customer(2) with no explicit list. Assert the first call's result is [1] and the second is [2] (not [1, 2]), and assert record_customer(1) is not record_customer(2)."
+          },
+          {
+            "severity": "medium",
+            "title": "Returned list is the caller's own mutable object, allowing cross-call contamination via the return value",
+            "file": "app.py",
+            "line": 4,
+            "evidence": "    return customer_ids",
+            "explanation": "The function returns the same list object it mutated (the shared default or the caller-supplied argument). Any caller that mutates the returned list \u2014 e.g. appending, clearing, or sorting in place \u2014 mutates the module-level default list, silently corrupting the state observed by later calls even after the default-argument bug is fixed for the common path.",
+            "recommendation": "Return a copy: `return list(customer_ids)`, or build a new list internally and return that.",
+            "suggested_test": "a = record_customer(1); a.append(999); b = record_customer(2); assert b == [2] and 999 not in b. Repeat with an explicitly passed list to confirm the caller's list is not aliased in the result."
+          },
+          {
+            "severity": "high",
+            "title": "No test suite present in the snapshot to cover the documented behavior",
+            "file": "app.py",
+            "line": 2,
+            "evidence": "    \"\"\"Return IDs belonging only to this independent request.\"\"\"",
+            "explanation": "The snapshot contains only app.py; there is no test file exercising record_customer. The function's stated contract (per-request isolation of IDs) is exactly the contract broken by the mutable default, and nothing in the repository would catch that regression. There is also no coverage of the explicit-customer_ids argument path, of duplicate IDs, or of the empty/falsy-ID edge case.",
+            "recommendation": "Add a test module (e.g. tests/test_record_customer.py) with pytest covering: (a) isolation between successive default-argument calls, (b) explicit customer_ids argument is honored and appended to, (c) returned list is not aliased to the default or to the argument, (d) duplicate customer_id values are appended (documented behavior) rather than deduplicated.",
+            "suggested_test": "pytest tests/test_record_customer.py -q with cases: `assert record_customer('a') == ['a']`; `assert record_customer('b') == ['b']`; `assert record_customer('c', ['a']) == ['a', 'c']`; `x = record_customer('d'); x.append('e'); assert record_customer('f') == ['f']`."
+          }
+        ],
+        "limitations": [
+          "Snapshot contains only app.py; no tests, callers, configuration, or framework code were available, so it cannot be determined whether a test suite exists elsewhere in the repository.",
+          "Static inspection only \u2014 no code was executed and no coverage data was measured.",
+          "Uncertain whether the explicit customer_ids parameter is intended to be a caller-owned accumulation list or an override; the recommended copy-on-return behavior covers both interpretations."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "fireworks",
+          "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+          "model_source": "provider_response",
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 986,
+            "prompt_tokens": 915,
+            "total_tokens": 1901,
+            "completion_tokens_details": {
+              "reasoning_tokens": 90
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 90
+            }
+          },
+          "citation_corrections": [],
+          "duration_seconds": 5.542
+        }
+      }
+    ],
+    "actual_models": [
+      "accounts/fireworks/models/minimax-m3p1-flash"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "b78fb0b2-13af-42ff-9651-972164f1a2bb",
+    "started_at": "2026-10-25T06:49:56.974305+00:00",
+    "completed_at": "2026-10-25T06:50:02.551345+00:00",
+    "duration_seconds": 5.577,
+    "backend": "fireworks",
+    "repository": "/home/runner/work/Week1Project-GenAcademy/Week1Project-GenAcademy/.github/coding-review/eval-fixture",
+    "snapshot_sha256": "b0e98105830998f18b6f23041e60675e2a1e67c02ad4dc79a450008e8f56c90b",
+    "snapshot_bytes": 177,
+    "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+    "model": "accounts/fireworks/models/minimax-m3p1-flash"
+  }
+}

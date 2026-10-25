@@ -1,0 +1,168 @@
+{
+  "variant": "three_source",
+  "case": "sql_injection",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 2,
+    "matched": 2,
+    "unmatched_indices": [],
+    "valid_citations": 2,
+    "severity_acceptable": 2,
+    "test_suggestion_present": 2,
+    "semantic_duplicate_excess": 1,
+    "complete": true,
+    "duration_seconds": 13.047,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "app.py"
+    ],
+    "counts": {
+      "critical": 0,
+      "high": 2,
+      "medium": 0,
+      "low": 0,
+      "info": 0
+    },
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Unauthenticated SQL injection in user lookup",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+        "explanation": "The name value comes from an unauthenticated HTTP request and is concatenated directly into SQL. An attacker can supply ' OR '1'='1 to change the WHERE clause and retrieve all user IDs.",
+        "recommendation": "Use a parameterized query and pass name as a bound parameter using the database driver's supported placeholder syntax.",
+        "suggested_test": "Pass ' OR '1'='1 as name and assert that it is treated as a literal name and does not return unrelated users.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "high",
+        "title": "Unauthenticated input is concatenated into SQL",
+        "file": "app.py",
+        "line": 3,
+        "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+        "explanation": "The name parameter comes from an unauthenticated HTTP request and is inserted directly into SQL. A value such as ' OR '1'='1 changes the WHERE clause to return every user ID instead of matching one name.",
+        "recommendation": "Use a parameterized query with the database driver's placeholder syntax and pass name separately as a bound parameter.",
+        "suggested_test": "Pass ' OR '1'='1 as name and assert it is treated as a literal name and does not return unrelated users.\nSeed users named alice and bob, then call find_user with name \"' OR '1'='1\". Assert no rows are returned and the input is passed as a bound parameter. Also assert that an existing name containing an apostrophe is matched correctly.",
+        "agents": [
+          "quality",
+          "tests"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Unauthenticated input is concatenated into SQL",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+            "explanation": "The name parameter comes from an unauthenticated HTTP request and is inserted directly into SQL. A value such as ' OR '1'='1 changes the WHERE clause to return every user ID instead of matching one name.",
+            "recommendation": "Use a parameterized query with the database driver's placeholder syntax and pass name separately as a bound parameter.",
+            "suggested_test": "Pass ' OR '1'='1 as name and assert it is treated as a literal name and does not return unrelated users."
+          }
+        ],
+        "limitations": [
+          "Only the supplied snapshot was reviewed; the database driver and surrounding request handling are not shown."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 9.963
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Unauthenticated SQL injection in user lookup",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+            "explanation": "The name value comes from an unauthenticated HTTP request and is concatenated directly into SQL. An attacker can supply ' OR '1'='1 to change the WHERE clause and retrieve all user IDs.",
+            "recommendation": "Use a parameterized query and pass name as a bound parameter using the database driver's supported placeholder syntax.",
+            "suggested_test": "Pass ' OR '1'='1 as name and assert that it is treated as a literal name and does not return unrelated users."
+          }
+        ],
+        "limitations": [
+          "Only the supplied snapshot was reviewed; the database driver and surrounding request handling are not shown."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 8.492
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Unauthenticated input is concatenated into SQL",
+            "file": "app.py",
+            "line": 3,
+            "evidence": "    return db.execute(\"SELECT id FROM users WHERE name = '\" + name + \"'\").fetchall()",
+            "explanation": "The request-supplied name is inserted directly into SQL. An input such as ' OR '1'='1 changes the WHERE clause and can return all user IDs.",
+            "recommendation": "Pass name as a bound parameter using the database driver's placeholder syntax.",
+            "suggested_test": "Seed users named alice and bob, then call find_user with name \"' OR '1'='1\". Assert no rows are returned and the input is passed as a bound parameter. Also assert that an existing name containing an apostrophe is matched correctly."
+          }
+        ],
+        "limitations": [
+          "Only the supplied function was available; no tests, database driver, or surrounding request handling were provided. No code or tests were executed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 12.991
+        }
+      }
+    ],
+    "actual_models": [
+      "gpt-6.1-sol"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "ac9299f0-9e67-4cb5-a4d9-26552f2997a5",
+    "started_at": "2026-10-25T06:39:36.266240+00:00",
+    "completed_at": "2026-10-25T06:39:49.313015+00:00",
+    "duration_seconds": 13.047,
+    "backend": "codex",
+    "repository": "/Users/krishnakumar/Documents/ChatGPT/Week2 - multi agent- Coding Agent/eval-fixture",
+    "snapshot_sha256": "3a65620e9ce596cb77e8abba700da1fd29f388886c5198cb110e229105f54e53",
+    "snapshot_bytes": 169,
+    "requested_model": null,
+    "model": "gpt-6.1-sol"
+  }
+}

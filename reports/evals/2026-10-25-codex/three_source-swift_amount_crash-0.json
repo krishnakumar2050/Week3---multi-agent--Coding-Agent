@@ -1,0 +1,180 @@
+{
+  "variant": "three_source",
+  "case": "swift_amount_crash",
+  "repeat": 0,
+  "metrics": {
+    "expected": 1,
+    "detected": 1,
+    "findings": 3,
+    "matched": 3,
+    "unmatched_indices": [],
+    "valid_citations": 3,
+    "severity_acceptable": 3,
+    "test_suggestion_present": 3,
+    "semantic_duplicate_excess": 2,
+    "complete": true,
+    "duration_seconds": 11.496,
+    "clean_control_pass": null
+  },
+  "report": {
+    "status": "complete",
+    "files_reviewed": [
+      "Amount.swift"
+    ],
+    "counts": {
+      "critical": 0,
+      "high": 1,
+      "medium": 2,
+      "low": 0,
+      "info": 0
+    },
+    "findings": [
+      {
+        "severity": "high",
+        "title": "Invalid pasted amounts crash instead of producing an error",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "Double(text) returns nil for invalid input such as \"abc\" or an empty string. Force-unwrapping that result crashes the process, violating the stated requirement that invalid amounts produce an error.",
+        "recommendation": "Return a throwing or Result-based API and handle failed conversion without force-unwrapping.",
+        "suggested_test": "After adding explicit error handling, pass \"abc\" and \"\" and assert an invalid-amount error is returned or thrown. Pass \"12.50\" and assert the result equals 12.5.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Invalid amount input crashes the process",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "Double(text) returns nil for invalid input. Force-unwrapping it traps, so arbitrary pasted text such as \"abc\" crashes the process instead of producing the required error. An attacker able to supply this input could trigger denial of service in the consuming process.",
+        "recommendation": "Use guarded optional binding and return or throw a validation error when conversion fails.",
+        "suggested_test": "Pass \"abc\" and an empty string; assert that each produces a validation error without crashing.",
+        "agents": [
+          "security"
+        ]
+      },
+      {
+        "severity": "medium",
+        "title": "Invalid input crashes instead of reporting a parsing error",
+        "file": "Amount.swift",
+        "line": 5,
+        "evidence": "    return Double(text)!",
+        "explanation": "Force-unwrapping the failable Double initializer traps for invalid pasted text such as \"abc\" or an empty string. The process crashes instead of producing the required error.",
+        "recommendation": "Make parseAmount throwing and use guard let to unwrap Double(text), throwing a defined invalid-amount error when conversion fails.",
+        "suggested_test": "Pass \"abc\" and an empty string and assert that each produces an invalid-amount error without crashing; assert that \"12.50\" returns 12.5.",
+        "agents": [
+          "quality"
+        ]
+      }
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "medium",
+            "title": "Invalid input crashes instead of reporting a parsing error",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "Force-unwrapping the failable Double initializer traps for invalid pasted text such as \"abc\" or an empty string. The process crashes instead of producing the required error.",
+            "recommendation": "Make parseAmount throwing and use guard let to unwrap Double(text), throwing a defined invalid-amount error when conversion fails.",
+            "suggested_test": "Pass \"abc\" and an empty string and assert that each produces an invalid-amount error without crashing; assert that \"12.50\" returns 12.5."
+          }
+        ],
+        "limitations": [
+          "Only the supplied snapshot was reviewed; callers and error-handling conventions were not provided."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "knowledge_enrichment": {
+            "provider": "keenable",
+            "status": "disabled",
+            "sources": [],
+            "queries": []
+          },
+          "citation_corrections": [],
+          "duration_seconds": 10.558
+        }
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "medium",
+            "title": "Invalid amount input crashes the process",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "Double(text) returns nil for invalid input. Force-unwrapping it traps, so arbitrary pasted text such as \"abc\" crashes the process instead of producing the required error. An attacker able to supply this input could trigger denial of service in the consuming process.",
+            "recommendation": "Use guarded optional binding and return or throw a validation error when conversion fails.",
+            "suggested_test": "Pass \"abc\" and an empty string; assert that each produces a validation error without crashing."
+          }
+        ],
+        "limitations": [
+          "Only the supplied snapshot was reviewed. Caller behavior and whether attacker-controlled input can reach this function are unknown."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 11.414
+        }
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "findings": [
+          {
+            "severity": "high",
+            "title": "Invalid pasted amounts crash instead of producing an error",
+            "file": "Amount.swift",
+            "line": 5,
+            "evidence": "    return Double(text)!",
+            "explanation": "Double(text) returns nil for invalid input such as \"abc\" or an empty string. Force-unwrapping that result crashes the process, violating the stated requirement that invalid amounts produce an error.",
+            "recommendation": "Return a throwing or Result-based API and handle failed conversion without force-unwrapping.",
+            "suggested_test": "After adding explicit error handling, pass \"abc\" and \"\" and assert an invalid-amount error is returned or thrown. Pass \"12.50\" and assert the result equals 12.5."
+          }
+        ],
+        "limitations": [
+          "Only the supplied snapshot was reviewed. No tests were supplied or executed."
+        ],
+        "error": null,
+        "execution": {
+          "backend": "codex",
+          "requested_model": null,
+          "actual_model": "gpt-6.1-sol",
+          "model_source": "codex_cli_startup",
+          "citation_corrections": [],
+          "duration_seconds": 10.733
+        }
+      }
+    ],
+    "actual_models": [
+      "gpt-6.1-sol"
+    ],
+    "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+    "schema_version": "1.0",
+    "run_id": "f4b6ff0a-2e34-4593-8dcb-9b2ab865dd4a",
+    "started_at": "2026-10-25T06:39:19.656557+00:00",
+    "completed_at": "2026-10-25T06:39:31.152850+00:00",
+    "duration_seconds": 11.496,
+    "backend": "codex",
+    "repository": "/Users/krishnakumar/Documents/ChatGPT/Week2 - multi agent- Coding Agent/eval-fixture",
+    "snapshot_sha256": "2bf81121ba901a0f3b70b85cd976c143c7495146e096cfa372539859328d7809",
+    "snapshot_bytes": 169,
+    "requested_model": null,
+    "model": "gpt-6.1-sol"
+  }
+}

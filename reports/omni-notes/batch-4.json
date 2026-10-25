@@ -1,0 +1,630 @@
+{
+  "status": "complete",
+  "files_reviewed": [
+    "build.gradle",
+    "omniNotes/src/alpha/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/alpha/res/xml/shortcuts.xml",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/DocumentFileHelperTest.kt",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/IntentHelperTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/helpers/TagOpenerHelperTest.kt",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/testutils/BaseAndroidTestCase.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/AutoBackupTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/BackNavigationTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabLifecycleTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/BitmapHelperTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/FileProviderHelperTest.kt",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/ParcelableUtilTest.java",
+    "omniNotes/src/androidTest/java/it/feio/android/omninotes/utils/date/RecurrenceHelperTest.java",
+    "omniNotes/src/beta/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/foss/java/it/feio/android/omninotes/utils/Constants.java",
+    "omniNotes/src/main/AndroidManifest.xml",
+    "omniNotes/src/main/assets/sql/upgrade-390.sql",
+    "omniNotes/src/main/assets/sql/upgrade-391.sql",
+    "omniNotes/src/main/assets/sql/upgrade-394.sql",
+    "omniNotes/src/main/assets/sql/upgrade-410.sql",
+    "omniNotes/src/main/assets/sql/upgrade-414.sql",
+    "omniNotes/src/main/assets/sql/upgrade-450.sql",
+    "omniNotes/src/main/java/it/feio/android/omninotes/AboutActivity.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/NavigationDrawerFragment.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/OmniNotes.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/PasswordActivity.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/SettingsActivity.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/SettingsFragment.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/StatsActivity.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/CategoryMenuTask.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/NotesUpdatedEvent.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/bus/SwitchFragmentEvent.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/async/notes/NoteProcessor.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/GenericException.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/NotesLoadingException.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/checked/UnhandledIntentException.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/exceptions/unchecked/ExternalDirectoryCreationException.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/extensions/ONDashClockExtension.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/AttachmentsHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/ChangelogHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/NotesHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/NumberHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/DefaultWordCounter.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/count/IdeogramsWordCounter.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/date/DateHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/location/LocationProviderFactory.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/helpers/notifications/NotificationChannel.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroActivity.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/intro/IntroSlide3.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/PasswordValidator.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/AttachmentAdapter.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/CategoryBaseAdapter.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/adapters/NavDrawerAdapter.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/views/ExpandableHeightGridView.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/views/Fab.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/models/views/VerticalSeekBar.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/AnimationsHelper.java",
+    "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+    "omniNotes/src/main/java/it/feio/android/omninotes/widget/ListWidgetService.java",
+    "omniNotes/src/play/java/it/feio/android/omninotes/utils/Constants.java"
+  ],
+  "counts": {
+    "critical": 0,
+    "high": 6,
+    "medium": 12,
+    "low": 1,
+    "info": 0
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Application password protection can be disabled without authentication",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/SettingsFragment.java",
+      "line": 335,
+      "evidence": "      passwordAccess.setOnPreferenceChangeListener((preference, newValue) -> {\n        PasswordHelper.requestPassword(getActivity(), passwordConfirmed -> {\n          if (passwordConfirmed.equals(Result.SUCCEED)) {\n            passwordAccess.setChecked((Boolean) newValue);\n          }\n        });\n        return true;\n      });",
+      "explanation": "Returning true accepts and persists the switch change immediately, independently of the password callback. Someone with access to an open application session can disable application password protection and cancel or fail the password prompt; the unsuccessful callback does not restore the setting.",
+      "recommendation": "Return false and change the persisted switch state only after successful password validation.",
+      "suggested_test": "With application password protection enabled, toggle it off and cancel or fail authentication. Assert that the switch and persisted preference remain enabled after reopening settings.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Password access can be disabled without successful authentication",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/SettingsFragment.java",
+      "line": 335,
+      "evidence": "      passwordAccess.setOnPreferenceChangeListener((preference, newValue) -> {\n        PasswordHelper.requestPassword(getActivity(), passwordConfirmed -> {\n          if (passwordConfirmed.equals(Result.SUCCEED)) {\n            passwordAccess.setChecked((Boolean) newValue);\n          }\n        });\n        return true;\n      });",
+      "explanation": "Returning true allows SwitchPreference to immediately persist the requested value while password validation is pending. A user can disable password access and cancel or fail the password prompt; no failure branch restores the original value.",
+      "recommendation": "Return false from the change listener and update the checked state only after successful password validation.",
+      "suggested_test": "Enable password access, request disabling it, then cancel or enter an incorrect password. Assert that both the switch and persisted preference remain enabled.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Password access changes persist before authentication succeeds",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/SettingsFragment.java",
+      "line": 335,
+      "evidence": "      passwordAccess.setOnPreferenceChangeListener((preference, newValue) -> {\n        PasswordHelper.requestPassword(getActivity(), passwordConfirmed -> {\n          if (passwordConfirmed.equals(Result.SUCCEED)) {\n            passwordAccess.setChecked((Boolean) newValue);\n          }\n        });\n        return true;\n      });",
+      "explanation": "Returning true lets SwitchPreference immediately accept and persist the requested value. Failed or cancelled authentication does not undo that change, so disabling password access does not require successful password validation.",
+      "recommendation": "Return false and apply the new checked value only in the successful authentication callback.",
+      "suggested_test": "Start with a configured password and password access enabled. Toggle access off, then submit an incorrect password or cancel. Assert the switch and persisted preference remain enabled. Repeat with the correct password and assert both become disabled.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Persistable folder permission flags always evaluate to zero",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "line": 273,
+      "evidence": "    final int takeFlags = FLAG_GRANT_READ_URI_PERMISSION & FLAG_GRANT_WRITE_URI_PERMISSION;\n    context.getContentResolver().takePersistableUriPermission(intent.getData(), takeFlags);",
+      "explanation": "Read and write permission flags are distinct bits, so their bitwise AND is zero. The selected backup folder therefore receives no persisted read or write grant, leaving later backup operations without access once the temporary grant expires.",
+      "recommendation": "Mask intent.getFlags() with the bitwise OR of the read and write flags, and persist the granted permissions.",
+      "suggested_test": "Select a backup folder, restart the device, and assert that its persisted URI permission includes read and write access and a backup can complete.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Backup encryption truncates the password hash to a weak DES key",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 58,
+      "evidence": "                val keySpec = DESKeySpec(password.toByteArray(StandardCharsets.UTF_8))\n                val keyFactory = SecretKeyFactory.getInstance(\"DES\")\n                val key = keyFactory.generateSecret(keySpec)\n                val clearText = value.toByteArray(StandardCharsets.UTF_8)\n                // Cipher is not thread safe\n                val cipher = Cipher.getInstance(\"DES\")",
+      "explanation": "BackupHelper.exportNote passes PREF_PASSWORD into this function, and PasswordActivity stores that value as hexadecimal MD5. DESKeySpec uses only the first eight bytes, so the encryption key has at most 32 bits of input entropy from eight hexadecimal characters, further reduced by DES parity bits. An attacker who obtains a locked-note backup can brute-force this small key space offline regardless of the original password's strength.",
+      "recommendation": "Use authenticated encryption such as AES-GCM with a random nonce and a properly salted password derivation function. Version the backup format and retain legacy decryption only for migration.",
+      "suggested_test": "Verify that two password inputs sharing their first eight characters cannot decrypt each other's new-format ciphertext, repeated encryption produces different ciphertext, and modified ciphertext is rejected.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Cryptographic failures silently return unprocessed content",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 66,
+      "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+      "explanation": "This is fail-open exception handling. Encryption failure returns plaintext as though encryption succeeded, allowing exportNote to write unencrypted content for a locked note. The corresponding decrypt catch also returns its input, so a backup encrypted with another password can be persisted by importNote as ciphertext instead of being rejected.",
+      "recommendation": "Return an explicit cryptographic failure or throw a dedicated exception from both operations. Abort the affected export or import before writing content when encryption or decryption fails.",
+      "suggested_test": "Force encryption failure and assert that no plaintext backup is written. Import a locked backup with an incorrect password and assert that no note is persisted.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "FAB action assertions never resolve the matched views",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabLifecycleTest.java",
+      "line": 69,
+      "evidence": "            isDisplayed()));\n    assertNotNull(checklistFabAction);",
+      "explanation": "Espresso onView returns a ViewInteraction without resolving the matcher. Checking that interaction for null therefore passes even when the checklist action is missing or hidden. The camera assertion has the same problem, so fabActionsTest does not verify either action's visibility.",
+      "recommendation": "Execute check(matches(isDisplayed())) on both interactions and verify collapse hides the actions.",
+      "suggested_test": "Expand the FAB and assert checklist and camera views are displayed using Espresso checks. Collapse it and assert they are not displayed. Verify the expanded-state assertion fails if either action is hidden.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "DashClock and Pushbullet cannot bind to their extension services",
+      "file": "omniNotes/src/main/AndroidManifest.xml",
+      "line": 287,
+      "evidence": "    <service\n      android:name=\".extensions.ONDashClockExtension\"\n      android:icon=\"@drawable/ic_stat_literal_icon\"\n      android:label=\"@string/app_name\"\n      android:permission=\"com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA\"\n      android:exported=\"false\">",
+      "explanation": "DashClock runs under another application's UID and cannot bind to a service marked exported=false, even with the declared permission. PushBulletExtension has the same configuration at lines 308–311, preventing that integration as well.",
+      "recommendation": "Export the extension services intended for external applications while retaining their permission restrictions.",
+      "suggested_test": "From clients holding the respective extension permissions, assert that both services can be discovered and bound.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Asynchronous deletion events refresh drawer views on a worker thread",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/NavigationDrawerFragment.java",
+      "line": 150,
+      "evidence": "  public void onEventAsync(NotesDeletedEvent event) {\n    refreshMenus();\n  }",
+      "explanation": "EventBus runs onEventAsync on a background thread. refreshMenus calls mDrawerToggle.syncState and executes CategoryMenuTask, whose onPreExecute immediately accesses drawer views and can add a footer. These UI operations therefore run off the main thread during note deletion, risking thread violations and inconsistent drawer updates.",
+      "recommendation": "Handle this event with onEventMainThread, keeping database work inside the tasks' background phases.",
+      "suggested_test": "Post NotesDeletedEvent and assert that drawer synchronization and CategoryMenuTask.onPreExecute execute on the main looper.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Settings recreation overwrites restored navigation",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/SettingsActivity.java",
+      "line": 64,
+      "evidence": "    initUI();\n    getSupportFragmentManager().beginTransaction()\n        .replace(R.id.content_frame, new SettingsFragment()).commit();",
+      "explanation": "After rotation or process recreation, FragmentManager restores the current settings fragment and its back stack. This unconditional replacement overwrites that restored screen with the root settings fragment while leaving the restored back stack in place, losing the user's location and making subsequent back navigation inconsistent.",
+      "recommendation": "Install the initial SettingsFragment only when savedInstanceState is null and otherwise retain FragmentManager's restored state.",
+      "suggested_test": "Open a nested settings screen, recreate the activity, and assert that the same screen remains visible and Back returns to its parent.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Tomorrow reminders are classified by elapsed hours instead of calendar date",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/extensions/ONDashClockExtension.java",
+      "line": 133,
+      "evidence": "        } else if (\n            (Long.valueOf(note.getAlarm()) - Calendar.getInstance().getTimeInMillis()) / (1000 * 60\n                *\n                60) < 24) {\n          tomorrow.add(note);\n        }",
+      "explanation": "At 08:00 today, a reminder at 20:00 tomorrow is excluded because it is 36 hours away. Conversely, an unfired reminder from yesterday has a negative difference and is labeled tomorrow. Elapsed hours do not identify the next calendar day.",
+      "recommendation": "Compare the alarm's local calendar date with a Calendar advanced by one day, using a single captured current time.",
+      "suggested_test": "Assert that tomorrow evening is included when now is this morning, yesterday is excluded, and classification remains correct across daylight-saving transitions.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Note export failures are swallowed",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "line": 78,
+      "evidence": "    try {\n      DocumentFileHelper.write(getAppContext(), noteFile, note.toJSON());\n    } catch (IOException e) {\n      LogDelegate.e(String.format(\"Error on note %s backup: %s\",  note.get_id(), e.getMessage()));\n    }",
+      "explanation": "This is the swallowed-exception anti-pattern. If storage fills or the provider fails while writing a note, exportNote returns normally and exportNotes continues without any failure result. Callers cannot distinguish a complete backup from one missing note contents.",
+      "recommendation": "Propagate the write failure or return an explicit result that exportNotes aggregates and reports as an incomplete backup.",
+      "suggested_test": "Make a note write throw IOException and assert that the overall export reports failure and identifies the affected note.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Attachments belonging to locked notes are exported without encryption",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "line": 140,
+      "evidence": "  private static void exportAttachment(DocumentFileCompat attachmentsDestination, Attachment attachment)\n      throws BackupAttachmentException {\n    try {\n      var destinationAttachment = attachmentsDestination.createFile(\"\",\n          attachment.getUri().getLastPathSegment());\n      DocumentFileHelper.copyFileTo(getAppContext(), new File(attachment.getUri().getPath()),\n          destinationAttachment);",
+      "explanation": "exportAttachments obtains all database attachments and copies their original bytes into the backup directory without checking note protection. Although exportNote encrypts locked-note content, its images, recordings, and other attachments remain readable to anyone who obtains access to the backup folder or its storage provider.",
+      "recommendation": "Encrypt attachments associated with protected notes using authenticated encryption, and record the encryption metadata needed for restoration.",
+      "suggested_test": "Export a locked note with an attachment containing a known marker. Assert that the backup attachment does not expose the original bytes and can be restored only with the correct secret.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Unreadable backup notes become empty notes during import",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "line": 187,
+      "evidence": "    } catch (IOException e) {\n      LogDelegate.e(\"Error parsing note json\");\n      return new Note();\n    }",
+      "explanation": "This is the error-as-success-value anti-pattern. An unreadable JSON file produces a non-null empty Note, which passes importNotes' non-null filter and reaches updateNote in importNote. An empty file likewise returns the newly constructed Note. Failed reads are consequently treated as successful note imports.",
+      "recommendation": "Reject empty content and propagate a descriptive import failure, or return null and explicitly report skipped files before any database update.",
+      "suggested_test": "Import an empty file and a file whose read throws IOException. Assert that neither creates a database note and both are reported as failed.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Missing attachment directory crashes restore",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "line": 199,
+      "evidence": "    var backupAttachmentsDir = backupDir.findFile(attachmentsDir.getName());\n    if (!backupAttachmentsDir.exists()) {\n      return false;\n    }",
+      "explanation": "findFile can return null when the backup contains no attachment directory, such as an incomplete or manually copied backup. Calling exists on that result throws NullPointerException instead of returning the intended failure result.",
+      "recommendation": "Check for null and verify that the entry is a directory before accessing its contents.",
+      "suggested_test": "Restore from a backup without an attachment directory and assert that importAttachments returns false without throwing.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Selected backup folders receive no persisted URI permissions",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+      "line": 273,
+      "evidence": "    final int takeFlags = FLAG_GRANT_READ_URI_PERMISSION & FLAG_GRANT_WRITE_URI_PERMISSION;\n    context.getContentResolver().takePersistableUriPermission(intent.getData(), takeFlags);",
+      "explanation": "Read and write permission flags are distinct bits, so their bitwise AND is zero. The call therefore does not persist either permission, leaving the saved backup URI unusable after its temporary grant expires.",
+      "recommendation": "Combine read and write flags with bitwise OR and intersect that mask with the permissions actually granted by the result intent.",
+      "suggested_test": "Select a document tree with read and write grants, save it, and assert persistedUriPermissions contains that tree with both permissions. After restarting the app, assert the saved folder can still be listed and written.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Parcel round trips lose explicit note IDs",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+      "line": 169,
+      "evidence": "  public void writeToParcel(Parcel parcel, int flags) {\n    parcel.writeString(String.valueOf(getCreation()));\n    parcel.writeString(String.valueOf(getLastModification()));",
+      "explanation": "Neither writeToParcel nor the parcel constructor serializes the note ID. A note with an explicitly assigned ID cannot reliably retain its identity across parcel transport. ParcelableUtilTest uses a default note and object equality, while IntentHelperTest reads the original intent extra without forcing parcel serialization; neither explicitly checks this case.",
+      "recommendation": "Serialize and restore the note ID symmetrically, and assert important fields individually in the round-trip test.",
+      "suggested_test": "Create a note with ID 1234567890123 and a different creation timestamp. Marshall and unmarshall it using Note.CREATOR, then assert the restored ID equals 1234567890123 and the creation timestamp is unchanged.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Encryption failures silently export protected content as plaintext",
+      "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+      "line": 66,
+      "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+      "explanation": "Encryption reports failure by returning the original plaintext. BackupHelper.exportNote assigns this result to a locked note's content and writes it to JSON without detecting failure. For example, an empty password produces an invalid DES key and allows protected content to be exported unencrypted.",
+      "recommendation": "Propagate encryption failure and abort the affected export with an explicit failure result instead of returning plaintext.",
+      "suggested_test": "Export a locked note containing a unique secret with an empty password preference. Assert export reports failure and no backup JSON contains the plaintext secret. Also assert the original note content remains unchanged.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "low",
+      "title": "FAB action assertions never resolve the matching views",
+      "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabLifecycleTest.java",
+      "line": 70,
+      "evidence": "    assertNotNull(checklistFabAction);",
+      "explanation": "Espresso onView creates a ViewInteraction without resolving its matcher. Checking that wrapper for null does not verify that the checklist action exists or is displayed. The camera assertion at line 81 has the same problem, so the test passes even when both action views are missing.",
+      "recommendation": "Call check(matches(isDisplayed())) on each ViewInteraction so Espresso resolves and validates the views.",
+      "suggested_test": "Hide or remove either action view and assert that fabActionsTest fails.",
+      "agents": [
+        "quality"
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "agent": "quality",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Password access can be disabled without successful authentication",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/SettingsFragment.java",
+          "line": 335,
+          "evidence": "      passwordAccess.setOnPreferenceChangeListener((preference, newValue) -> {\n        PasswordHelper.requestPassword(getActivity(), passwordConfirmed -> {\n          if (passwordConfirmed.equals(Result.SUCCEED)) {\n            passwordAccess.setChecked((Boolean) newValue);\n          }\n        });\n        return true;\n      });",
+          "explanation": "Returning true allows SwitchPreference to immediately persist the requested value while password validation is pending. A user can disable password access and cancel or fail the password prompt; no failure branch restores the original value.",
+          "recommendation": "Return false from the change listener and update the checked state only after successful password validation.",
+          "suggested_test": "Enable password access, request disabling it, then cancel or enter an incorrect password. Assert that both the switch and persisted preference remain enabled."
+        },
+        {
+          "severity": "high",
+          "title": "Persistable folder permission flags always evaluate to zero",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+          "line": 273,
+          "evidence": "    final int takeFlags = FLAG_GRANT_READ_URI_PERMISSION & FLAG_GRANT_WRITE_URI_PERMISSION;\n    context.getContentResolver().takePersistableUriPermission(intent.getData(), takeFlags);",
+          "explanation": "Read and write permission flags are distinct bits, so their bitwise AND is zero. The selected backup folder therefore receives no persisted read or write grant, leaving later backup operations without access once the temporary grant expires.",
+          "recommendation": "Mask intent.getFlags() with the bitwise OR of the read and write flags, and persist the granted permissions.",
+          "suggested_test": "Select a backup folder, restart the device, and assert that its persisted URI permission includes read and write access and a backup can complete."
+        },
+        {
+          "severity": "medium",
+          "title": "Note export failures are swallowed",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+          "line": 78,
+          "evidence": "    try {\n      DocumentFileHelper.write(getAppContext(), noteFile, note.toJSON());\n    } catch (IOException e) {\n      LogDelegate.e(String.format(\"Error on note %s backup: %s\",  note.get_id(), e.getMessage()));\n    }",
+          "explanation": "This is the swallowed-exception anti-pattern. If storage fills or the provider fails while writing a note, exportNote returns normally and exportNotes continues without any failure result. Callers cannot distinguish a complete backup from one missing note contents.",
+          "recommendation": "Propagate the write failure or return an explicit result that exportNotes aggregates and reports as an incomplete backup.",
+          "suggested_test": "Make a note write throw IOException and assert that the overall export reports failure and identifies the affected note."
+        },
+        {
+          "severity": "medium",
+          "title": "Unreadable backup notes become empty notes during import",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+          "line": 187,
+          "evidence": "    } catch (IOException e) {\n      LogDelegate.e(\"Error parsing note json\");\n      return new Note();\n    }",
+          "explanation": "This is the error-as-success-value anti-pattern. An unreadable JSON file produces a non-null empty Note, which passes importNotes' non-null filter and reaches updateNote in importNote. An empty file likewise returns the newly constructed Note. Failed reads are consequently treated as successful note imports.",
+          "recommendation": "Reject empty content and propagate a descriptive import failure, or return null and explicitly report skipped files before any database update.",
+          "suggested_test": "Import an empty file and a file whose read throws IOException. Assert that neither creates a database note and both are reported as failed."
+        },
+        {
+          "severity": "medium",
+          "title": "Missing attachment directory crashes restore",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+          "line": 199,
+          "evidence": "    var backupAttachmentsDir = backupDir.findFile(attachmentsDir.getName());\n    if (!backupAttachmentsDir.exists()) {\n      return false;\n    }",
+          "explanation": "findFile can return null when the backup contains no attachment directory, such as an incomplete or manually copied backup. Calling exists on that result throws NullPointerException instead of returning the intended failure result.",
+          "recommendation": "Check for null and verify that the entry is a directory before accessing its contents.",
+          "suggested_test": "Restore from a backup without an attachment directory and assert that importAttachments returns false without throwing."
+        },
+        {
+          "severity": "high",
+          "title": "Cryptographic failures silently return unprocessed content",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 66,
+          "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+          "explanation": "This is fail-open exception handling. Encryption failure returns plaintext as though encryption succeeded, allowing exportNote to write unencrypted content for a locked note. The corresponding decrypt catch also returns its input, so a backup encrypted with another password can be persisted by importNote as ciphertext instead of being rejected.",
+          "recommendation": "Return an explicit cryptographic failure or throw a dedicated exception from both operations. Abort the affected export or import before writing content when encryption or decryption fails.",
+          "suggested_test": "Force encryption failure and assert that no plaintext backup is written. Import a locked backup with an incorrect password and assert that no note is persisted."
+        },
+        {
+          "severity": "medium",
+          "title": "Settings recreation overwrites restored navigation",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/SettingsActivity.java",
+          "line": 64,
+          "evidence": "    initUI();\n    getSupportFragmentManager().beginTransaction()\n        .replace(R.id.content_frame, new SettingsFragment()).commit();",
+          "explanation": "After rotation or process recreation, FragmentManager restores the current settings fragment and its back stack. This unconditional replacement overwrites that restored screen with the root settings fragment while leaving the restored back stack in place, losing the user's location and making subsequent back navigation inconsistent.",
+          "recommendation": "Install the initial SettingsFragment only when savedInstanceState is null and otherwise retain FragmentManager's restored state.",
+          "suggested_test": "Open a nested settings screen, recreate the activity, and assert that the same screen remains visible and Back returns to its parent."
+        },
+        {
+          "severity": "medium",
+          "title": "Asynchronous deletion events refresh drawer views on a worker thread",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/NavigationDrawerFragment.java",
+          "line": 150,
+          "evidence": "  public void onEventAsync(NotesDeletedEvent event) {\n    refreshMenus();\n  }",
+          "explanation": "EventBus runs onEventAsync on a background thread. refreshMenus calls mDrawerToggle.syncState and executes CategoryMenuTask, whose onPreExecute immediately accesses drawer views and can add a footer. These UI operations therefore run off the main thread during note deletion, risking thread violations and inconsistent drawer updates.",
+          "recommendation": "Handle this event with onEventMainThread, keeping database work inside the tasks' background phases.",
+          "suggested_test": "Post NotesDeletedEvent and assert that drawer synchronization and CategoryMenuTask.onPreExecute execute on the main looper."
+        },
+        {
+          "severity": "medium",
+          "title": "DashClock and Pushbullet cannot bind to their extension services",
+          "file": "omniNotes/src/main/AndroidManifest.xml",
+          "line": 287,
+          "evidence": "    <service\n      android:name=\".extensions.ONDashClockExtension\"\n      android:icon=\"@drawable/ic_stat_literal_icon\"\n      android:label=\"@string/app_name\"\n      android:permission=\"com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA\"\n      android:exported=\"false\">",
+          "explanation": "DashClock runs under another application's UID and cannot bind to a service marked exported=false, even with the declared permission. PushBulletExtension has the same configuration at lines 308–311, preventing that integration as well.",
+          "recommendation": "Export the extension services intended for external applications while retaining their permission restrictions.",
+          "suggested_test": "From clients holding the respective extension permissions, assert that both services can be discovered and bound."
+        },
+        {
+          "severity": "medium",
+          "title": "Tomorrow reminders are classified by elapsed hours instead of calendar date",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/extensions/ONDashClockExtension.java",
+          "line": 133,
+          "evidence": "        } else if (\n            (Long.valueOf(note.getAlarm()) - Calendar.getInstance().getTimeInMillis()) / (1000 * 60\n                *\n                60) < 24) {\n          tomorrow.add(note);\n        }",
+          "explanation": "At 08:00 today, a reminder at 20:00 tomorrow is excluded because it is 36 hours away. Conversely, an unfired reminder from yesterday has a negative difference and is labeled tomorrow. Elapsed hours do not identify the next calendar day.",
+          "recommendation": "Compare the alarm's local calendar date with a Calendar advanced by one day, using a single captured current time.",
+          "suggested_test": "Assert that tomorrow evening is included when now is this morning, yesterday is excluded, and classification remains correct across daylight-saving transitions."
+        },
+        {
+          "severity": "low",
+          "title": "FAB action assertions never resolve the matching views",
+          "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabLifecycleTest.java",
+          "line": 70,
+          "evidence": "    assertNotNull(checklistFabAction);",
+          "explanation": "Espresso onView creates a ViewInteraction without resolving its matcher. Checking that wrapper for null does not verify that the checklist action exists or is displayed. The camera assertion at line 81 has the same problem, so the test passes even when both action views are missing.",
+          "recommendation": "Call check(matches(isDisplayed())) on each ViewInteraction so Espresso resolves and validates the views.",
+          "suggested_test": "Hide or remove either action view and assert that fabActionsTest fails."
+        }
+      ],
+      "limitations": [
+        "Review was limited to the supplied snapshot; no tools or execution were used.",
+        "Missing helper implementations, base models, service code, resources, and dependency configuration limit assessment of database, serialization, storage, and lifecycle behavior."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "knowledge_enrichment": {
+          "provider": "keenable",
+          "status": "ok",
+          "sources": [
+            {
+              "title": "Java Code Review Checklist: Best Practices and Common Pitfalls",
+              "url": "https://pullpanda.io/blog/java-code-review-checklist",
+              "snippet": "**Resource Management**\n- Resources closed with try-with-resources: `try (var stream = Files.lines(path))`\n- No manual `close()` calls in finally blocks\n- Streams properly closed, especially for file operations\n- Database connections, statements, and result sets in try-with-resources\n- Thread pools shut down properly: `executor.shutdown()`\n- No suppressed exceptions from automatic resource closing\n- Resources not assigned to fields without careful lifecycle management\n**Thread Safety & Concurrency**\n- Shared mutable state protected by synchronization\n- Volatile used for simple flags, not complex operations\n- Double-checked locking avoided or implemented correctly with volatile\n- Collections wrapped with `Collections.synchronized*()` if shared\n- `ConcurrentHashMap` used instead of `Hashtable` or synchronized HashMap\n- Thread-safe classes from `java.util.concurrent` preferred\n- Immutable objects used for sharing state between threads\n- No publishing partially constructed objects from constructors\n\nJava's try-with-resources statement, introduced in Java 7, provides the standard pattern for managing resources that need cleanup. When we see code opening files, database connections, or s"
+            },
+            {
+              "title": "claude-code-java/.claude/skills/java-code-review/SKILL.md at main · decebals/claude-code-java",
+              "url": "https://github.com/decebals/claude-code-java/blob/main/.claude/skills/java-code-review/SKILL.md",
+              "snippet": "### 1. Null Safety\n**Check for:**\n```\n// ❌ NPE risk\nString name = user.getName().toUpperCase();\n// ✅ Safe\nString name = Optional.ofNullable(user.getName())\n.map(String::toUpperCase)\n.orElse(\"\");\n// ✅ Also safe (early return)\nif (user.getName() == null) {\nreturn \"\";\n}\nreturn user.getName().toUpperCase();\n```\n**Flags:**\n- Chained method calls without null checks\n- Missing `@Nullable` / `@NonNull` annotations on public APIs\n- `Optional.get()` without `isPresent()` check\n- Returning `null` from methods that could return `Optional` or empty collection\n**Suggest:**\n- Use `Optional` for return types that may be absent\n- Use `Objects.requireNonNull()` for constructor/method params\n- Return empty collections instead of null: `Collections.emptyList()`\n### 2. Exception Handling\n**Check for:**\n```\n// ❌ Swallowing exceptions\ntry {\nprocess();\n} catch (Exception e) {\n// silently ignored\n}\n// ❌ Catching too broad\ncatch (Exception e) { }\ncatch (Throwable t) { }\n// ❌ Losing stack trace\ncatch (IOException e) {\nthrow new RuntimeException(e.getMessage());\n}\n// ✅ Proper handling\ncatch (IOException e) {\nlog.error(\"Failed to process file: {}\", filename, e);\nthrow new ProcessingException(\"File processing f"
+            },
+            {
+              "title": "Java Code Review Checklist | Engineering Guidelines",
+              "url": "https://guidelines.ryanharrison.co.uk/languages/java/java-code-review",
+              "snippet": "- Not using try-with-resources for `AutoCloseable` resources → [Resource leaks prevention](/languages/java/java-general)\n- Streams/readers/writers not closed properly\n- Database connections not returned to pool\n- File handles leaked in error paths\n- Thread pools not shut down in `finally` block\n```\n// GOOD: try-with-resources ensures cleanup try ( var stream = Files . lines ( path ) ) { stream . forEach ( System . out :: println ) ; } // BAD: Stream never closed if exception occurs var stream = Files . lines ( path ) ; stream . forEach ( System . out :: println ) ;\n```\n\n- Mutable static fields accessed by multiple threads → [Java Concurrency](/languages/java/java-concurrency-fundamentals)\n- Missing synchronization on shared mutable state\n- Double-checked locking without `volatile` (broken pattern)\n- Non-thread-safe collections (ArrayList, HashMap) shared between threads\n- Race conditions in check-then-act patterns\n```\n// BAD: Race condition - multiple threads can pass check if ( counter < MAX ) { counter ++ ; // Not atomic! } // GOOD: Atomic operation atomicCounter . getAndIncrement ( ) ;\n```\n- Pinning virtual threads with `synchronized` blocks doing I/O → Use `ReentrantLock` ([Vir"
+            },
+            {
+              "title": "code-review-skill/reference/java8.md at 4850184dfd7765ea7b3c5c4e9b6cf8e0815ee7cb · awesome-skills/code-review-skill",
+              "url": "https://github.com/awesome-skills/code-review-skill/blob/HEAD/reference/java8.md",
+              "snippet": "### Captured variables must be effectively final\n```\n// ❌ Mutating a captured variable → compile error (or Atomic/array hacks)\nint sum = 0;\nlist.forEach(n -> sum += n); // does not compile\n// ✅ Reduce with a stream, or use an explicit mutable accumulator type\nint sum = list.stream().mapToInt(Integer::intValue).sum();\n```\n\nBoot 2 does not treat Spring 6 `ProblemDetail` as a first-class citizen (that is a Boot 3 story). Use a shared `@ControllerAdvice` with clear HTTP statuses.\n```\n// ❌ Swallow exceptions, printStackTrace, return null to hide failure\ntry {\nuserService.create(user);\n} catch (Exception e) {\ne.printStackTrace();\nreturn null;\n}\n// ✅ Domain exceptions + global handler\n@RestControllerAdvice\npublic class GlobalExceptionHandler {\n@ExceptionHandler(UserNotFoundException.class)\npublic ResponseEntity<ApiError> handleNotFound(UserNotFoundException e) {\nreturn ResponseEntity.status(HttpStatus.NOT_FOUND)\n.body(new ApiError(\"USER_NOT_FOUND\", e.getMessage()));\n}\n}\n```\nClose resources with try-with-resources (Java 7+). Avoid hand-rolled `finally { close() }` that forgets null checks.\n\n- Lambdas stay short; prefer method references and standard functional interfaces\n- Streams used for"
+            },
+            {
+              "title": "software-engineering-skills/plugins/java/skills/java-code-review/SKILL.md at main · wesleyegberto/software-engineering-skills",
+              "url": "https://github.com/wesleyegberto/software-engineering-skills/blob/main/plugins/java/skills/java-code-review/SKILL.md",
+              "snippet": "### 1. Null Safety\n**Check for:**\n```\n// ❌ NPE risk\nString name = user.getName().toUpperCase();\n// ✅ Safe\nString name = Optional.ofNullable(user.getName())\n.map(String::toUpperCase)\n.orElse(\"\");\n// ✅ Also safe (early return)\nif (user.getName() == null) {\nreturn \"\";\n}\nreturn user.getName().toUpperCase();\n```\n**Flags:**\n- Chained method calls without null checks\n- Missing `@Nullable` / `@NonNull` annotations on public APIs\n- `Optional.get()` without `isPresent()` check\n- Returning `null` from methods that could return `Optional` or empty collection\n**Suggest:**\n- Use `Optional` for return types that may be absent\n- Use `Objects.requireNonNull()` for constructor/method params\n- Return empty collections instead of null: `Collections.emptyList()`\n### 2. Exception Handling\n**Check for:**\n```\n// ❌ Swallowing exceptions\ntry {\nprocess();\n} catch (Exception e) {\n// silently ignored\n}\n// ❌ Catching too broad\ncatch (Exception e) { }\ncatch (Throwable t) { }\n// ❌ Losing stack trace\ncatch (IOException e) {\nthrow new RuntimeException(e.getMessage());\n}\n// ✅ Proper handling\ncatch (IOException e) {\nlog.error(\"Failed to process file: {}\", filename, e);\nthrow new ProcessingException(\"File processing f"
+            },
+            {
+              "title": "code-review-best-practices/example-guidelines/languages/java.yaml at main · augmentcode/code-review-best-practices",
+              "url": "https://github.com/augmentcode/code-review-best-practices/blob/main/example-guidelines/languages/java.yaml",
+              "snippet": "Prefer immutable objects and collections. Make classes immutable when possible. Use final fields, no setters, and return defensive copies of mutable fields. Use List.of(), Set.of(), Map.of() for immutable collections.\n\n- id: java-try-with-resources\ndescription: |\nUse try-with-resources for AutoCloseable resources. Always use try-with-resources for streams, connections, readers, writers, and any AutoCloseable resource. This ensures proper cleanup even when exceptions occur.\nBAD: Manual try-finally with is.close() that may throw and hide original exception.\nGOOD: try (InputStream is = new FileInputStream(file)) { } for automatic cleanup.\nseverity: medium\n\nEnsure thread safety for shared mutable state. Protect shared mutable state with proper synchronization. Use thread-safe collections (ConcurrentHashMap, CopyOnWriteArrayList) or immutable objects. Document thread-safety guarantees.\nBAD: private Map<String, User> cache = new HashMap<>();\nGOOD: private final Map<String, User> cache = new ConcurrentHashMap<>();"
+            }
+          ],
+          "queries": [
+            "Java code review anti-patterns error handling mutable state resource management official documentation"
+          ]
+        },
+        "citation_corrections": [],
+        "duration_seconds": 59.095
+      }
+    },
+    {
+      "agent": "security",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Application password protection can be disabled without authentication",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/SettingsFragment.java",
+          "line": 335,
+          "evidence": "      passwordAccess.setOnPreferenceChangeListener((preference, newValue) -> {\n        PasswordHelper.requestPassword(getActivity(), passwordConfirmed -> {\n          if (passwordConfirmed.equals(Result.SUCCEED)) {\n            passwordAccess.setChecked((Boolean) newValue);\n          }\n        });\n        return true;\n      });",
+          "explanation": "Returning true accepts and persists the switch change immediately, independently of the password callback. Someone with access to an open application session can disable application password protection and cancel or fail the password prompt; the unsuccessful callback does not restore the setting.",
+          "recommendation": "Return false and change the persisted switch state only after successful password validation.",
+          "suggested_test": "With application password protection enabled, toggle it off and cancel or fail authentication. Assert that the switch and persisted preference remain enabled after reopening settings."
+        },
+        {
+          "severity": "high",
+          "title": "Backup encryption truncates the password hash to a weak DES key",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 58,
+          "evidence": "                val keySpec = DESKeySpec(password.toByteArray(StandardCharsets.UTF_8))\n                val keyFactory = SecretKeyFactory.getInstance(\"DES\")\n                val key = keyFactory.generateSecret(keySpec)\n                val clearText = value.toByteArray(StandardCharsets.UTF_8)\n                // Cipher is not thread safe\n                val cipher = Cipher.getInstance(\"DES\")",
+          "explanation": "BackupHelper.exportNote passes PREF_PASSWORD into this function, and PasswordActivity stores that value as hexadecimal MD5. DESKeySpec uses only the first eight bytes, so the encryption key has at most 32 bits of input entropy from eight hexadecimal characters, further reduced by DES parity bits. An attacker who obtains a locked-note backup can brute-force this small key space offline regardless of the original password's strength.",
+          "recommendation": "Use authenticated encryption such as AES-GCM with a random nonce and a properly salted password derivation function. Version the backup format and retain legacy decryption only for migration.",
+          "suggested_test": "Verify that two password inputs sharing their first eight characters cannot decrypt each other's new-format ciphertext, repeated encryption produces different ciphertext, and modified ciphertext is rejected."
+        },
+        {
+          "severity": "medium",
+          "title": "Attachments belonging to locked notes are exported without encryption",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+          "line": 140,
+          "evidence": "  private static void exportAttachment(DocumentFileCompat attachmentsDestination, Attachment attachment)\n      throws BackupAttachmentException {\n    try {\n      var destinationAttachment = attachmentsDestination.createFile(\"\",\n          attachment.getUri().getLastPathSegment());\n      DocumentFileHelper.copyFileTo(getAppContext(), new File(attachment.getUri().getPath()),\n          destinationAttachment);",
+          "explanation": "exportAttachments obtains all database attachments and copies their original bytes into the backup directory without checking note protection. Although exportNote encrypts locked-note content, its images, recordings, and other attachments remain readable to anyone who obtains access to the backup folder or its storage provider.",
+          "recommendation": "Encrypt attachments associated with protected notes using authenticated encryption, and record the encryption metadata needed for restoration.",
+          "suggested_test": "Export a locked note with an attachment containing a known marker. Assert that the backup attachment does not expose the original bytes and can be restored only with the correct secret."
+        }
+      ],
+      "limitations": [
+        "Review was limited to the supplied snapshot; no tools or execution were used.",
+        "Missing intent handlers, storage helpers, database implementation, and provider path configuration prevent confirming additional exploit paths."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "citation_corrections": [],
+        "duration_seconds": 32.21
+      }
+    },
+    {
+      "agent": "tests",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Password access changes persist before authentication succeeds",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/SettingsFragment.java",
+          "line": 335,
+          "evidence": "      passwordAccess.setOnPreferenceChangeListener((preference, newValue) -> {\n        PasswordHelper.requestPassword(getActivity(), passwordConfirmed -> {\n          if (passwordConfirmed.equals(Result.SUCCEED)) {\n            passwordAccess.setChecked((Boolean) newValue);\n          }\n        });\n        return true;\n      });",
+          "explanation": "Returning true lets SwitchPreference immediately accept and persist the requested value. Failed or cancelled authentication does not undo that change, so disabling password access does not require successful password validation.",
+          "recommendation": "Return false and apply the new checked value only in the successful authentication callback.",
+          "suggested_test": "Start with a configured password and password access enabled. Toggle access off, then submit an incorrect password or cancel. Assert the switch and persisted preference remain enabled. Repeat with the correct password and assert both become disabled."
+        },
+        {
+          "severity": "medium",
+          "title": "Selected backup folders receive no persisted URI permissions",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/helpers/BackupHelper.java",
+          "line": 273,
+          "evidence": "    final int takeFlags = FLAG_GRANT_READ_URI_PERMISSION & FLAG_GRANT_WRITE_URI_PERMISSION;\n    context.getContentResolver().takePersistableUriPermission(intent.getData(), takeFlags);",
+          "explanation": "Read and write permission flags are distinct bits, so their bitwise AND is zero. The call therefore does not persist either permission, leaving the saved backup URI unusable after its temporary grant expires.",
+          "recommendation": "Combine read and write flags with bitwise OR and intersect that mask with the permissions actually granted by the result intent.",
+          "suggested_test": "Select a document tree with read and write grants, save it, and assert persistedUriPermissions contains that tree with both permissions. After restarting the app, assert the saved folder can still be listed and written."
+        },
+        {
+          "severity": "medium",
+          "title": "Parcel round trips lose explicit note IDs",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/models/Note.java",
+          "line": 169,
+          "evidence": "  public void writeToParcel(Parcel parcel, int flags) {\n    parcel.writeString(String.valueOf(getCreation()));\n    parcel.writeString(String.valueOf(getLastModification()));",
+          "explanation": "Neither writeToParcel nor the parcel constructor serializes the note ID. A note with an explicitly assigned ID cannot reliably retain its identity across parcel transport. ParcelableUtilTest uses a default note and object equality, while IntentHelperTest reads the original intent extra without forcing parcel serialization; neither explicitly checks this case.",
+          "recommendation": "Serialize and restore the note ID symmetrically, and assert important fields individually in the round-trip test.",
+          "suggested_test": "Create a note with ID 1234567890123 and a different creation timestamp. Marshall and unmarshall it using Note.CREATOR, then assert the restored ID equals 1234567890123 and the creation timestamp is unchanged."
+        },
+        {
+          "severity": "medium",
+          "title": "Encryption failures silently export protected content as plaintext",
+          "file": "omniNotes/src/main/java/it/feio/android/omninotes/utils/Security.kt",
+          "line": 66,
+          "evidence": "            } catch (e: Exception) {\n                LogDelegate.e(\"Something is gone wrong encrypting\", e)\n                value\n            }",
+          "explanation": "Encryption reports failure by returning the original plaintext. BackupHelper.exportNote assigns this result to a locked note's content and writes it to JSON without detecting failure. For example, an empty password produces an invalid DES key and allows protected content to be exported unencrypted.",
+          "recommendation": "Propagate encryption failure and abort the affected export with an explicit failure result instead of returning plaintext.",
+          "suggested_test": "Export a locked note containing a unique secret with an empty password preference. Assert export reports failure and no backup JSON contains the plaintext secret. Also assert the original note content remains unchanged."
+        },
+        {
+          "severity": "medium",
+          "title": "FAB action assertions never resolve the matched views",
+          "file": "omniNotes/src/androidTest/java/it/feio/android/omninotes/ui/FabLifecycleTest.java",
+          "line": 69,
+          "evidence": "            isDisplayed()));\n    assertNotNull(checklistFabAction);",
+          "explanation": "Espresso onView returns a ViewInteraction without resolving the matcher. Checking that interaction for null therefore passes even when the checklist action is missing or hidden. The camera assertion has the same problem, so fabActionsTest does not verify either action's visibility.",
+          "recommendation": "Execute check(matches(isDisplayed())) on both interactions and verify collapse hides the actions.",
+          "suggested_test": "Expand the FAB and assert checklist and camera views are displayed using Espresso checks. Collapse it and assert they are not displayed. Verify the expanded-state assertion fails if either action is hidden."
+        }
+      ],
+      "limitations": [
+        "Review was limited to the supplied snapshot; no tools were called and no tests were run.",
+        "Several helper implementations, BaseNote, BaseEspressoTest, dependency configuration, and resources were not supplied, limiting assessment of their behavior and test setup.",
+        "Suggested tests describe missing assertions and failure scenarios, not measured coverage."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "codex",
+        "requested_model": null,
+        "actual_model": "gpt-6.1-sol",
+        "model_source": "codex_cli_startup",
+        "citation_corrections": [],
+        "duration_seconds": 38.978
+      }
+    }
+  ],
+  "actual_models": [
+    "gpt-6.1-sol"
+  ],
+  "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+  "schema_version": "1.0",
+  "run_id": "a4b7a533-14ab-41d7-9c9a-807899f2f2a1",
+  "started_at": "2026-10-25T06:24:28.919198+00:00",
+  "completed_at": "2026-10-25T06:25:28.069403+00:00",
+  "duration_seconds": 59.152,
+  "backend": "codex",
+  "repository": "/Users/krishnakumar/Documents/github/Omni-Notes",
+  "snapshot_sha256": "b5959e91ccde9bd954fe33bf556e98260064750c0ec73316555512e2d1042279",
+  "snapshot_bytes": 222733,
+  "requested_model": null,
+  "model": "gpt-6.1-sol",
+  "batch": 4,
+  "source_revision": "504253db6781a19d377ab04153f2f2cd75ef5494"
+}
