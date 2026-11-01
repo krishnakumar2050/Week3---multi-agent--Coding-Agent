@@ -4,6 +4,7 @@ import os
 
 from coding_review.backends.base import ReviewBackend
 from coding_review.config import ReviewConfig
+from coding_review.credentials import load_fireworks_key
 from coding_review.exceptions import ConfigurationError
 
 
@@ -11,11 +12,7 @@ def create_backend(config: ReviewConfig) -> ReviewBackend:
     if config.backend == "fireworks":
         from coding_review.backends.fireworks import DEFAULT_FIREWORKS_MODEL, FireworksBackend
 
-        key = os.getenv("FIREWORKS_API_KEY", "")
-        if not key.strip():
-            raise ConfigurationError(
-                "Set FIREWORKS_API_KEY (Fireworks API usage is billed separately from ChatGPT Pro)"
-            )
+        key = load_fireworks_key()
         model = config.model or os.getenv("FIREWORKS_MODEL") or DEFAULT_FIREWORKS_MODEL
         return FireworksBackend(api_key=key, model=model, timeout=config.timeout)
     if config.backend == "codex":

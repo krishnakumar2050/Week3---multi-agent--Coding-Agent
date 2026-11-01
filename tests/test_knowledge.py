@@ -64,7 +64,8 @@ def test_bad_urls_and_result_budget(monkeypatch):
     assert len(metadata["sources"]) == 6
 
 
-def test_only_quality_receives_enrichment(monkeypatch):
+def test_only_quality_receives_quality_enrichment(monkeypatch):
+    monkeypatch.setenv("KEENABLE_SECURITY_ENABLED", "false")
     calls = []
 
     def enrich(files):

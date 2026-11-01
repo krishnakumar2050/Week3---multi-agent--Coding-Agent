@@ -12,6 +12,17 @@ def markdown(report):
         " | ".join(f"{key}: {value}" for key, value in report["counts"].items()),
         "",
     ]
+    if synthesis := report.get("synthesis"):
+        lines += ["## Aggregator synthesis", "", synthesis["summary"], ""]
+        for priority in synthesis["priorities"]:
+            lines += [
+                f"- [{priority['severity'].upper()}] `{priority['file']}:{priority['line']}` "
+                f"{priority['title']}: {priority['recommendation']}"
+            ]
+        gaps = synthesis["failed_agents"] + synthesis["missing_agents"]
+        if gaps:
+            lines += ["", "Review gaps: " + ", ".join(sorted(set(gaps)))]
+        lines += [""]
     if report.get("run_id"):
         lines += [
             f"Run: `{report['run_id']}` · Schema: {report['schema_version']}",
@@ -41,11 +52,14 @@ def markdown(report):
         knowledge = agent.get("execution", {}).get("knowledge_enrichment", {})
         if knowledge and knowledge.get("status") != "disabled":
             lines += [
-                "## Agent 1 anti-pattern knowledge",
+                "## Agent 1 anti-pattern knowledge" if agent["agent"] == "quality"
+                else "## Security framework knowledge",
                 "",
                 f"Keenable status: {knowledge['status']}",
                 "",
             ]
+            if knowledge.get("frameworks"):
+                lines += ["Frameworks: " + ", ".join(knowledge["frameworks"]), ""]
             for source in knowledge.get("sources", []):
                 lines += [f"- {source['title']} — {source['url']}"]
             lines += [

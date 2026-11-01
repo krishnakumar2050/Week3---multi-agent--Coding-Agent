@@ -5,7 +5,7 @@ from time import monotonic
 
 from coding_review.agents.context import source_prompt
 from coding_review.agents.evidence import resolve_evidence
-from coding_review.agents.knowledge import enrich_quality
+from coding_review.agents.knowledge import enrich_quality, enrich_security
 from coding_review.agents.prompts import POLICY, SPECIALTIES
 from coding_review.domain import AgentResult, Review, State
 from coding_review.errors import diagnose, error_summary
@@ -21,7 +21,9 @@ def make_reviewer(name, model):
         reviewer = None
         corrections = []
         knowledge_context, knowledge = (
-            enrich_quality(state["files"]) if name == "quality" else ("", None)
+            enrich_quality(state["files"]) if name == "quality"
+            else enrich_security(state["files"]) if name == "security"
+            else ("", None)
         )
         try:
             reviewer = model.with_structured_output(Review)
@@ -76,7 +78,7 @@ def make_reviewer(name, model):
             result.execution["knowledge_enrichment"] = knowledge
             if knowledge["status"] in {"failed", "empty"}:
                 result.limitations.append(
-                    "Keenable enrichment unavailable or empty; quality review used source context only."
+                    f"Keenable enrichment unavailable or empty; {name} review used source context only."
                 )
         result.execution["citation_corrections"] = corrections
         result.execution["duration_seconds"] = round(monotonic() - started, 3)

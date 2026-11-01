@@ -1,0 +1,652 @@
+{
+  "status": "complete",
+  "files_reviewed": [
+    "Expense Tracker/Controllers/Forget Password/ForgetPasswordVC.swift",
+    "Expense Tracker/Controllers/Login SingUp/LoginVC.swift",
+    "Expense Tracker/Controllers/Login SingUp/LoginWithPinVC.swift",
+    "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+    "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+    "Expense Tracker/Controllers/Main/HomeVC.swift",
+    "Expense Tracker/Controllers/Main/ProfileVC.swift",
+    "Expense Tracker/Controllers/Main/TransectionsVC.swift",
+    "Expense Tracker/Controllers/OnBoarding/OnboardingViewController.swift",
+    "Expense Tracker/Controllers/ProfileViews/AboutUsVC.swift",
+    "Expense Tracker/Controllers/ProfileViews/ChangePasswordVC.swift",
+    "Expense Tracker/Controllers/ProfileViews/EditProfileVC.swift",
+    "Expense Tracker/Controllers/ProfileViews/UserStatementVC.swift",
+    "Expense Tracker/Custom Views/AlertView/AlertBody.swift",
+    "Expense Tracker/Custom Views/AlertView/AlertBtn.swift",
+    "Expense Tracker/Custom Views/AlertView/AlertContainer.swift",
+    "Expense Tracker/Custom Views/AlertView/AlertController.swift",
+    "Expense Tracker/Custom Views/AlertView/AlertTitle.swift",
+    "Expense Tracker/Custom Views/Button/EButton.swift",
+    "Expense Tracker/Custom Views/Button/GradientButton.swift",
+    "Expense Tracker/Custom Views/Cell/OnboardingCell.swift",
+    "Expense Tracker/Custom Views/Cell/TransectionTableViewCell.swift",
+    "Expense Tracker/Custom Views/Custom TableView/CustomTableView.swift",
+    "Expense Tracker/Custom Views/CustomPageController/ColorUtils.swift",
+    "Expense Tracker/Custom Views/CustomPageController/CustomPageController.swift",
+    "Expense Tracker/Custom Views/CustomPageController/DotDrawer.swift",
+    "Expense Tracker/Custom Views/CustomPageController/DrawerProtocol.swift",
+    "Expense Tracker/Custom Views/CustomPageController/InfiniteDrawer.swift",
+    "Expense Tracker/Custom Views/CustomPageController/InfiniteScrollingDrawer.swift",
+    "Expense Tracker/Custom Views/ImageView/AvatarImageView.swift",
+    "Expense Tracker/Custom Views/Label/CustomLabel.swift",
+    "Expense Tracker/Custom Views/SwiftUI CharView/CharView.swift",
+    "Expense Tracker/Custom Views/TabBar Controller/TabBarVC.swift",
+    "Expense Tracker/Custom Views/TextField/CustomTextFields.swift",
+    "Expense Tracker/Custom Views/TextField/ForgetPasswordTextFeild.swift",
+    "Expense Tracker/Custom Views/TextField/PasswordTextField.swift",
+    "Expense Tracker/Custom Views/TextField/UsernameTextField.swift",
+    "Expense Tracker/Custom Views/UIView/CardView.swift",
+    "Expense Tracker/Custom Views/UIView/CustomView.swift",
+    "Expense Tracker/Custom Views/UIView/ProfileHeaderView.swift",
+    "Expense Tracker/Custom Views/View Controllers/AllTransactions.swift",
+    "Expense Tracker/Custom Views/View Controllers/DataLoading.swift",
+    "Expense Tracker/Custom Views/View Controllers/HeaderVC.swift",
+    "Expense Tracker/Extentions/Color+Ext.swift",
+    "Expense Tracker/Extentions/Double+Ext.swift",
+    "Expense Tracker/Extentions/UITableView+Ext.swift",
+    "Expense Tracker/Extentions/UITextFeild+Ext.swift",
+    "Expense Tracker/Extentions/UIView+Ext.swift",
+    "Expense Tracker/Extentions/UIViewController+Ext.swift",
+    "Expense Tracker/Models/Login.swift",
+    "Expense Tracker/Models/OnBoardingModel.swift",
+    "Expense Tracker/Models/SignUp.swift",
+    "Expense Tracker/Models/Transection.swift",
+    "Expense Tracker/Models/User.swift",
+    "Expense Tracker/Network Manager/AuthManager.swift",
+    "Expense Tracker/Network Manager/NetworkManager.swift",
+    "Expense Tracker/Resources/AppDelegate.swift",
+    "Expense Tracker/Resources/SceneDelegate.swift",
+    "Expense Tracker/Utilits/AppError.swift",
+    "Expense Tracker/Utilits/BalanceFormater.swift",
+    "Expense Tracker/Utilits/Constants.swift",
+    "Expense Tracker/Utilits/DatePicker.swift",
+    "Expense Tracker/Utilits/HTTPMethod.swift",
+    "Expense Tracker/Utilits/ValidationTextField.swift"
+  ],
+  "counts": {
+    "critical": 0,
+    "high": 6,
+    "medium": 4,
+    "low": 1,
+    "info": 0
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "title": "PIN signup force-unwrap crashes; delegate limiting input is never attached",
+      "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+      "line": 165,
+      "evidence": "                    let signUpResult = try await NetworkManager.shared.Signup(fullname: fullnameTextFeild.text!, email: emailTextFeild.text!, mobile: phoneTextFeild.text!, username: usernameTextFeild.text!, pin: Int(pinTextFeild.text!)!, passowrd: passwordTextFeild.text!)",
+      "explanation": "`Int(pinTextFeild.text!)!` crashes if the PIN contains any non-digit. The UITextFieldDelegate extension (lines 185-192) that limits input to 4 characters is dead code because none of the form fields ever set `delegate = self`. Additionally, an Int-encoded PIN silently drops leading zeros (\"0123\" is sent as 123), corrupting the credential.",
+      "recommendation": "Set `delegate = self` on each field (or restrict per-field via shouldChangeCharactersIn), validate the PIN is 4 digits with digit-only characterSet before conversion, and transmit the PIN as a String to preserve leading zeros.",
+      "suggested_test": "Enter PIN \"0123\" and password \"abcdefgh1\"; assert signup sends pin \"0123\" unchanged and does not crash. Enter PIN \"12a4\"; assert a validation error is shown instead of a crash.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Sign-up force-unwraps PIN conversion; delegate that limits input is never assigned",
+      "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+      "line": 165,
+      "evidence": "                    let signUpResult = try await NetworkManager.shared.Signup(fullname: fullnameTextFeild.text!, email: emailTextFeild.text!, mobile: phoneTextFeild.text!, username: usernameTextFeild.text!, pin: Int(pinTextFeild.text!)!, passowrd: passwordTextFeild.text!)",
+      "explanation": "`Int(pinTextFeild.text!)!` crashes if the user enters non-numeric PIN characters. The maxLength-4 restriction in the UITextFieldDelegate extension (lines 185-192) is dead code because `textField.delegate = self` is never set for any of the form fields, so nothing constrains input to 4 digits.",
+      "recommendation": "Set the text field delegates in configVC, and replace the force-unwrap with `guard let pin = Int(pinTextFeild.text ?? \"\")` plus a validation alert.",
+      "suggested_test": "Enter \"abc\" in the PIN field, fill the rest, tap Sign up. Expected: validation alert, not a crash.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Force-unwrap of amount text crashes on save (default value is \"$0\")",
+      "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+      "line": 237,
+      "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+      "explanation": "expensesAndIncomeTextField is initialized with textField.text = \"$0\" (line 43) and the user can type any characters on the numberPad. Double(\"$0\") is nil, so the force-unwrap crashes at runtime whenever the user saves without editing the field or when parsing fails. This is a deterministic crash on the default screen state.",
+      "recommendation": "Parse defensively: strip non-numeric characters, use Double(text.replacingOccurrences(of: \"$\", with: \"\")) with guard/optional binding, and show a validation alert on failure instead of crashing.",
+      "suggested_test": "Set expensesAndIncomeTextField.text to \"$0\" (the default) and invoke postTransaction(); assert no precondition failure occurs and an invalid-input alert is presented. Also test text \"12.5abc\".",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Force-unwrap of amount text crashes on the pre-filled value \"$0\"",
+      "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+      "line": 237,
+      "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+      "explanation": "The amount field is initialized with text = \"$0\" (line 43), which is non-empty, so the Validate() empty-check passes. Double(\"$0\") returns nil, and the trailing force-unwrap crashes the app immediately when the user taps Save without editing the amount (or types any non-numeric characters, since only .numberPad suggests—not enforces—numeric input).",
+      "recommendation": "Use `guard let amountText = expensesAndIncomeTextField.text, let amount = Double(amountText.replacingOccurrences(of: \"$\", with: \"\"))` and show a validation alert on failure instead of force-unwrapping.",
+      "suggested_test": "Launch Add screen, leave the amount as \"$0\", fill other fields, tap Save. Expected: validation message, no crash.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "Login request body including password logged to console",
+      "file": "Expense Tracker/Network Manager/AuthManager.swift",
+      "line": 39,
+      "evidence": "        print(\"DEBUG:\\(body)\")",
+      "explanation": "The full LoginBody (username/email and plaintext password) is printed to the console on every login, leaking credentials into device logs and crash reports.",
+      "recommendation": "Remove the print or log only non-sensitive fields (e.g., that a login attempt was made).",
+      "suggested_test": "Static test: assert no print statement serializes LoginBody or Pin objects.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "high",
+      "title": "User ID trusted from local storage and embedded in API paths (IDOR-style design)",
+      "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+      "line": 27,
+      "evidence": "        let request = try await createRequest(with: URL(string: API.baseURL + \"statements/info/\\(userID ?? \"N/A\")\"), type: .GET)",
+      "explanation": "All authenticated endpoints fetch data for a user_id taken from UserDefaults and appended into the URL. If the server does not verify the user_id against the bearer token, an attacker who can obtain/guess another user's ID can read their balance, income/expense data, and transactions, and even post transactions on their behalf (makeTransaction sends an arbitrary userID in the body at line 83).",
+      "recommendation": "Derive the identity server-side from the bearer token; never accept user IDs from client-controlled paths or bodies.",
+      "suggested_test": "Call GET /transactions/{otherUserID} with a valid token of a different user; assert the server returns 403.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Forgot Password screen is non-functional — no submission, no network call",
+      "file": "Expense Tracker/Controllers/Forget Password/ForgetPasswordVC.swift",
+      "line": 16,
+      "evidence": "    let forgetuserTextFeild = ForgetPasswordTextFeild()",
+      "explanation": "ForgetPasswordVC only lays out an image and a username field. There is no submit button, no target/action, and no call to any reset-password API — the \"Forget Password\" button on LoginVC leads to a dead end, and the \"Done\" bar button only dismisses.",
+      "recommendation": "Add a submit action that validates the username and calls a reset endpoint via AuthManager/NetworkManager, with loading and success/error states.",
+      "suggested_test": "Present ForgetPasswordVC, enter a username, tap a submit action; assert a reset request is issued and an alert is presented on both success and failure.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Force-unwrapped string conversions can crash the app",
+      "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+      "line": 237,
+      "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+      "explanation": "Double(expensesAndIncomeTextField.text!)! crashes if the user edits the amount to non-numeric text (clearsOnBeginEditing makes intermediate states possible), and SingUpVC line 165 force-unwraps Int(pinTextFeild.text!) similarly. This is a denial-of-service/DoS via routine input.",
+      "recommendation": "Use safe optional conversion with a validation error path instead of force unwrapping.",
+      "suggested_test": "Enter '$abc' in the amount field and tap Save; assert a validation alert appears and the app does not crash.",
+      "agents": [
+        "security"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "NetworkManager caches user_id at init, so requests use nil/\"N/A\" after login",
+      "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+      "line": 14,
+      "evidence": "    private let userID          = UserDefaults.standard.string(forKey: \"user_id\")",
+      "explanation": "`userID` is a let captured once when the NetworkManager singleton is first initialized. If the singleton is created before login completes (e.g., any early access), it will permanently read nil and every API path becomes `.../transactions/N/A`, silently failing or returning wrong-user data. It should be read dynamically on each request.",
+      "recommendation": "Replace the stored property with a computed property `private var userID: String? { UserDefaults.standard.string(forKey: \"user_id\") }` and fail fast when nil.",
+      "suggested_test": "Create the singleton before setting user_id, then set user_id and call getTransaction(); assert the request URL contains the new id, not \"N/A\".",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "user_id cached at singleton init, so requests use a stale/absent user id",
+      "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+      "line": 14,
+      "evidence": "    private let userID          = UserDefaults.standard.string(forKey: \"user_id\")",
+      "explanation": "NetworkManager.shared is a singleton; userID is captured when the singleton is first touched. If that happens before login (e.g., HomeVC fetch after the token write ordering differs), userID is nil and every endpoint hits \"/N/A\" (lines 27, 41, 54, 69), silently failing with 404. After logout/login as another user, the old id persists in memory.",
+      "recommendation": "Make it a computed property: `private var userID: String? { UserDefaults.standard.string(forKey: \"user_id\") }`, and fail fast with a typed error when nil instead of substituting \"N/A\".",
+      "suggested_test": "Fresh install (no user_id), trigger dashboard fetch. Expected: explicit auth error handling, not a request to /statements/info/N/A.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "low",
+      "title": "Logout confirmation leaks loading overlay and title string-matching is fragile",
+      "file": "Expense Tracker/Controllers/Main/ProfileVC.swift",
+      "line": 135,
+      "evidence": "        guard let actionTitle = action.title else { return }",
+      "explanation": "showLoadingView() is called before the guard; if action.title is nil the overlay never dismisses, blocking the UI. The branch also compares display strings (`actionTitle == \"logout\"` / \"cancel\") to enum cases—an anti-pattern that silently breaks if the action titles are localized. In the 'Sign Out' path, SingOut() clears the token but not `user_id` (AuthManager.swift line 90), leaving stale identity data.",
+      "recommendation": "Capture the logoutOptions case in UIAlertAction and switch on it; dismiss the loading view on all paths; clear user_id in SingOut().",
+      "suggested_test": "Tap Logout → choose an action. Expected: loading overlay always dismissed; after sign-out, subsequent login stores a fresh user_id.",
+      "agents": [
+        "quality"
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "agent": "quality",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Force-unwrap of amount text crashes on the pre-filled value \"$0\"",
+          "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+          "line": 237,
+          "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+          "explanation": "The amount field is initialized with text = \"$0\" (line 43), which is non-empty, so the Validate() empty-check passes. Double(\"$0\") returns nil, and the trailing force-unwrap crashes the app immediately when the user taps Save without editing the amount (or types any non-numeric characters, since only .numberPad suggests—not enforces—numeric input).",
+          "recommendation": "Use `guard let amountText = expensesAndIncomeTextField.text, let amount = Double(amountText.replacingOccurrences(of: \"$\", with: \"\"))` and show a validation alert on failure instead of force-unwrapping.",
+          "suggested_test": "Launch Add screen, leave the amount as \"$0\", fill other fields, tap Save. Expected: validation message, no crash."
+        },
+        {
+          "severity": "high",
+          "title": "Sign-up force-unwraps PIN conversion; delegate that limits input is never assigned",
+          "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+          "line": 165,
+          "evidence": "                    let signUpResult = try await NetworkManager.shared.Signup(fullname: fullnameTextFeild.text!, email: emailTextFeild.text!, mobile: phoneTextFeild.text!, username: usernameTextFeild.text!, pin: Int(pinTextFeild.text!)!, passowrd: passwordTextFeild.text!)",
+          "explanation": "`Int(pinTextFeild.text!)!` crashes if the user enters non-numeric PIN characters. The maxLength-4 restriction in the UITextFieldDelegate extension (lines 185-192) is dead code because `textField.delegate = self` is never set for any of the form fields, so nothing constrains input to 4 digits.",
+          "recommendation": "Set the text field delegates in configVC, and replace the force-unwrap with `guard let pin = Int(pinTextFeild.text ?? \"\")` plus a validation alert.",
+          "suggested_test": "Enter \"abc\" in the PIN field, fill the rest, tap Sign up. Expected: validation alert, not a crash."
+        },
+        {
+          "severity": "medium",
+          "title": "user_id cached at singleton init, so requests use a stale/absent user id",
+          "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+          "line": 14,
+          "evidence": "    private let userID          = UserDefaults.standard.string(forKey: \"user_id\")",
+          "explanation": "NetworkManager.shared is a singleton; userID is captured when the singleton is first touched. If that happens before login (e.g., HomeVC fetch after the token write ordering differs), userID is nil and every endpoint hits \"/N/A\" (lines 27, 41, 54, 69), silently failing with 404. After logout/login as another user, the old id persists in memory.",
+          "recommendation": "Make it a computed property: `private var userID: String? { UserDefaults.standard.string(forKey: \"user_id\") }`, and fail fast with a typed error when nil instead of substituting \"N/A\".",
+          "suggested_test": "Fresh install (no user_id), trigger dashboard fetch. Expected: explicit auth error handling, not a request to /statements/info/N/A."
+        },
+        {
+          "severity": "low",
+          "title": "Logout confirmation leaks loading overlay and title string-matching is fragile",
+          "file": "Expense Tracker/Controllers/Main/ProfileVC.swift",
+          "line": 135,
+          "evidence": "        guard let actionTitle = action.title else { return }",
+          "explanation": "showLoadingView() is called before the guard; if action.title is nil the overlay never dismisses, blocking the UI. The branch also compares display strings (`actionTitle == \"logout\"` / \"cancel\") to enum cases—an anti-pattern that silently breaks if the action titles are localized. In the 'Sign Out' path, SingOut() clears the token but not `user_id` (AuthManager.swift line 90), leaving stale identity data.",
+          "recommendation": "Capture the logoutOptions case in UIAlertAction and switch on it; dismiss the loading view on all paths; clear user_id in SingOut().",
+          "suggested_test": "Tap Logout → choose an action. Expected: loading overlay always dismissed; after sign-out, subsequent login stores a fresh user_id."
+        }
+      ],
+      "limitations": [
+        "Network layer internals (API.baseURL responses, ExError usage in other files) and derived types like Transaction extensions are outside the snapshot; some runtime behavior is inferred.",
+        "Constraint-conflict severity depends on runtime layout; findings about repeated constraint activation are based on code paths, not measured output.",
+        "LoginVC shows the loading view before validation completes (line 64) and force-unwraps validated text fields; flagged only where a concrete crash path exists.",
+        "Single-file evidence for Validation()/extension helpers not shown here (ValidationTextField.swift) limits assessment of regex validation usage, which appears unused by the surveyed flows.",
+        "Discarded unverified finding: Change Password Save button is a no-op",
+        "Discarded unverified finding: Header subviews and constraints re-added on every layout pass",
+        "Discarded unverified finding: Reused table cells keep stale Face ID switch accessory",
+        "Discarded unverified finding: Login error responses (4xx) throw generic invalidResponse, making the result.status!=200 branch dead and leaking debug info elsewhere",
+        "Discarded unverified finding: Date picker callback ignores the selected day component",
+        "Discarded unverified finding: Chart reconfigured and re-animated inside viewDidLayoutSubviews",
+        "Corrected 4 source citation(s) using unambiguous matches in the cited file; exact source excerpts retained."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "fireworks",
+        "requested_model": "accounts/fireworks/models/glm-5p3-flash",
+        "actual_model": "accounts/fireworks/models/glm-5p3-flash",
+        "model_source": "provider_response",
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3366,
+          "prompt_tokens": 113788,
+          "total_tokens": 117154,
+          "completion_tokens_details": {
+            "reasoning_tokens": 949
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "knowledge_enrichment": {
+          "provider": "keenable",
+          "status": "disabled",
+          "sources": [],
+          "queries": []
+        },
+        "citation_corrections": [
+          {
+            "title": "Force-unwrap of amount text crashes on the pre-filled value \"$0\"",
+            "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+            "original_line": 237,
+            "line": 237,
+            "method": "normalized_indentation"
+          },
+          {
+            "title": "Sign-up force-unwraps PIN conversion; delegate that limits input is never assigned",
+            "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+            "original_line": 165,
+            "line": 165,
+            "method": "normalized_indentation"
+          },
+          {
+            "title": "user_id cached at singleton init, so requests use a stale/absent user id",
+            "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+            "original_line": 14,
+            "line": 14,
+            "method": "normalized_indentation"
+          },
+          {
+            "title": "Logout confirmation leaks loading overlay and title string-matching is fragile",
+            "file": "Expense Tracker/Controllers/Main/ProfileVC.swift",
+            "original_line": 135,
+            "line": 135,
+            "method": "normalized_indentation"
+          }
+        ],
+        "duration_seconds": 24.928
+      }
+    },
+    {
+      "agent": "security",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "User ID trusted from local storage and embedded in API paths (IDOR-style design)",
+          "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+          "line": 27,
+          "evidence": "        let request = try await createRequest(with: URL(string: API.baseURL + \"statements/info/\\(userID ?? \"N/A\")\"), type: .GET)",
+          "explanation": "All authenticated endpoints fetch data for a user_id taken from UserDefaults and appended into the URL. If the server does not verify the user_id against the bearer token, an attacker who can obtain/guess another user's ID can read their balance, income/expense data, and transactions, and even post transactions on their behalf (makeTransaction sends an arbitrary userID in the body at line 83).",
+          "recommendation": "Derive the identity server-side from the bearer token; never accept user IDs from client-controlled paths or bodies.",
+          "suggested_test": "Call GET /transactions/{otherUserID} with a valid token of a different user; assert the server returns 403."
+        },
+        {
+          "severity": "medium",
+          "title": "Force-unwrapped string conversions can crash the app",
+          "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+          "line": 237,
+          "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+          "explanation": "Double(expensesAndIncomeTextField.text!)! crashes if the user edits the amount to non-numeric text (clearsOnBeginEditing makes intermediate states possible), and SingUpVC line 165 force-unwraps Int(pinTextFeild.text!) similarly. This is a denial-of-service/DoS via routine input.",
+          "recommendation": "Use safe optional conversion with a validation error path instead of force unwrapping.",
+          "suggested_test": "Enter '$abc' in the amount field and tap Save; assert a validation alert appears and the app does not crash."
+        }
+      ],
+      "limitations": [
+        "Server-side implementation is not in the snapshot, so IDOR/rate-limiting severity depends on unverifiable backend behavior.",
+        "NetworkManager, AuthManager, and Validators are reviewed from the shown sources only; URLSession configuration (ATS, TLS pinning) and keychain alternatives not in scope.",
+        "Non-Swift files (Info.plist, entitlements, build settings) were not provided, so ATS exceptions and permission strings could not be verified.",
+        "Discarded unverified finding: Access token and user ID persisted in UserDefaults (unencrypted plist)",
+        "Discarded unverified finding: PIN login has no client-side attempt limiting and small keyspace",
+        "Discarded unverified finding: Face ID gate fails open: content stays accessible after failed authentication",
+        "Discarded unverified finding: Biometrics can be silently disabled without authentication",
+        "Discarded unverified finding: Change Password screen is non-functional (Save handler empty)",
+        "Discarded unverified finding: Server responses only implicitly checked; errors logged including credentials in debug output",
+        "Discarded unverified finding: Sign-up PIN capped at 4 chars but password/PIN validation not enforced client-side",
+        "Discarded unverified finding: HomeVC table cell indexing can crash on reload races",
+        "Corrected 2 source citation(s) using unambiguous matches in the cited file; exact source excerpts retained."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "fireworks",
+        "requested_model": "accounts/fireworks/models/glm-5p3-flash",
+        "actual_model": "accounts/fireworks/models/glm-5p3-flash",
+        "model_source": "provider_response",
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 2317,
+          "prompt_tokens": 113743,
+          "total_tokens": 116060,
+          "completion_tokens_details": {
+            "reasoning_tokens": 142
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "citation_corrections": [
+          {
+            "title": "User ID trusted from local storage and embedded in API paths (IDOR-style design)",
+            "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+            "original_line": 27,
+            "line": 27,
+            "method": "normalized_indentation"
+          },
+          {
+            "title": "Force-unwrapped string conversions can crash the app",
+            "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+            "original_line": 237,
+            "line": 237,
+            "method": "normalized_indentation"
+          }
+        ],
+        "duration_seconds": 17.777
+      }
+    },
+    {
+      "agent": "tests",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Force-unwrap of amount text crashes on save (default value is \"$0\")",
+          "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+          "line": 237,
+          "evidence": "                    let result = try await NetworkManager.shared.makeTransaction(transectionTypeTextField.text!, titleTextField.text!, descriptionTextField.text!, Double(expensesAndIncomeTextField.text!)!)",
+          "explanation": "expensesAndIncomeTextField is initialized with textField.text = \"$0\" (line 43) and the user can type any characters on the numberPad. Double(\"$0\") is nil, so the force-unwrap crashes at runtime whenever the user saves without editing the field or when parsing fails. This is a deterministic crash on the default screen state.",
+          "recommendation": "Parse defensively: strip non-numeric characters, use Double(text.replacingOccurrences(of: \"$\", with: \"\")) with guard/optional binding, and show a validation alert on failure instead of crashing.",
+          "suggested_test": "Set expensesAndIncomeTextField.text to \"$0\" (the default) and invoke postTransaction(); assert no precondition failure occurs and an invalid-input alert is presented. Also test text \"12.5abc\"."
+        },
+        {
+          "severity": "high",
+          "title": "PIN signup force-unwrap crashes; delegate limiting input is never attached",
+          "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+          "line": 165,
+          "evidence": "                    let signUpResult = try await NetworkManager.shared.Signup(fullname: fullnameTextFeild.text!, email: emailTextFeild.text!, mobile: phoneTextFeild.text!, username: usernameTextFeild.text!, pin: Int(pinTextFeild.text!)!, passowrd: passwordTextFeild.text!)",
+          "explanation": "`Int(pinTextFeild.text!)!` crashes if the PIN contains any non-digit. The UITextFieldDelegate extension (lines 185-192) that limits input to 4 characters is dead code because none of the form fields ever set `delegate = self`. Additionally, an Int-encoded PIN silently drops leading zeros (\"0123\" is sent as 123), corrupting the credential.",
+          "recommendation": "Set `delegate = self` on each field (or restrict per-field via shouldChangeCharactersIn), validate the PIN is 4 digits with digit-only characterSet before conversion, and transmit the PIN as a String to preserve leading zeros.",
+          "suggested_test": "Enter PIN \"0123\" and password \"abcdefgh1\"; assert signup sends pin \"0123\" unchanged and does not crash. Enter PIN \"12a4\"; assert a validation error is shown instead of a crash."
+        },
+        {
+          "severity": "high",
+          "title": "Login request body including password logged to console",
+          "file": "Expense Tracker/Network Manager/AuthManager.swift",
+          "line": 39,
+          "evidence": "        print(\"DEBUG:\\(body)\")",
+          "explanation": "The full LoginBody (username/email and plaintext password) is printed to the console on every login, leaking credentials into device logs and crash reports.",
+          "recommendation": "Remove the print or log only non-sensitive fields (e.g., that a login attempt was made).",
+          "suggested_test": "Static test: assert no print statement serializes LoginBody or Pin objects."
+        },
+        {
+          "severity": "medium",
+          "title": "NetworkManager caches user_id at init, so requests use nil/\"N/A\" after login",
+          "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+          "line": 14,
+          "evidence": "    private let userID          = UserDefaults.standard.string(forKey: \"user_id\")",
+          "explanation": "`userID` is a let captured once when the NetworkManager singleton is first initialized. If the singleton is created before login completes (e.g., any early access), it will permanently read nil and every API path becomes `.../transactions/N/A`, silently failing or returning wrong-user data. It should be read dynamically on each request.",
+          "recommendation": "Replace the stored property with a computed property `private var userID: String? { UserDefaults.standard.string(forKey: \"user_id\") }` and fail fast when nil.",
+          "suggested_test": "Create the singleton before setting user_id, then set user_id and call getTransaction(); assert the request URL contains the new id, not \"N/A\"."
+        },
+        {
+          "severity": "medium",
+          "title": "Forgot Password screen is non-functional — no submission, no network call",
+          "file": "Expense Tracker/Controllers/Forget Password/ForgetPasswordVC.swift",
+          "line": 16,
+          "evidence": "    let forgetuserTextFeild = ForgetPasswordTextFeild()",
+          "explanation": "ForgetPasswordVC only lays out an image and a username field. There is no submit button, no target/action, and no call to any reset-password API — the \"Forget Password\" button on LoginVC leads to a dead end, and the \"Done\" bar button only dismisses.",
+          "recommendation": "Add a submit action that validates the username and calls a reset endpoint via AuthManager/NetworkManager, with loading and success/error states.",
+          "suggested_test": "Present ForgetPasswordVC, enter a username, tap a submit action; assert a reset request is issued and an alert is presented on both success and failure."
+        }
+      ],
+      "limitations": [
+        "Only the supplied snapshot was reviewed; supporting types (AuthManager.isSingedIn consumers, ExError usage, Images, DeviceTypes behavior, ProfileHeaderView.xib) were inspected statically without running the app.",
+        "No unit/UI test targets were present in the snapshot, so no existing coverage could be evaluated; all suggested tests are proposals.",
+        "Threading of UI updates inside async Task blocks (e.g., HomeVC.configData) was noted as a risk but not exhaustively verified for every call path.",
+        "Focus was on correctness, security, and testability of the authentication and transaction flows; layout-only nitpicks were deprioritized.",
+        "Discarded unverified finding: Invalid CGGradient locations force-unwrap crashes chart rendering",
+        "Discarded unverified finding: Biometric lock does not block access on authentication failure",
+        "Discarded unverified finding: Access token and user id persisted in UserDefaults",
+        "Discarded unverified finding: SingOut does not clear user_id and logout presents Login over existing stack",
+        "Discarded unverified finding: Change Password save handler is unimplemented",
+        "Corrected 5 source citation(s) using unambiguous matches in the cited file; exact source excerpts retained."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "fireworks",
+        "requested_model": "accounts/fireworks/models/glm-5p3-flash",
+        "actual_model": "accounts/fireworks/models/glm-5p3-flash",
+        "model_source": "provider_response",
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3544,
+          "prompt_tokens": 113745,
+          "total_tokens": 117289,
+          "completion_tokens_details": {
+            "reasoning_tokens": 1316
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "citation_corrections": [
+          {
+            "title": "Force-unwrap of amount text crashes on save (default value is \"$0\")",
+            "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+            "original_line": 237,
+            "line": 237,
+            "method": "normalized_indentation"
+          },
+          {
+            "title": "PIN signup force-unwrap crashes; delegate limiting input is never attached",
+            "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+            "original_line": 165,
+            "line": 165,
+            "method": "normalized_indentation"
+          },
+          {
+            "title": "Login request body including password logged to console",
+            "file": "Expense Tracker/Network Manager/AuthManager.swift",
+            "original_line": 39,
+            "line": 39,
+            "method": "normalized_indentation"
+          },
+          {
+            "title": "NetworkManager caches user_id at init, so requests use nil/\"N/A\" after login",
+            "file": "Expense Tracker/Network Manager/NetworkManager.swift",
+            "original_line": 14,
+            "line": 14,
+            "method": "normalized_indentation"
+          },
+          {
+            "title": "Forgot Password screen is non-functional — no submission, no network call",
+            "file": "Expense Tracker/Controllers/Forget Password/ForgetPasswordVC.swift",
+            "original_line": 16,
+            "line": 16,
+            "method": "normalized_indentation"
+          }
+        ],
+        "duration_seconds": 24.299
+      }
+    }
+  ],
+  "actual_models": [
+    "accounts/fireworks/models/glm-5p3-flash"
+  ],
+  "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+  "synthesis": {
+    "summary": "3/3 specialists succeeded; 11 verified finding(s). Highest reported severity: high.",
+    "priorities": [
+      {
+        "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+        "line": 165,
+        "title": "PIN signup force-unwrap crashes; delegate limiting input is never attached",
+        "severity": "high",
+        "recommendation": "Set `delegate = self` on each field (or restrict per-field via shouldChangeCharactersIn), validate the PIN is 4 digits with digit-only characterSet before conversion, and transmit the PIN as a String to preserve leading zeros.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "file": "Expense Tracker/Controllers/Login SingUp/SingUpVC.swift",
+        "line": 165,
+        "title": "Sign-up force-unwraps PIN conversion; delegate that limits input is never assigned",
+        "severity": "high",
+        "recommendation": "Set the text field delegates in configVC, and replace the force-unwrap with `guard let pin = Int(pinTextFeild.text ?? \"\")` plus a validation alert.",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+        "line": 237,
+        "title": "Force-unwrap of amount text crashes on save (default value is \"$0\")",
+        "severity": "high",
+        "recommendation": "Parse defensively: strip non-numeric characters, use Double(text.replacingOccurrences(of: \"$\", with: \"\")) with guard/optional binding, and show a validation alert on failure instead of crashing.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "file": "Expense Tracker/Controllers/Main/AddIncomeAndExpensesVC.swift",
+        "line": 237,
+        "title": "Force-unwrap of amount text crashes on the pre-filled value \"$0\"",
+        "severity": "high",
+        "recommendation": "Use `guard let amountText = expensesAndIncomeTextField.text, let amount = Double(amountText.replacingOccurrences(of: \"$\", with: \"\"))` and show a validation alert on failure instead of force-unwrapping.",
+        "agents": [
+          "quality"
+        ]
+      },
+      {
+        "file": "Expense Tracker/Network Manager/AuthManager.swift",
+        "line": 39,
+        "title": "Login request body including password logged to console",
+        "severity": "high",
+        "recommendation": "Remove the print or log only non-sensitive fields (e.g., that a login attempt was made).",
+        "agents": [
+          "tests"
+        ]
+      }
+    ],
+    "shared_findings": 0,
+    "completed_agents": [
+      "quality",
+      "security",
+      "tests"
+    ],
+    "failed_agents": [],
+    "missing_agents": [],
+    "limitations": [
+      "Constraint-conflict severity depends on runtime layout; findings about repeated constraint activation are based on code paths, not measured output.",
+      "Corrected 2 source citation(s) using unambiguous matches in the cited file; exact source excerpts retained.",
+      "Corrected 4 source citation(s) using unambiguous matches in the cited file; exact source excerpts retained.",
+      "Corrected 5 source citation(s) using unambiguous matches in the cited file; exact source excerpts retained.",
+      "Discarded unverified finding: Access token and user ID persisted in UserDefaults (unencrypted plist)",
+      "Discarded unverified finding: Access token and user id persisted in UserDefaults",
+      "Discarded unverified finding: Biometric lock does not block access on authentication failure",
+      "Discarded unverified finding: Biometrics can be silently disabled without authentication",
+      "Discarded unverified finding: Change Password Save button is a no-op",
+      "Discarded unverified finding: Change Password save handler is unimplemented",
+      "Discarded unverified finding: Change Password screen is non-functional (Save handler empty)",
+      "Discarded unverified finding: Chart reconfigured and re-animated inside viewDidLayoutSubviews",
+      "Discarded unverified finding: Date picker callback ignores the selected day component",
+      "Discarded unverified finding: Face ID gate fails open: content stays accessible after failed authentication",
+      "Discarded unverified finding: Header subviews and constraints re-added on every layout pass",
+      "Discarded unverified finding: HomeVC table cell indexing can crash on reload races",
+      "Discarded unverified finding: Invalid CGGradient locations force-unwrap crashes chart rendering",
+      "Discarded unverified finding: Login error responses (4xx) throw generic invalidResponse, making the result.status!=200 branch dead and leaking debug info elsewhere",
+      "Discarded unverified finding: PIN login has no client-side attempt limiting and small keyspace",
+      "Discarded unverified finding: Reused table cells keep stale Face ID switch accessory",
+      "Discarded unverified finding: Server responses only implicitly checked; errors logged including credentials in debug output",
+      "Discarded unverified finding: Sign-up PIN capped at 4 chars but password/PIN validation not enforced client-side",
+      "Discarded unverified finding: SingOut does not clear user_id and logout presents Login over existing stack",
+      "Focus was on correctness, security, and testability of the authentication and transaction flows; layout-only nitpicks were deprioritized.",
+      "LoginVC shows the loading view before validation completes (line 64) and force-unwraps validated text fields; flagged only where a concrete crash path exists.",
+      "Network layer internals (API.baseURL responses, ExError usage in other files) and derived types like Transaction extensions are outside the snapshot; some runtime behavior is inferred.",
+      "NetworkManager, AuthManager, and Validators are reviewed from the shown sources only; URLSession configuration (ATS, TLS pinning) and keychain alternatives not in scope.",
+      "No unit/UI test targets were present in the snapshot, so no existing coverage could be evaluated; all suggested tests are proposals.",
+      "Non-Swift files (Info.plist, entitlements, build settings) were not provided, so ATS exceptions and permission strings could not be verified.",
+      "Only the supplied snapshot was reviewed; supporting types (AuthManager.isSingedIn consumers, ExError usage, Images, DeviceTypes behavior, ProfileHeaderView.xib) were inspected statically without running the app.",
+      "Server-side implementation is not in the snapshot, so IDOR/rate-limiting severity depends on unverifiable backend behavior.",
+      "Single-file evidence for Validation()/extension helpers not shown here (ValidationTextField.swift) limits assessment of regex validation usage, which appears unused by the surveyed flows.",
+      "Threading of UI updates inside async Task blocks (e.g., HomeVC.configData) was noted as a risk but not exhaustively verified for every call path."
+    ]
+  },
+  "schema_version": "1.0",
+  "run_id": "8044b2df-5002-4109-ba3d-8be65316a80b",
+  "started_at": "2026-11-01T10:18:59.756687+00:00",
+  "completed_at": "2026-11-01T10:19:24.715209+00:00",
+  "duration_seconds": 24.958,
+  "backend": "fireworks",
+  "repository": "/Users/krishnakumar/Documents/GitHub/Expense-Tracker-App",
+  "snapshot_sha256": "83ab6449ed7aab7c754f304211b83cc5e8bb9d96ec92f5933d5d63953883c24d",
+  "snapshot_bytes": 234057,
+  "requested_model": "accounts/fireworks/models/glm-5p3-flash",
+  "model": "accounts/fireworks/models/glm-5p3-flash"
+}

@@ -8,3 +8,6 @@ build/
 dist/
 .env
 review-report.*
+
+.env.*
+!.env.example

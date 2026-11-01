@@ -1,0 +1,104 @@
+[
+  {
+    "model": "minimax-m3p1-flash",
+    "status": "complete",
+    "findings": 29,
+    "counts": {
+      "critical": 1,
+      "high": 12,
+      "medium": 14,
+      "low": 2,
+      "info": 0
+    },
+    "seconds": 41.296,
+    "snapshot_sha256": "83ab6449ed7aab7c754f304211b83cc5e8bb9d96ec92f5933d5d63953883c24d",
+    "actual_models": [
+      "accounts/fireworks/models/minimax-m3p1-flash"
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "error": null
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "error": null
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "error": null
+      }
+    ]
+  },
+  {
+    "model": "glm-5p3-flash",
+    "status": "complete",
+    "findings": 11,
+    "counts": {
+      "critical": 0,
+      "high": 6,
+      "medium": 4,
+      "low": 1,
+      "info": 0
+    },
+    "seconds": 24.958,
+    "snapshot_sha256": "83ab6449ed7aab7c754f304211b83cc5e8bb9d96ec92f5933d5d63953883c24d",
+    "actual_models": [
+      "accounts/fireworks/models/glm-5p3-flash"
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "error": null
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "error": null
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "error": null
+      }
+    ]
+  },
+  {
+    "model": "glm-5p3",
+    "status": "complete",
+    "findings": 26,
+    "counts": {
+      "critical": 0,
+      "high": 10,
+      "medium": 10,
+      "low": 5,
+      "info": 1
+    },
+    "seconds": 37.049,
+    "snapshot_sha256": "83ab6449ed7aab7c754f304211b83cc5e8bb9d96ec92f5933d5d63953883c24d",
+    "actual_models": [
+      "accounts/fireworks/models/glm-5p3"
+    ],
+    "agents": [
+      {
+        "agent": "quality",
+        "status": "ok",
+        "error": null
+      },
+      {
+        "agent": "security",
+        "status": "ok",
+        "error": null
+      },
+      {
+        "agent": "tests",
+        "status": "ok",
+        "error": null
+      }
+    ]
+  }
+]

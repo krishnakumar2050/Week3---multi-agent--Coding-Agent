@@ -1,6 +1,6 @@
 # LangGraph coding review
 
-Three specialist reviewers examine one bounded source snapshot: correctness and anti-patterns, security, and test gaps. LangGraph runs the specialists concurrently; a deterministic orchestrator waits for all three, checks source citations, merges exact duplicates, and ranks findings by severity.
+Three specialist reviewers examine one bounded source snapshot: correctness and anti-patterns, security, and test gaps. LangGraph runs the specialists concurrently; an explicit aggregator agent waits for all three, merges verified duplicates, ranks findings by severity, and synthesizes priorities and review gaps. Each specialist validates its own source citations.
 
 ## Documentation
 
@@ -14,6 +14,7 @@ Three specialist reviewers examine one bounded source snapshot: correctness and 
 - [Expense Tracker mobile app — prioritized findings](reports/expense-tracker/review-report-expense-tracker.md)
 - [Expense Tracker — full three-agent report](reports/expense-tracker/review-report-expense-tracker-raw.md)
 - [Expense Tracker — JSON results and provenance](reports/expense-tracker/review-report-expense-tracker.json)
+- [Expense Tracker — Fireworks model comparison (1 November 2026)](reports/expense-tracker/2026-11-01-fireworks-comparison/comparison.md)
 
 ## Architecture evaluations
 
@@ -29,7 +30,8 @@ Python 3.10+ is required. The default backend is **Fireworks AI**, using **MiniM
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e '.[test,dev]'
-export FIREWORKS_API_KEY='your-fireworks-key'
+python -m pip install -e ".[credentials]"
+python -m coding_review.credentials set
 coding-review ./examples --snapshot-only
 coding-review ./examples --output review-report.md
 coding-review ./examples --format json --output review-report.json
@@ -119,10 +121,10 @@ flowchart TD
     Quality --> Backend[Backend protocol: Fireworks, Codex, OpenAI]
     Security --> Backend
     Tests --> Backend
-    Quality --> Join[Join and aggregate]
+    Quality --> Join[Aggregator agent: join and synthesize]
     Security --> Join
     Tests --> Join
-    Join --> Report[Report with model and snapshot provenance]
+    Join --> Report[Priorities, shared findings, review gaps and provenance]
     Report --> Writer[Atomic Markdown or JSON writer]
 ```
 
@@ -223,3 +225,60 @@ The GitHub deployment is a separate vendored copy: deploy the updated package,
 install `.[knowledge]` in its trusted workflow, set `KEENABLE_ENABLED: 'true'` on
 the review step, and optionally map a `KEENABLE_API_KEY` Actions secret. Local
 changes do not automatically update the installed GitHub integration.
+
+## Parallel fan-out and aggregator agent
+
+The graph fans the same bounded snapshot out to independent quality, security,
+and test-gap agents. An explicit all-sources join runs `agents/aggregator.py`
+once after every specialist returns. The default concurrency of three allows
+all specialists to run together; a lower configured limit bounds concurrency.
+
+The aggregator preserves the verified findings and individual agent results,
+merges exact issue matches, and produces a `synthesis` section in JSON and
+Markdown: a summary, up to five severity-ranked priorities, a count of shared
+findings, completed/failed/missing specialists, and consolidated limitations.
+Synthesis is deterministic and does not make another model request. Shared
+findings mean matching reports from specialists, not independent proof of an
+issue. Failed specialists produce an incomplete report with available findings.
+The legacy `orchestrate` function remains available for existing callers.
+
+## Secure Fireworks credentials
+
+On macOS, install `python -m pip install -e ".[credentials]"`, then run
+`python -m coding_review.credentials set` from an interactive terminal using the
+project's Python environment. Hidden input stores your existing Fireworks key in
+native macOS Keychain, service `coding-review.fireworks`, account
+`FIREWORKS_API_KEY`. Repeat the command to rotate the key. Obtain a key from your
+Fireworks account first; setup does not create a provider API key.
+
+`python -m coding_review.credentials status` checks configuration without showing
+the key or making an API call. Reviews automatically load the credential into
+process memory; it is never added to graph state or reports. Environment variable
+`FIREWORKS_API_KEY` takes precedence for CI secret-manager integration. No
+plaintext backend fallback is used. macOS may request Keychain authorization.
+Do not pass keys as command arguments, paste them into chat, or commit them.
+Delete the `coding-review.fireworks` entry in Keychain Access to remove the key.
+
+## Security guidance through Keenable
+
+The security specialist focuses on **OWASP Top 10:2025** and **MITRE CWE Top
+25:2025**, which are separate lists. Swift/Kotlin snapshots also retrieve OWASP
+MASVS mobile guidance. Security enrichment is enabled by default; install the
+`knowledge` extra (`python -m pip install -e ".[knowledge]"`). Keenable uses at
+most three generic searches and retains at most two official OWASP/MITRE sources
+per query, with bounded snippets. Repository content and filenames are never
+included in searches. No external search result is treated as repository evidence.
+
+`KEENABLE_SECURITY_ENABLED=true|false` explicitly controls security enrichment;
+otherwise it inherits `KEENABLE_ENABLED`, defaulting to true when neither is set.
+Quality enrichment continues to use `KEENABLE_ENABLED` and is off by default.
+Tests receive no web guidance. Keenable SDK credentials, if needed, use its
+`KEENABLE_API_KEY` environment setting. Missing SDK, failed searches, and empty
+results are disclosed in security metadata and report limitations while source
+review continues. JSON and Markdown include search status, framework targets,
+and retained sources. A successful search does not establish framework coverage.
+
+Security findings must explain concrete attacker control, preconditions, impact,
+and supported framework/CWE mappings. Missing backend implementation is not
+proof of missing authorization or rate limits. Ordinary crash bugs belong to
+quality unless an exploitable security impact is established.

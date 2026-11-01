@@ -132,6 +132,7 @@ def test_model_override_precedence(monkeypatch):
 
 def test_missing_key_fails_clearly_without_fallback(tmp_path, monkeypatch):
     monkeypatch.delenv("FIREWORKS_API_KEY", raising=False)
+    monkeypatch.setattr("coding_review.credentials.sys.platform", "linux")
     monkeypatch.setenv("OPENAI_API_KEY", "must-not-use")
     with pytest.raises(ConfigurationError, match="FIREWORKS_API_KEY"):
         create_backend(ReviewConfig())

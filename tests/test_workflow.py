@@ -81,3 +81,33 @@ def test_snapshot_budget_fails_explicitly(tmp_path):
     (tmp_path / "app.py").write_text("pass\n")
     with pytest.raises(ValueError, match="budget"):
         load_files(tmp_path, max_bytes=1)
+
+
+def test_aggregator_synthesizes_parallel_results():
+    report = run(FakeModel())
+    synthesis = report["synthesis"]
+    assert synthesis["completed_agents"] == ["quality", "security", "tests"]
+    assert synthesis["failed_agents"] == []
+    assert synthesis["missing_agents"] == []
+    assert synthesis["shared_findings"] == 1
+    assert synthesis["priorities"][0]["severity"] == "high"
+    assert synthesis["priorities"][0]["agents"] == ["quality", "security", "tests"]
+    assert "Aggregator synthesis" in markdown(report)
+
+
+def test_aggregator_discloses_failure_and_no_verified_findings():
+    report = run(FakeModel(fail="exploitable security", invalid=True))
+    assert report["synthesis"]["failed_agents"] == ["security"]
+    assert report["synthesis"]["priorities"] == []
+    assert "incomplete" in report["synthesis"]["summary"]
+    assert "Review gaps: security" in markdown(report)
+
+
+def test_aggregator_runs_once_after_all_parallel_agents():
+    graph = build_graph(FakeModel())
+    updates = list(graph.stream({"files": {"app.py": "eval(user_input)\n"}, "results": []}))
+    names = [name for update in updates for name in update]
+    assert set(names[:-1]) == {"quality", "security", "tests"}
+    assert names[-1] == "aggregator"
+    assert names.count("aggregator") == 1
+    assert len(updates[-1]["aggregator"]["report"]["agents"]) == 3

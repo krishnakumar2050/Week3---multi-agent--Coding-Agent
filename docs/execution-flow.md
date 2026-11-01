@@ -15,7 +15,7 @@ sequenceDiagram
     participant Keenable as Keenable AI
     participant Others as Agents 2 and 3
     participant Model as Fireworks / MiniMax
-    participant Report as Reporting
+    participant Report as Aggregator agent
 
     Developer->>Actions: Open PR or push a commit
     Actions->>Actions: Check eligibility and install trusted engine
@@ -97,7 +97,7 @@ The graph state contains the files, accumulated specialist results, and report.
 ## 5. LangGraph fans out
 
 `graph.py` creates quality, security, and tests nodes through
-`agents/reviewer.py`, then joins all three at the orchestrator. The graph normally
+`agents/reviewer.py`, then joins all three at the aggregator agent. The graph normally
 allows three concurrent specialists; the configured limit can serialize them.
 
 Each invocation owns its reviewer and model metadata. A provider failure becomes
@@ -105,7 +105,7 @@ a failed agent result so the other specialists can still contribute findings.
 
 ## 6. Agent 1 enriches its context
 
-Only the quality node calls `agents/knowledge.py`. When enabled, it derives
+The quality and security nodes call `agents/knowledge.py` independently. When enabled, it derives
 languages from file extensions and performs at most two generic anti-pattern
 queries using the Keenable SDK. Repository text and filenames are not searched.
 
@@ -114,8 +114,10 @@ The snippets are labeled untrusted reference data and appended to the source
 message. They supplement the quality instructions in `agents/prompts.py`.
 
 If Keenable is unavailable, source-only quality review continues. Its limitation
-and enrichment status make this degradation visible. Agents 2 and 3 receive no
-Keenable guidance.
+and enrichment status make this degradation visible. The security agent independently retrieves official OWASP Top 10:2025, CWE
+Top 25:2025, and, for Swift/Kotlin, OWASP MASVS guidance. Test-gap review receives
+no Keenable guidance. Security searches are bounded to three generic queries and
+six official sources, with status and sources retained in report metadata.
 
 ## 7. Specialists call the model
 
@@ -140,15 +142,19 @@ source location, not correctness of the reasoning. Each `AgentResult` records
 status, findings, limitations, duration, model metadata, citation corrections,
 and, for quality, knowledge-enrichment metadata.
 
-## 9. The orchestrator consolidates
+## 9. The aggregator agent synthesizes
 
-After all three nodes return, `reporting/aggregation.py` checks that each expected
+After all three nodes return, `agents/aggregator.py` invokes the deterministic
+merge in `reporting/aggregation.py`, which checks that each expected
 specialist succeeded. It merges matches by file, line, and normalized title,
 preserves contributing agents, and retains the highest assigned severity.
 
 Findings sort by critical, high, medium, low, then info, with stable location/title
 tie-breakers. The report is incomplete if any expected specialist failed. This
-step does not invoke an LLM.
+step does not invoke an LLM. The aggregator adds a synthesis summary, up to
+five ranked priorities, shared-finding counts, completed/failed/missing agent
+lists, and consolidated limitations to the JSON report. Markdown presents the
+summary, priorities, and review gaps before the detailed evidence.
 
 ## 10. Reports are written
 
