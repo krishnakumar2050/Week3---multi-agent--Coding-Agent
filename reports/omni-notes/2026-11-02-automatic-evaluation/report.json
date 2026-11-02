@@ -1,0 +1,511 @@
+{
+  "status": "complete",
+  "files_reviewed": [
+    "review-fixtures/android/EvaluationWorkflowSmoke.java"
+  ],
+  "counts": {
+    "critical": 0,
+    "high": 1,
+    "medium": 2,
+    "low": 3,
+    "info": 1
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Smoke fixture lives outside any build/test source set and is never executed by CI",
+      "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+      "line": 7,
+      "evidence": "/** Standalone workflow verification fixture, outside Android build source sets. */",
+      "explanation": "The file is a standalone class with a `main` method containing manual `AssertionError` checks. It is located in `review-fixtures/`, is not under `src/test/`, `src/androidTest/`, or any declared source set, and no Gradle task (`test`, `connectedCheck`) references it. Consequently nothing in the automated pipeline ever invokes `main`, so a regression in `averageLength` (or in whatever production logic mirrors it) would not fail any build; the assertions only run if a human remembers to compile and run it.",
+      "recommendation": "Either convert the checks into real unit tests (e.g. `src/test/java/.../EvaluationWorkflowTest.java` with JUnit assertions) so `gradlew test` runs them, or add an explicit Gradle task/JavaExec wired into `check`/`preBuild` that executes this class and fails the build on `AssertionError`.",
+      "suggested_test": "Add a JUnit test class mirroring the fixture: `assertEquals(0, EvaluationWorkflowSmoke.averageLength(Collections.emptyList()))`, `assertEquals(4, EvaluationWorkflowSmoke.averageLength(Collections.singletonList(\"note\")))`, and assert that the CI job running `gradlew test` reports the new test class as executed.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Null-handling contract is documented but never asserted",
+      "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+      "line": 14,
+      "evidence": "    public static int averageLength(List<String> notes) {\n        Objects.requireNonNull(notes, \"notes\");",
+      "explanation": "The Javadoc promises `NullPointerException` for a null collection and for null elements (lines 11-13, enforced by `Objects.requireNonNull` at lines 15 and 21), but `main` only exercises the empty-list and single-element paths. A future refactor could remove the `requireNonNull` calls (or replace them with a lenient default) and the fixture would still pass, silently changing the documented API contract for callers that rely on fail-fast behavior.",
+      "recommendation": "Assert the null contract explicitly in the smoke fixture and/or in a real unit test: `assertThrows(NullPointerException.class, () -> averageLength(null))` and `assertThrows(NullPointerException.class, () -> averageLength(Arrays.asList(\"a\", null)))`, including the message text `\"notes\"` / `\"note\"` if the message is part of the contract.",
+      "suggested_test": "In `main`, add: `try { averageLength(null); throw new AssertionError(\"null list must throw\"); } catch (NullPointerException expected) { /* ok */ }` and the analogous check for a list containing a null element.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "medium",
+      "title": "Multi-element averaging and floor-division semantics are untested",
+      "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+      "line": 23,
+      "evidence": "        return (int) (total / notes.size());",
+      "explanation": "The only non-empty assertion uses a single-element list, where the average trivially equals the element length. The interesting behavior — integer truncation of the mean across heterogeneous note lengths — is never exercised. A change from `total / notes.size()` to a rounding or ceiling computation, or an off-by-one in the divisor, would not be detected by the fixture. The same holds for the `long total` accumulation: with a large list of long strings, an `int` accumulator would overflow and the current fixture would still pass.",
+      "recommendation": "Add cases with mixed lengths that pin the floor semantics (e.g. `[\"a\", \"bbb\"]` -> 2, `[\"ab\", \"cde\"]` -> 2, `[\"a\", \"bb\"]` -> 1) and a case with many elements (e.g. 1000 notes of length 10 -> 10) so accumulator width regressions surface.",
+      "suggested_test": "`if (averageLength(Arrays.asList(\"a\", \"bbb\")) != 2) throw new AssertionError(\"floor average\");` and `if (averageLength(Arrays.asList(\"a\", \"bb\")) != 1) throw new AssertionError(\"floor average\");` plus a 1000-element case asserting the result equals 10.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "low",
+      "title": "Package declaration does not match the source directory path",
+      "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+      "line": 1,
+      "evidence": "package it.feio.android.omninotes.reviewfixture;",
+      "explanation": "The file sits in `review-fixtures/android/` but declares package `it.feio.android.omninotes.reviewfixture`. With standard javac/Gradle source-set conventions the directory layout does not correspond to the package, so compiling it as part of a source set requires either non-default package directories or explicit `includes`/`sourceSets` configuration. This is a friction point that contributes to the fixture never being wired into the build.",
+      "recommendation": "Move the file to a directory matching its package (e.g. `src/test/java/it/feio/android/omninotes/reviewfixture/EvaluationWorkflowSmoke.java`) when converting it into a real test, or align the package with the directory if the fixture must remain standalone.",
+      "suggested_test": "After conversion, verify the build compiles the class by running `gradlew test --tests '*EvaluationWorkflow*'` and confirming the test is discovered rather than silently excluded.",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "low",
+      "title": "Narrowing cast of long average can silently overflow to a negative result",
+      "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+      "line": 19,
+      "evidence": "        long total = 0;\n        for (String note : notes) {\n            total += Objects.requireNonNull(note, \"note\").length();\n        }\n        return (int) (total / notes.size());",
+      "explanation": "The accumulator is a long, but the result is narrowed with a plain `(int)` cast. Nothing bounds `total`: a caller passing a list of many large strings (e.g. a few thousand notes of a few hundred KB each) easily produces `total / notes.size()` above Integer.MAX_VALUE, and the cast then wraps to a negative number instead of failing or saturating. The method silently returns a wrong (negative) average with no error signal, which is worse than an explicit overflow, because callers typically aggregate this value into statistics.",
+      "recommendation": "Avoid the lossy narrowing cast. Either document and enforce the precondition (e.g. `Math.toIntExact(total / notes.size())` so an out-of-range average throws `ArithmeticException` instead of wrapping), or return a `long`/`double` so the caller receives the true value.",
+      "suggested_test": "Call `averageLength` with a list whose total length divided by size exceeds Integer.MAX_VALUE (e.g. 4 notes of 600_000_000 characters each) and assert that the result is positive and equals 600000000, or that an `ArithmeticException` is thrown rather than a negative value.",
+      "agents": [
+        "quality"
+      ]
+    },
+    {
+      "severity": "low",
+      "title": "No coverage of non-ASCII / surrogate-pair note content",
+      "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+      "line": 21,
+      "evidence": "            total += Objects.requireNonNull(note, \"note\").length();",
+      "explanation": "`String.length()` counts UTF-16 code units, so a note containing an emoji or other supplementary character contributes 2. The fixture only uses ASCII input, so it cannot detect a change from `length()` to `codePointCount()`, nor an accidental change to byte-length semantics (which would matter if notes are persisted as UTF-8 and measured elsewhere). For a note-taking app where users commonly type emoji and CJK text, this is a realistic divergence between the metric and user expectation.",
+      "recommendation": "Add a non-ASCII case to document the intended unit (UTF-16 code units vs code points vs bytes). If UTF-16 code units are intended, add an assertion with an emoji note so the semantics are pinned.",
+      "suggested_test": "`if (averageLength(Collections.singletonList(\"\\uD83D\\uDE00\")) != 2) throw new AssertionError(\"UTF-16 code unit semantics\");` (or assert the code-point expectation `1` if that is the intended metric, making the choice explicit).",
+      "agents": [
+        "tests"
+      ]
+    },
+    {
+      "severity": "info",
+      "title": "Manual `main`-based assertions give poor failure diagnostics and no isolation",
+      "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+      "line": 30,
+      "evidence": "        if (averageLength(Collections.singletonList(\"note\")) != 4) {\n            throw new AssertionError(\"Single-note average must match its length\");\n        }",
+      "explanation": "Each assertion is hand-rolled inside `main`, so only the first failing check aborts the run and the failure message omits the actual vs expected values. There is also no separation between test cases: one failing case hides the status of all subsequent ones, and there is no test-name reporting.",
+      "recommendation": "Replace the hand-rolled `if`/`AssertionError` blocks with a small table-driven loop or a JUnit test class using `assertEquals(expected, actual)` so each case is reported independently with actual and expected values.",
+      "suggested_test": "Loop over a list of {input, expected} pairs, and on mismatch throw `AssertionError(\"case \" + name + \": expected \" + expected + \" but was \" + actual)` so failures identify the offending case.",
+      "agents": [
+        "tests"
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "agent": "quality",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "low",
+          "title": "Narrowing cast of long average can silently overflow to a negative result",
+          "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+          "line": 19,
+          "evidence": "        long total = 0;\n        for (String note : notes) {\n            total += Objects.requireNonNull(note, \"note\").length();\n        }\n        return (int) (total / notes.size());",
+          "explanation": "The accumulator is a long, but the result is narrowed with a plain `(int)` cast. Nothing bounds `total`: a caller passing a list of many large strings (e.g. a few thousand notes of a few hundred KB each) easily produces `total / notes.size()` above Integer.MAX_VALUE, and the cast then wraps to a negative number instead of failing or saturating. The method silently returns a wrong (negative) average with no error signal, which is worse than an explicit overflow, because callers typically aggregate this value into statistics.",
+          "recommendation": "Avoid the lossy narrowing cast. Either document and enforce the precondition (e.g. `Math.toIntExact(total / notes.size())` so an out-of-range average throws `ArithmeticException` instead of wrapping), or return a `long`/`double` so the caller receives the true value.",
+          "suggested_test": "Call `averageLength` with a list whose total length divided by size exceeds Integer.MAX_VALUE (e.g. 4 notes of 600_000_000 characters each) and assert that the result is positive and equals 600000000, or that an `ArithmeticException` is thrown rather than a negative value."
+        }
+      ],
+      "limitations": [
+        "Only a single 34-line fixture file was supplied; the callers of `averageLength` and the intended contract were not visible, so the overflow finding's real-world impact could not be confirmed.",
+        "No build files, tests, or Android source-set configuration were provided, so the claim in the class comment that this file is outside the build source sets could not be verified.",
+        "The main() method's assertions cover only empty and single-element lists; the truncation and multi-element averaging behaviour is unverified by the fixture itself.",
+        "Corrected 1 source citation(s) using unambiguous matches in the cited file; exact source excerpts retained."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "fireworks",
+        "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+        "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+        "model_source": "provider_response",
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 652,
+          "prompt_tokens": 3668,
+          "total_tokens": 4320,
+          "completion_tokens_details": {
+            "reasoning_tokens": 182
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens_details": {
+            "reasoning_tokens": 182
+          }
+        },
+        "knowledge_enrichment": {
+          "provider": "keenable",
+          "status": "ok",
+          "sources": [
+            {
+              "title": "claude-ai-spring-boot/.claude/skills/java-code-review/SKILL.md at d9fda233d103e50017c7b5d2ac7c566763fed976 · piomin/claude-ai-spring-boot",
+              "url": "https://github.com/piomin/claude-ai-spring-boot/blob/d9fda233d103e50017c7b5d2ac7c566763fed976/.claude/skills/java-code-review/SKILL.md",
+              "snippet": "### 2. Exception Handling\n**Check for:**\n```\n// ❌ Swallowing exceptions try { process (); } catch ( Exception e ) { // silently ignored } // ❌ Catching too broad catch ( Exception e ) { } catch ( Throwable t ) { } // ❌ Losing stack trace catch ( IOException e ) { throw new RuntimeException ( e . getMessage ()); } // ✅ Proper handling catch ( IOException e ) { log . error ( \"Failed to process file: {}\" , filename , e ); throw new ProcessingException ( \"File processing failed\" , e ); }\n```\n**Flags:**\n- Empty catch blocks\n- Catching `Exception` or `Throwable` broadly\n- Losing original exception (not chaining)\n- Using exceptions for flow control\n- Checked exceptions leaking through API boundaries\n**Suggest:**\n- Log with context AND stack trace\n- Use specific exception types\n- Chain exceptions with `cause`\n- Consider custom exceptions for domain errors\n\n### 6. Resource Management\n**Check for:**\n```\n// ❌ Resource leak FileInputStream fis = new FileInputStream ( file ); // ... might throw before close // ✅ Try-with-resources try ( FileInputStream fis = new FileInputStream ( file )) { // ... } // ❌ Multiple resources, wrong order try ( BufferedWriter writer = new BufferedWriter ( new FileW"
+            },
+            {
+              "title": "software-engineering-skills/plugins/java/skills/java-code-review/SKILL.md at main · wesleyegberto/software-engineering-skills",
+              "url": "https://github.com/wesleyegberto/software-engineering-skills/blob/main/plugins/java/skills/java-code-review/SKILL.md",
+              "snippet": "### 1. Null Safety\n**Check for:**\n```\n// ❌ NPE risk\nString name = user.getName().toUpperCase();\n// ✅ Safe\nString name = Optional.ofNullable(user.getName())\n.map(String::toUpperCase)\n.orElse(\"\");\n// ✅ Also safe (early return)\nif (user.getName() == null) {\nreturn \"\";\n}\nreturn user.getName().toUpperCase();\n```\n**Flags:**\n- Chained method calls without null checks\n- Missing `@Nullable` / `@NonNull` annotations on public APIs\n- `Optional.get()` without `isPresent()` check\n- Returning `null` from methods that could return `Optional` or empty collection\n**Suggest:**\n- Use `Optional` for return types that may be absent\n- Use `Objects.requireNonNull()` for constructor/method params\n- Return empty collections instead of null: `Collections.emptyList()`\n### 2. Exception Handling\n**Check for:**\n```\n// ❌ Swallowing exceptions\ntry {\nprocess();\n} catch (Exception e) {\n// silently ignored\n}\n// ❌ Catching too broad\ncatch (Exception e) { }\ncatch (Throwable t) { }\n// ❌ Losing stack trace\ncatch (IOException e) {\nthrow new RuntimeException(e.getMessage());\n}\n// ✅ Proper handling\ncatch (IOException e) {\nlog.error(\"Failed to process file: {}\", filename, e);\nthrow new ProcessingException(\"File processing f"
+            },
+            {
+              "title": "Code review checklist: how to tackle issues with Java concurrency",
+              "url": "https://freecodecamp.org/news/code-review-checklist-java-concurrency-49398c326154",
+              "snippet": "**Immutability/Snapshotting.** When some state should be updated, a new immutable object (or a snapshot within a mutable object) is created, published and used, while some concurrent threads may still use older copies or snapshots. See [EJ Item 17], [JCIP 3.4], items 4.5 and 9.2 in this checklist, `CopyOnWriteArrayList`, `CopyOnWriteArraySet`, [persistent data structures](https://en.wikipedia.org/wiki/Persistent_data_structure).\n\nIf the `@com.google.errorprone.annotations.Immutable` annotation is used to mark immutable classes, [Error Prone](https://errorprone.info/) static analysis tool is capable to detect when a class is not actually immutable (see the relevant [bug pattern](https://errorprone.info/bugpattern/Immutable)).\n\n3.1. An example of excessive thread safety is a class where every modifiable field is `volatile` or an `AtomicReference` or other atomic, and every collection field stores a concurrent collection (e. g. `ConcurrentHashMap`), although all accesses to those fields are synchronized.\n**There shouldn’t be any “extra” thread safety in code, there should be just enough of it.** Duplication of thread safety confuses readers because they might think the extra thread sa"
+            },
+            {
+              "title": "Guidelines for Java code review",
+              "url": "https://medium.com/javarevisited/guidelines-for-java-code-review-12756c8a89b9",
+              "snippet": "The same rule applies while returning references. You need to be cautious so as not to expose an internal mutable state.\n## 5. Handle exceptions with care\nWhile catching exceptions, if you have multiple catch blocks, ensure that the sequence of catch blocks is most specific to least. In the snippet below, the exception will never be caught in the second block since the `Exception` class is the mother of all exceptions.\n```\ntry { stack . pop (); } catch ( Exception exception ) { // handle exception } catch ( StackEmptyException exception ) { // handle exception }\n```\nIf the situation is recoverable and can be handled by the client (the consumer of your library or code) then it is good to use [checked exceptions](https://javarevisited.blogspot.com/2011/12/checked-vs-unchecked-exception-in-java.html). e. g. `IOException` is a checked exception that forces the client to handle the scenario and in case the client chooses to re-throw the exception then it should be a conscious call to disregard the exception."
+            },
+            {
+              "title": "Java Code Review Checklist: Best Practices and Common Pitfalls",
+              "url": "https://pullpanda.io/blog/java-code-review-checklist",
+              "snippet": "**Resource Management**\n- Resources closed with try-with-resources: `try (var stream = Files.lines(path))`\n- No manual `close()` calls in finally blocks\n- Streams properly closed, especially for file operations\n- Database connections, statements, and result sets in try-with-resources\n- Thread pools shut down properly: `executor.shutdown()`\n- No suppressed exceptions from automatic resource closing\n- Resources not assigned to fields without careful lifecycle management\n**Thread Safety & Concurrency**\n- Shared mutable state protected by synchronization\n- Volatile used for simple flags, not complex operations\n- Double-checked locking avoided or implemented correctly with volatile\n- Collections wrapped with `Collections.synchronized*()` if shared\n- `ConcurrentHashMap` used instead of `Hashtable` or synchronized HashMap\n- Thread-safe classes from `java.util.concurrent` preferred\n- Immutable objects used for sharing state between threads\n- No publishing partially constructed objects from constructors\n\nJava's try-with-resources statement, introduced in Java 7, provides the standard pattern for managing resources that need cleanup. When we see code opening files, database connections, or s"
+            },
+            {
+              "title": "code-review-skill/reference/java8.md at 4850184dfd7765ea7b3c5c4e9b6cf8e0815ee7cb · awesome-skills/code-review-skill",
+              "url": "https://github.com/awesome-skills/code-review-skill/blob/HEAD/reference/java8.md",
+              "snippet": "### Captured variables must be effectively final\n```\n// ❌ Mutating a captured variable → compile error (or Atomic/array hacks)\nint sum = 0;\nlist.forEach(n -> sum += n); // does not compile\n// ✅ Reduce with a stream, or use an explicit mutable accumulator type\nint sum = list.stream().mapToInt(Integer::intValue).sum();\n```\n\nBoot 2 does not treat Spring 6 `ProblemDetail` as a first-class citizen (that is a Boot 3 story). Use a shared `@ControllerAdvice` with clear HTTP statuses.\n```\n// ❌ Swallow exceptions, printStackTrace, return null to hide failure\ntry {\nuserService.create(user);\n} catch (Exception e) {\ne.printStackTrace();\nreturn null;\n}\n// ✅ Domain exceptions + global handler\n@RestControllerAdvice\npublic class GlobalExceptionHandler {\n@ExceptionHandler(UserNotFoundException.class)\npublic ResponseEntity<ApiError> handleNotFound(UserNotFoundException e) {\nreturn ResponseEntity.status(HttpStatus.NOT_FOUND)\n.body(new ApiError(\"USER_NOT_FOUND\", e.getMessage()));\n}\n}\n```\nClose resources with try-with-resources (Java 7+). Avoid hand-rolled `finally { close() }` that forgets null checks.\n\n- Lambdas stay short; prefer method references and standard functional interfaces\n- Streams used for"
+            }
+          ],
+          "queries": [
+            "Java code review anti-patterns error handling mutable state resource management official documentation"
+          ]
+        },
+        "citation_corrections": [
+          {
+            "title": "Narrowing cast of long average can silently overflow to a negative result",
+            "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+            "original_line": 23,
+            "line": 19,
+            "method": "relocated_exact"
+          }
+        ],
+        "duration_seconds": 5.324
+      }
+    },
+    {
+      "agent": "security",
+      "status": "ok",
+      "findings": [],
+      "limitations": [
+        "Snapshot contains only a single standalone Java fixture (review-fixtures/android/EvaluationWorkflowSmoke.java) with pure in-memory string length arithmetic; no I/O, networking, IPC, storage, cryptography, deserialization, or permission usage is present, so no injection, path traversal, secret exposure, or authorization surface exists to assess.",
+        "No dependency manifest (build.gradle/pom.xml) or lockfile is included, so insecure-dependency analysis (CWE-1104) could not be performed.",
+        "The external guidance pages were provided only as excerpts; broader OWASP Top 10:2025 and CWE Top 25:2025 category coverage beyond those excerpts was not available.",
+        "OWASP MASVS controls (STORAGE, CRYPTO, AUTH, NETWORK, PLATFORM, CODE, RESILIENCE, PRIVACY) are largely inapplicable to this file since it performs no Android platform or network operations; no mobile security checks could be meaningfully applied."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "fireworks",
+        "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+        "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+        "model_source": "provider_response",
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 223,
+          "prompt_tokens": 3686,
+          "total_tokens": 3909,
+          "completion_tokens_details": {
+            "reasoning_tokens": 16
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens_details": {
+            "reasoning_tokens": 16
+          }
+        },
+        "knowledge_enrichment": {
+          "provider": "keenable",
+          "status": "ok",
+          "sources": [
+            {
+              "title": "A05 Injection - OWASP Top 10:2025",
+              "url": "https://top10.owasp.org/2025/A05_2025-Injection",
+              "snippet": "Injection falls two spots from #3 to #5 in the ranking, maintaining its position relative to A04:2025-Cryptographic Failures and A06:2025-Insecure Design. Injection is one of the most tested categories with 100% of applications tested for some form of injection. It had the greatest number of CVEs for any category, with 37 CWEs in this category. Injection includes Cross-site Scripting (high frequency/low impact) with more than 30k CVEs and SQL Injection (low frequency/high impact) with more than 14k CVEs. The massive number of reported CVEs for CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') brings down the average weighted impact of this category.\n## Score table.\n| CWEs Mapped | Max Incidence Rate | Avg Incidence Rate | Max Coverage | Avg Coverage | Avg Weighted Exploit | Avg Weighted Impact | Total Occurrences | Total CVEs |\n|---|---|---|---|---|---|---|---|---|\n| 37 | 13.77% | 3.08% | 100.00% | 42.93% | 7.15 | 4.32 | 1,404,249 | 62,445 |\n## Description.\nAn injection vulnerability is an application flaw that allows untrusted user input to be sent to an interpreter (e.g. a browser, database, the command line) and causes the interpreter to"
+            },
+            {
+              "title": "A08 Software or Data Integrity Failures",
+              "url": "https://owasp.org/Top10/2025/A08_2025-Software_or_Data_Integrity_Failures?featured_on=talkpython",
+              "snippet": "Software or Data Integrity Failures continues at #8, with a slight, clarifying name change from \"Software *and* Data Integrity Failures\". This category is focused on the failure to maintain trust boundaries and verify the integrity of software, code, and data artifacts at a lower level than Software Supply Chain Failures. This category focuses on making assumptions related to software updates and critical data, without verifying integrity. Notable Common Weakness Enumerations (CWEs) include *CWE-829: Inclusion of Functionality from Untrusted Control Sphere*, *CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes*, and *CWE-502: Deserialization of Untrusted Data*.\n## Score table.\nScore table.\n| CWEs Mapped | Max Incidence Rate | Avg Incidence Rate | Max Coverage | Avg Coverage | Avg Weighted Exploit | Avg Weighted Impact | Total Occurrences | Total CVEs |\n|---|---|---|---|---|---|---|---|---|\n| 14 | 8.98% | 2.75% | 78.52% | 45.49% | 7.11 | 4.79 | 501,327 | 3,331 |\n## Description.\nSoftware and data integrity failures relate to code and infrastructure that does not protect against invalid or untrusted code or data being treated as trusted and valid. A"
+            },
+            {
+              "title": "2025 CWE Top 25 Most Dangerous Software Weaknesses",
+              "url": "https://cwe.mitre.org/top25/archive/2025/2025_cwe_top25",
+              "snippet": "1. Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')\n[CWE-79](/data/definitions/79.html) CVEs in KEV: 7 Rank Last Year: 1\n2. Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')\n[CWE-89](/data/definitions/89.html) CVEs in KEV: 4 Rank Last Year: 3 (up 1) ![upward trend](/top25/images/triangle-green.png)\n3. Cross-Site Request Forgery (CSRF)\n[CWE-352](/data/definitions/352.html) CVEs in KEV: 0 Rank Last Year: 4 (up 1) ![upward trend](/top25/images/triangle-green.png)\n4. Missing Authorization\n[CWE-862](/data/definitions/862.html) CVEs in KEV: 0 Rank Last Year: 9 (up 5) ![upward trend](/top25/images/triangle-green.png)\n5. Out-of-bounds Write\n[CWE-787](/data/definitions/787.html) CVEs in KEV: 12 Rank Last Year: 2 (down 3) ![downward trend](/top25/images/triangle-red.png)\n6. Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')\n[CWE-22](/data/definitions/22.html) CVEs in KEV: 10 Rank Last Year: 5 (down 1) ![downward trend](/top25/images/triangle-red.png)\n7. Use After Free\n[CWE-416](/data/definitions/416.html) CVEs in KEV: 14 Rank Last Year: 8 (up 1) ![upward trend](/top25/images/triangle-green.png)"
+            },
+            {
+              "title": "CWE - News & Events",
+              "url": "https://cwe.mitre.org/news/archives/news2025.html",
+              "snippet": "The “[ 2025 Common Weakness Enumeration (CWE™) Top 25 Most Dangerous Software Weaknesses](/top25/archive/2025/2025_cwe_top25.html)” (2025 CWE Top 25) is now available on the CWE website! The Top 25 highlights the most severe and prevalent weaknesses behind the 39,080 [CVE™ Records](https://www.cve.org/) in this year’s dataset. Uncovering the root causes of these vulnerabilities serves as a powerful guide for investments, policies, and practices to prevent these vulnerabilities from occurring in the first place. These weaknesses lead to serious vulnerabilities in software, and an attacker can often exploit them to take control of an affected system, steal data, or prevent applications from working.\n\nThe 2025 Top 25’s #1 ranked weakness is [CWE-79: Improper Neutralization of Input During Web Page Generation (‘Cross Site Scripting’)](/data/definitions/79.html), retaining the top position from last year while being the only CWE to not change in ranking. Notable shifts in rankings included [CWE-862: Missing Authorization](/data/definitions/862.html) moving up 5 ranks to #4, [CWE-20: Improper Input Validation](/data/definitions/20.html) moving down 6 ranks to #18, and [CWE-77: Command In"
+            },
+            {
+              "title": "Introduction to the OWASP Mobile Application Security Project",
+              "url": "https://mas.owasp.org/MASTG/0x03-Overview",
+              "snippet": "First, the Project recommends that your mobile app security strategies should be based on the [OWASP Mobile Application Security *Verification Standard* (MASVS)](https://mas.owasp.org/MASVS/), which defines a mobile app security model and lists generic security requirements for mobile apps. MASVS is designed to be used by architects, developers, testers, security professionals, and consumers to define and understand the qualities of a secure mobile app. After you have determined how OWASP MASVS applies to your mobile app's security model, the Project suggests that you use the [OWASP Mobile Application Security *Testing Guide* (MASTG)](https://mas.owasp.org/MASTG/).\n\nThe Standard is based on the principle that protecting sensitive data, such as user credentials and private information, is crucial to mobile security. If an app does not use operating system APIs properly, especially those that handle local storage or inter-process communication (IPC), the app could expose sensitive data to other apps running on the same device or may unintentionally leak data to cloud storage, backups, or the keyboard cache. And since mobile devices are more likely to be or lost or stolen, attackers c"
+            },
+            {
+              "title": "OWASP MASVS - OWASP Mobile Application Security",
+              "url": "https://mas.owasp.org/MASVS",
+              "snippet": "The standard is divided into various groups of controls, labeled **MASVS-XXXXX**, that represent the most critical areas of the mobile attack surface:\n- **MASVS-STORAGE**: Secure storage of sensitive data on a device (data-at-rest).\n- **MASVS-CRYPTO**: Cryptographic functionality used to protect sensitive data.\n- **MASVS-AUTH**: Authentication and authorization mechanisms used by the mobile app.\n- **MASVS-NETWORK**: Secure network communication between the mobile app and remote endpoints (data-in-transit).\n- **MASVS-PLATFORM**: Secure interaction with the underlying mobile platform and other installed apps.\n- **MASVS-CODE**: Security best practices for data processing and keeping the app up-to-date.\n- **MASVS-RESILIENCE**: Resilience to reverse engineering and tampering attempts.\n- **MASVS-PRIVACY**: Privacy controls to protect user privacy."
+            }
+          ],
+          "queries": [
+            "site:owasp.org OWASP Top 10 2025 security risks source code review",
+            "site:cwe.mitre.org 2025 CWE Top 25 most dangerous software weaknesses",
+            "site:mas.owasp.org MASVS mobile authentication storage network security"
+          ],
+          "frameworks": [
+            "OWASP Top 10:2025",
+            "CWE Top 25:2025",
+            "OWASP MASVS"
+          ]
+        },
+        "citation_corrections": [],
+        "duration_seconds": 2.708
+      }
+    },
+    {
+      "agent": "tests",
+      "status": "ok",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Smoke fixture lives outside any build/test source set and is never executed by CI",
+          "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+          "line": 7,
+          "evidence": "/** Standalone workflow verification fixture, outside Android build source sets. */",
+          "explanation": "The file is a standalone class with a `main` method containing manual `AssertionError` checks. It is located in `review-fixtures/`, is not under `src/test/`, `src/androidTest/`, or any declared source set, and no Gradle task (`test`, `connectedCheck`) references it. Consequently nothing in the automated pipeline ever invokes `main`, so a regression in `averageLength` (or in whatever production logic mirrors it) would not fail any build; the assertions only run if a human remembers to compile and run it.",
+          "recommendation": "Either convert the checks into real unit tests (e.g. `src/test/java/.../EvaluationWorkflowTest.java` with JUnit assertions) so `gradlew test` runs them, or add an explicit Gradle task/JavaExec wired into `check`/`preBuild` that executes this class and fails the build on `AssertionError`.",
+          "suggested_test": "Add a JUnit test class mirroring the fixture: `assertEquals(0, EvaluationWorkflowSmoke.averageLength(Collections.emptyList()))`, `assertEquals(4, EvaluationWorkflowSmoke.averageLength(Collections.singletonList(\"note\")))`, and assert that the CI job running `gradlew test` reports the new test class as executed."
+        },
+        {
+          "severity": "medium",
+          "title": "Null-handling contract is documented but never asserted",
+          "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+          "line": 14,
+          "evidence": "    public static int averageLength(List<String> notes) {\n        Objects.requireNonNull(notes, \"notes\");",
+          "explanation": "The Javadoc promises `NullPointerException` for a null collection and for null elements (lines 11-13, enforced by `Objects.requireNonNull` at lines 15 and 21), but `main` only exercises the empty-list and single-element paths. A future refactor could remove the `requireNonNull` calls (or replace them with a lenient default) and the fixture would still pass, silently changing the documented API contract for callers that rely on fail-fast behavior.",
+          "recommendation": "Assert the null contract explicitly in the smoke fixture and/or in a real unit test: `assertThrows(NullPointerException.class, () -> averageLength(null))` and `assertThrows(NullPointerException.class, () -> averageLength(Arrays.asList(\"a\", null)))`, including the message text `\"notes\"` / `\"note\"` if the message is part of the contract.",
+          "suggested_test": "In `main`, add: `try { averageLength(null); throw new AssertionError(\"null list must throw\"); } catch (NullPointerException expected) { /* ok */ }` and the analogous check for a list containing a null element."
+        },
+        {
+          "severity": "medium",
+          "title": "Multi-element averaging and floor-division semantics are untested",
+          "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+          "line": 23,
+          "evidence": "        return (int) (total / notes.size());",
+          "explanation": "The only non-empty assertion uses a single-element list, where the average trivially equals the element length. The interesting behavior — integer truncation of the mean across heterogeneous note lengths — is never exercised. A change from `total / notes.size()` to a rounding or ceiling computation, or an off-by-one in the divisor, would not be detected by the fixture. The same holds for the `long total` accumulation: with a large list of long strings, an `int` accumulator would overflow and the current fixture would still pass.",
+          "recommendation": "Add cases with mixed lengths that pin the floor semantics (e.g. `[\"a\", \"bbb\"]` -> 2, `[\"ab\", \"cde\"]` -> 2, `[\"a\", \"bb\"]` -> 1) and a case with many elements (e.g. 1000 notes of length 10 -> 10) so accumulator width regressions surface.",
+          "suggested_test": "`if (averageLength(Arrays.asList(\"a\", \"bbb\")) != 2) throw new AssertionError(\"floor average\");` and `if (averageLength(Arrays.asList(\"a\", \"bb\")) != 1) throw new AssertionError(\"floor average\");` plus a 1000-element case asserting the result equals 10."
+        },
+        {
+          "severity": "low",
+          "title": "No coverage of non-ASCII / surrogate-pair note content",
+          "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+          "line": 21,
+          "evidence": "            total += Objects.requireNonNull(note, \"note\").length();",
+          "explanation": "`String.length()` counts UTF-16 code units, so a note containing an emoji or other supplementary character contributes 2. The fixture only uses ASCII input, so it cannot detect a change from `length()` to `codePointCount()`, nor an accidental change to byte-length semantics (which would matter if notes are persisted as UTF-8 and measured elsewhere). For a note-taking app where users commonly type emoji and CJK text, this is a realistic divergence between the metric and user expectation.",
+          "recommendation": "Add a non-ASCII case to document the intended unit (UTF-16 code units vs code points vs bytes). If UTF-16 code units are intended, add an assertion with an emoji note so the semantics are pinned.",
+          "suggested_test": "`if (averageLength(Collections.singletonList(\"\\uD83D\\uDE00\")) != 2) throw new AssertionError(\"UTF-16 code unit semantics\");` (or assert the code-point expectation `1` if that is the intended metric, making the choice explicit)."
+        },
+        {
+          "severity": "low",
+          "title": "Package declaration does not match the source directory path",
+          "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+          "line": 1,
+          "evidence": "package it.feio.android.omninotes.reviewfixture;",
+          "explanation": "The file sits in `review-fixtures/android/` but declares package `it.feio.android.omninotes.reviewfixture`. With standard javac/Gradle source-set conventions the directory layout does not correspond to the package, so compiling it as part of a source set requires either non-default package directories or explicit `includes`/`sourceSets` configuration. This is a friction point that contributes to the fixture never being wired into the build.",
+          "recommendation": "Move the file to a directory matching its package (e.g. `src/test/java/it/feio/android/omninotes/reviewfixture/EvaluationWorkflowSmoke.java`) when converting it into a real test, or align the package with the directory if the fixture must remain standalone.",
+          "suggested_test": "After conversion, verify the build compiles the class by running `gradlew test --tests '*EvaluationWorkflow*'` and confirming the test is discovered rather than silently excluded."
+        },
+        {
+          "severity": "info",
+          "title": "Manual `main`-based assertions give poor failure diagnostics and no isolation",
+          "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+          "line": 30,
+          "evidence": "        if (averageLength(Collections.singletonList(\"note\")) != 4) {\n            throw new AssertionError(\"Single-note average must match its length\");\n        }",
+          "explanation": "Each assertion is hand-rolled inside `main`, so only the first failing check aborts the run and the failure message omits the actual vs expected values. There is also no separation between test cases: one failing case hides the status of all subsequent ones, and there is no test-name reporting.",
+          "recommendation": "Replace the hand-rolled `if`/`AssertionError` blocks with a small table-driven loop or a JUnit test class using `assertEquals(expected, actual)` so each case is reported independently with actual and expected values.",
+          "suggested_test": "Loop over a list of {input, expected} pairs, and on mismatch throw `AssertionError(\"case \" + name + \": expected \" + expected + \" but was \" + actual)` so failures identify the offending case."
+        }
+      ],
+      "limitations": [
+        "Only the single supplied fixture file was reviewed; the actual production code that computes note lengths (if any) is not in the snapshot, so the fixture may not mirror real production behavior.",
+        "No build files, Gradle configuration, or CI workflow definitions were provided, so the claim that no source set includes this file is based on the stated path and package only.",
+        "Tests were not executed; all statements about behavior are derived from static reading of the supplied source lines."
+      ],
+      "error": null,
+      "execution": {
+        "backend": "fireworks",
+        "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+        "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+        "model_source": "provider_response",
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 2130,
+          "prompt_tokens": 1484,
+          "total_tokens": 3614,
+          "completion_tokens_details": {
+            "reasoning_tokens": 221
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens_details": {
+            "reasoning_tokens": 221
+          }
+        },
+        "citation_corrections": [],
+        "duration_seconds": 13.676
+      }
+    }
+  ],
+  "actual_models": [
+    "accounts/fireworks/models/minimax-m3p1-flash"
+  ],
+  "coverage_note": "Static test-gap analysis only; tests were not executed and coverage was not measured.",
+  "synthesis": {
+    "summary": "3/3 specialists succeeded; 7 verified finding(s). Highest reported severity: high.",
+    "priorities": [
+      {
+        "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+        "line": 7,
+        "title": "Smoke fixture lives outside any build/test source set and is never executed by CI",
+        "severity": "high",
+        "recommendation": "Either convert the checks into real unit tests (e.g. `src/test/java/.../EvaluationWorkflowTest.java` with JUnit assertions) so `gradlew test` runs them, or add an explicit Gradle task/JavaExec wired into `check`/`preBuild` that executes this class and fails the build on `AssertionError`.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+        "line": 14,
+        "title": "Null-handling contract is documented but never asserted",
+        "severity": "medium",
+        "recommendation": "Assert the null contract explicitly in the smoke fixture and/or in a real unit test: `assertThrows(NullPointerException.class, () -> averageLength(null))` and `assertThrows(NullPointerException.class, () -> averageLength(Arrays.asList(\"a\", null)))`, including the message text `\"notes\"` / `\"note\"` if the message is part of the contract.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+        "line": 23,
+        "title": "Multi-element averaging and floor-division semantics are untested",
+        "severity": "medium",
+        "recommendation": "Add cases with mixed lengths that pin the floor semantics (e.g. `[\"a\", \"bbb\"]` -> 2, `[\"ab\", \"cde\"]` -> 2, `[\"a\", \"bb\"]` -> 1) and a case with many elements (e.g. 1000 notes of length 10 -> 10) so accumulator width regressions surface.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+        "line": 1,
+        "title": "Package declaration does not match the source directory path",
+        "severity": "low",
+        "recommendation": "Move the file to a directory matching its package (e.g. `src/test/java/it/feio/android/omninotes/reviewfixture/EvaluationWorkflowSmoke.java`) when converting it into a real test, or align the package with the directory if the fixture must remain standalone.",
+        "agents": [
+          "tests"
+        ]
+      },
+      {
+        "file": "review-fixtures/android/EvaluationWorkflowSmoke.java",
+        "line": 19,
+        "title": "Narrowing cast of long average can silently overflow to a negative result",
+        "severity": "low",
+        "recommendation": "Avoid the lossy narrowing cast. Either document and enforce the precondition (e.g. `Math.toIntExact(total / notes.size())` so an out-of-range average throws `ArithmeticException` instead of wrapping), or return a `long`/`double` so the caller receives the true value.",
+        "agents": [
+          "quality"
+        ]
+      }
+    ],
+    "shared_findings": 0,
+    "completed_agents": [
+      "quality",
+      "security",
+      "tests"
+    ],
+    "failed_agents": [],
+    "missing_agents": [],
+    "limitations": [
+      "Corrected 1 source citation(s) using unambiguous matches in the cited file; exact source excerpts retained.",
+      "No build files, Gradle configuration, or CI workflow definitions were provided, so the claim that no source set includes this file is based on the stated path and package only.",
+      "No build files, tests, or Android source-set configuration were provided, so the claim in the class comment that this file is outside the build source sets could not be verified.",
+      "No dependency manifest (build.gradle/pom.xml) or lockfile is included, so insecure-dependency analysis (CWE-1104) could not be performed.",
+      "OWASP MASVS controls (STORAGE, CRYPTO, AUTH, NETWORK, PLATFORM, CODE, RESILIENCE, PRIVACY) are largely inapplicable to this file since it performs no Android platform or network operations; no mobile security checks could be meaningfully applied.",
+      "Only a single 34-line fixture file was supplied; the callers of `averageLength` and the intended contract were not visible, so the overflow finding's real-world impact could not be confirmed.",
+      "Only the single supplied fixture file was reviewed; the actual production code that computes note lengths (if any) is not in the snapshot, so the fixture may not mirror real production behavior.",
+      "Snapshot contains only a single standalone Java fixture (review-fixtures/android/EvaluationWorkflowSmoke.java) with pure in-memory string length arithmetic; no I/O, networking, IPC, storage, cryptography, deserialization, or permission usage is present, so no injection, path traversal, secret exposure, or authorization surface exists to assess.",
+      "Tests were not executed; all statements about behavior are derived from static reading of the supplied source lines.",
+      "The external guidance pages were provided only as excerpts; broader OWASP Top 10:2025 and CWE Top 25:2025 category coverage beyond those excerpts was not available.",
+      "The main() method's assertions cover only empty and single-element lists; the truncation and multi-element averaging behaviour is unverified by the fixture itself."
+    ]
+  },
+  "evaluation": {
+    "reasoning": "Step 1 — Independent findings: The diff adds one 34-line standalone file, review-fixtures/android/EvaluationWorkflowSmoke.java. Independent reading of lines 14-24 shows averageLength is functionally correct against the stated requirements: Objects.requireNonNull on the list (line 15) and on each element (line 21), empty list returns 0 (lines 16-18), a long accumulator sums String.length() (UTF-16 code units, line 21) and the result is the floor of the mean via integer division (line 23). No confirmed logic defect exists. Relevant test gaps (optional, given the PR explicitly declares the fixture standalone and the main method an optional manual smoke check): null-contract behavior (lines 11-13, 15, 21) and multi-element floor-division semantics (line 23) are not exercised by main (lines 27-32). Conditional/optional observations: the plain (int) narrowing cast on line 23 is lossy only if the mean length exceeds Integer.MAX_VALUE, i.e. individual strings longer than ~2.1 billion chars — the review's stated scenario (thousands of notes of a few hundred KB) yields a mean of ~300 KB and cannot overflow; the package declaration (line 1) does not match the directory (review-fixtures/android/), which is only a friction point because the file is deliberately outside any source set. Context limitations: no build files, source-set configuration, CI workflow, callers, or production note-length code were supplied, so build-wiring claims cannot be verified and there is no evidence of any production reachability. No security-relevant surface exists (no I/O, network, storage, crypto, permissions); no vulnerability is evidenced.\n\nStep 2 — Review comparison: The 'high' finding (line 7) that the fixture 'is never executed by CI' and therefore is a defect is contradicted by the PR's own stated scope (standalone fixture outside Android build source sets; main is an optional manual smoke check, not a claim of Gradle integration or coverage) and by the file's own Javadoc. It is a restatement of intended design, not a defect, and its recommendation to wire the class into gradlew test/check would contradict the PR's purpose — a severity and relevance error. The 'quality' narrowing-cast finding correctly locates line 19/23 but its concrete failure scenario and suggested test are wrong: means of a few hundred KB never overflow int, and the proposed 600,000,000-char case yields 600000000, well under Integer.MAX_VALUE, so the test would pass without exercising the claimed behavior; Math.toIntExact as a fix would introduce a new exception contract not implied by the stated requirements. The null-contract (line 14), multi-element floor (line 23), and surrogate-pair (line 21) findings are accurate descriptions of untested paths and their suggested assertions are correct and feasible, though they are optional improvements rather than defects given the declared scope. The package/path finding (line 1) is factually correct but low-value and partially duplicative of the 'high' finding's build-integration argument. The info finding about hand-rolled assertions (line 30) is a valid, minor diagnostics observation. The security agent correctly returned no findings with appropriate, well-scoped restraint. No semantic duplicates beyond the high/low build-integration pairing.\n\nStep 3 — Evaluation outcome: True positives: the package/directory mismatch and the info-level diagnostics point, plus the three test-gap observations as genuine (optional) coverage gaps. Confirmed false positives/exaggerations: the 'high' severity claim that the unexecuted fixture is a defect (contradicts explicit scope and file documentation), and the narrowing-cast overflow claim whose concrete scenario and suggested test are arithmetically impossible to trigger. No confirmed missed defect exists, since no logic defect was present in the supplied source. Scores reflect a review that correctly understands the code's semantics but mis-prioritizes one finding as high and states an arithmetically invalid failure scenario, while adding considerable optional test-suggestion noise for a file whose scope excludes CI integration.",
+    "criteria_scores": {
+      "bug_accuracy": 3,
+      "security": 5,
+      "actionability": 3,
+      "false_positives": 3
+    },
+    "overall_verdict": "NEEDS_REVISION",
+    "summary": "Review correctly reads the fixture's semantics and sensibly declines security findings, but inflates an intended-by-design fixture as a high-severity defect and presents an arithmetically impossible overflow scenario, so it needs revision on severity calibration and claim accuracy."
+  },
+  "evaluation_execution": {
+    "status": "ok",
+    "prompt_version": "1.0",
+    "prompt_sha256": "90783d23dd08be370ea226b95866373eb2cf120720dae4c8a571e85ab0cf209f",
+    "assessment_note": "Model-judged assessment, not measured precision/recall or proof of security.",
+    "backend": "fireworks",
+    "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+    "actual_model": "accounts/fireworks/models/minimax-m3p1-flash",
+    "model_source": "provider_response",
+    "finish_reason": "stop",
+    "usage": {
+      "completion_tokens": 1848,
+      "prompt_tokens": 13629,
+      "total_tokens": 15477,
+      "completion_tokens_details": {
+        "reasoning_tokens": 888
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens_details": {
+        "reasoning_tokens": 888
+      }
+    },
+    "duration_seconds": 13.244
+  },
+  "schema_version": "1.0",
+  "run_id": "7179bc5f-5419-4905-8bc7-deb4e79b7140",
+  "started_at": "2026-11-02T10:49:53.967974+00:00",
+  "completed_at": "2026-11-02T10:50:20.955705+00:00",
+  "duration_seconds": 26.988,
+  "backend": "fireworks",
+  "repository": "https://github.com/krishnakumar2050/Omni-Notes-sample",
+  "snapshot_sha256": "241776be0acc8ce4b47051170cfa7e8df5c2b0783b03d7a1e49efc72f81fab80",
+  "snapshot_bytes": 1201,
+  "requested_model": "accounts/fireworks/models/minimax-m3p1-flash",
+  "model": "accounts/fireworks/models/minimax-m3p1-flash",
+  "github": {
+    "repository": "krishnakumar2050/Omni-Notes-sample",
+    "pull_request": 5,
+    "head_sha": "11a92c0d8cb859788d18ae83fdfa87ff3049c71f",
+    "scope": "Changed supported files at the immutable PR head; full file contents, not just changed lines. Unchanged files and deleted files are not reviewed."
+  }
+}

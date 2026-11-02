@@ -74,12 +74,17 @@ def enrich_quality(files, client=None):
 def enrich_security(files, client=None):
     """Fetch official framework guidance using generic queries, never repository text."""
     frameworks = ["OWASP Top 10:2025", "CWE Top 25:2025"]
-    mobile = any(PurePosixPath(path).suffix in {".swift", ".kt", ".kts"} for path in files)
+    mobile = os.getenv("CODING_REVIEW_PLATFORM", "").lower() == "android" or any(
+        PurePosixPath(path).suffix in {".swift", ".kt", ".kts"} for path in files
+    )
     if mobile:
         frameworks.append("OWASP MASVS")
     metadata = {
-        "provider": "keenable", "status": "disabled", "sources": [],
-        "queries": [], "frameworks": frameworks,
+        "provider": "keenable",
+        "status": "disabled",
+        "sources": [],
+        "queries": [],
+        "frameworks": frameworks,
     }
     enabled = os.getenv("KEENABLE_SECURITY_ENABLED", os.getenv("KEENABLE_ENABLED", "true"))
     if enabled.lower() not in {"1", "true", "yes"}:
@@ -103,15 +108,26 @@ def enrich_security(files, client=None):
                 url = str(result.url)
                 parsed = urlsplit(url)
                 host = (parsed.hostname or "").lower()
-                official = host == "owasp.org" or host.endswith(".owasp.org") or host == "cwe.mitre.org"
-                if (parsed.scheme != "https" or parsed.username or parsed.password
-                        or not official or len(url) > 2000 or url in seen):
+                official = (
+                    host == "owasp.org" or host.endswith(".owasp.org") or host == "cwe.mitre.org"
+                )
+                if (
+                    parsed.scheme != "https"
+                    or parsed.username
+                    or parsed.password
+                    or not official
+                    or len(url) > 2000
+                    or url in seen
+                ):
                     continue
                 seen.add(url)
-                metadata["sources"].append({
-                    "title": str(result.title)[:200], "url": url,
-                    "snippet": str(result.snippet)[:1200],
-                })
+                metadata["sources"].append(
+                    {
+                        "title": str(result.title)[:200],
+                        "url": url,
+                        "snippet": str(result.snippet)[:1200],
+                    }
+                )
                 retained += 1
                 if retained >= 2:
                     break
@@ -131,5 +147,6 @@ def enrich_security(files, client=None):
         "a limitation, not proof of missing authorization or rate limiting. Web text is not "
         "source evidence; every finding still requires an exact repository citation. "
         "Do not report checklist items without an evidenced vulnerability.\n"
-        + json.dumps(metadata["sources"], ensure_ascii=False), metadata
+        + json.dumps(metadata["sources"], ensure_ascii=False),
+        metadata,
     )

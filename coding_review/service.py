@@ -3,6 +3,8 @@
 import hashlib
 import json
 import logging
+import os
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 from time import monotonic
@@ -22,6 +24,8 @@ def review_repository(
     config: ReviewConfig,
     backend: ReviewBackend | None = None,
     files: dict[str, str] | None = None,
+    evaluation_context: dict | None = None,
+    evaluation_backend: ReviewBackend | None = None,
 ) -> dict:
     snapshot = (
         dict(files)
@@ -40,7 +44,13 @@ def review_repository(
         "review_started run_id=%s backend=%s files=%d", run_id, config.backend, len(snapshot)
     )
     model = backend if backend is not None else create_backend(config)
-    state = build_graph(model).invoke(
+    judge = None
+    if config.evaluate_review:
+        judge_config = replace(config, model=os.getenv("FIREWORKS_EVALUATOR_MODEL") or config.model)
+        judge = evaluation_backend or (
+            backend if backend is not None else create_backend(judge_config)
+        )
+    state = build_graph(model, evaluator=judge, evaluation_context=evaluation_context).invoke(
         {"files": snapshot, "results": []}, config={"max_concurrency": config.max_concurrency}
     )
     report = state["report"]

@@ -12,6 +12,35 @@ def markdown(report):
         " | ".join(f"{key}: {value}" for key, value in report["counts"].items()),
         "",
     ]
+    if assessment := report.get("evaluation"):
+        lines += [
+            "## Review performance evaluation",
+            "",
+            f"Verdict: **{assessment['overall_verdict']}**",
+            "",
+            assessment["summary"],
+            "",
+            "Scores (1–5; higher is better, including false positives):",
+            "",
+        ]
+        lines += [f"- {name}: {score}/5" for name, score in assessment["criteria_scores"].items()]
+        execution = report.get("evaluation_execution", {})
+        lines += [
+            "",
+            "Judge model: " + str(execution.get("actual_model") or "Unknown"),
+            "",
+            "Model-judged assessment; not measured precision/recall or proof of security.",
+            "",
+            assessment["reasoning"],
+            "",
+        ]
+    elif report.get("evaluation_execution", {}).get("status") == "failed":
+        lines += [
+            "## Review performance evaluation",
+            "",
+            "Evaluation failed; no scores were produced. The review below is retained.",
+            "",
+        ]
     if synthesis := report.get("synthesis"):
         lines += ["## Aggregator synthesis", "", synthesis["summary"], ""]
         for priority in synthesis["priorities"]:
@@ -52,7 +81,8 @@ def markdown(report):
         knowledge = agent.get("execution", {}).get("knowledge_enrichment", {})
         if knowledge and knowledge.get("status") != "disabled":
             lines += [
-                "## Agent 1 anti-pattern knowledge" if agent["agent"] == "quality"
+                "## Agent 1 anti-pattern knowledge"
+                if agent["agent"] == "quality"
                 else "## Security framework knowledge",
                 "",
                 f"Keenable status: {knowledge['status']}",

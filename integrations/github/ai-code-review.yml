@@ -1,7 +1,7 @@
 name: Multi-agent AI code review
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
@@ -18,7 +18,7 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.event.pull_request.draft == false && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout trusted default-branch review engine
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -46,6 +46,10 @@ jobs:
         if: steps.installation.outputs.ready == 'true'
         env:
           KEENABLE_ENABLED: 'true'
+          KEENABLE_SECURITY_ENABLED: 'true'
+          CODING_REVIEW_PLATFORM: android
+          FIREWORKS_MODEL: ${{ vars.FIREWORKS_MODEL || 'accounts/fireworks/models/minimax-m3p1-flash' }}
+          FIREWORKS_EVALUATOR_MODEL: ${{ vars.FIREWORKS_EVALUATOR_MODEL || vars.FIREWORKS_MODEL || 'accounts/fireworks/models/minimax-m3p1-flash' }}
           KEENABLE_API_KEY: ${{ secrets.KEENABLE_API_KEY }}
           FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY || secrets.CODINGAGENT }}
           GITHUB_TOKEN: ${{ github.token }}
@@ -54,7 +58,7 @@ jobs:
             echo '::error::Add FIREWORKS_API_KEY (or CODINGAGENT) under repository Settings > Secrets and variables > Actions.'
             exit 1
           fi
-          python -m coding_review.integrations.github review
+          python -m coding_review.integrations.github review --scope changed --max-bytes 300000
       - name: Publish or update prioritized PR report
         if: always() && steps.installation.outputs.ready == 'true' && hashFiles('review-output/report.json') != ''
         env:

@@ -18,6 +18,7 @@ class ReviewConfig:
     max_concurrency: int = 3
     exclude: tuple[str, ...] = ()
     codex_executable: str = "codex"
+    evaluate_review: bool = False
 
     def __post_init__(self):
         if self.backend not in {"codex", "openai", "fireworks"}:

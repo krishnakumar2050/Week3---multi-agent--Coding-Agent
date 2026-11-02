@@ -152,3 +152,29 @@ def test_known_response_error_is_actionable_without_raw_output():
         backend="fireworks",
     )
     assert "no response choices" in detail["message"]
+
+
+def test_evaluation_request_uses_judge_schema_without_review_limits():
+    from coding_review.agents.evaluator import Evaluation
+
+    answer = {
+        "reasoning": "Step 1: no evidenced defect. Step 2: correct restraint. Step 3: no confirmed misses.",
+        "criteria_scores": {
+            "bug_accuracy": 5,
+            "security": 5,
+            "actionability": 4,
+            "false_positives": 5,
+        },
+        "overall_verdict": "PASS",
+        "summary": "Appropriate restraint on supplied code.",
+    }
+
+    def transport(request):
+        body = json.loads(request.content)
+        assert body["response_format"]["json_schema"]["name"] == "Evaluation"
+        assert "at most 10" not in body["messages"][0]["content"]
+        assert body["response_format"]["json_schema"]["schema"]["additionalProperties"] is False
+        return httpx.Response(200, json=completion(json.dumps(answer)))
+
+    result = backend_for(transport).with_structured_output(Evaluation).invoke([])
+    assert result.criteria_scores.false_positives == 5

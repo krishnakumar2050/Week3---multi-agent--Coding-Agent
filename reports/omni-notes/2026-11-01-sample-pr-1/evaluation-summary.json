@@ -1,0 +1,20 @@
+{
+  "pr_url": "https://github.com/krishnakumar2050/Omni-Notes-sample/pull/1",
+  "head_sha": "008d504115cd81d91774948003004b2c37f20f8e",
+  "execution": "local application; not Actions",
+  "seeded_cases": 2,
+  "detected_cases": 2,
+  "agents_completed": 3,
+  "citations_valid": 13,
+  "findings": 13,
+  "duplicate_excess_within_seeded_groups": 4,
+  "latency_seconds": 11.158,
+  "precision": null,
+  "observed_gaps": [
+    "semantic duplicates",
+    "severity inflation",
+    "wrong OWASP category IDs",
+    "Android Java did not trigger MASVS retrieval",
+    "unsupported model claims"
+  ]
+}

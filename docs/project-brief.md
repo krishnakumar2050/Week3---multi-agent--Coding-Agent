@@ -1,6 +1,6 @@
 # Multi-agent code review: project brief
 
-Updated: 25 October 2026.
+Architecture updated: 2 November 2026.
 
 ## Purpose
 
@@ -27,9 +27,10 @@ external anti-pattern guidance retrieved through Keenable AI.
 | Component | Objective | Context |
 | --- | --- | --- |
 | Agent 1: quality | Find correctness bugs, error-handling defects, and actionable anti-patterns; name the pattern and recommend refactoring | Source plus optional Keenable guidance |
-| Agent 2: security | Identify evidenced vulnerabilities, attack preconditions, impact, and remediation | Source |
+| Agent 2: security | Identify evidenced vulnerabilities, attack preconditions, impact, and remediation | Source plus Keenable OWASP/CWE/MASVS guidance |
 | Agent 3: tests | Identify missing behavioral, edge-case, and failure-path tests, including expected assertions | Source and supplied tests |
-| Orchestrator | Check completion, merge exact duplicates, and prioritize results | Validated agent results |
+| Aggregator | Check completion, merge exact duplicates, and prioritize results | Validated agent results |
+| Performance evaluator | Score bug accuracy, security, actionability, and false positives; produce an advisory verdict | Source, available PR diff/context, aggregated review, and versioned rubric |
 
 The test agent performs static analysis. It does not execute tests or measure
 runtime coverage. Model findings still require human review.
@@ -38,29 +39,36 @@ runtime coverage. Model findings still require human review.
 
 ```mermaid
 flowchart TD
-    Entry[CLI / Python API / GitHub event] --> Snapshot[Bounded source snapshot]
-    Snapshot --> Graph[LangGraph fan-out]
-    Graph --> Quality[Agent 1: quality]
-    Graph --> Security[Agent 2: security]
-    Graph --> Tests[Agent 3: test gaps]
-    Quality --> Search[Generic language queries to Keenable]
-    Search --> Guidance[Bounded untrusted guidance]
-    Guidance --> QReview[Quality model request]
-    Quality --> QReview
-    Security --> SReview[Security model request]
-    Tests --> TReview[Test-gap model request]
-    QReview --> Evidence[Schema and source-citation validation]
-    SReview --> Evidence
-    TReview --> Evidence
-    Evidence --> Join[Join all three results]
-    Join --> Aggregate[Deterministic deduplication and severity ordering]
-    Aggregate --> Report[Markdown / JSON]
-    Report --> Publish[Files / GitHub comment / artifacts]
+    Entry[CLI / Python API / GitHub PR] --> Snapshot[Bounded immutable source snapshot]
+    Snapshot --> Fanout[LangGraph parallel fan-out]
+    Fanout --> Quality[Quality agent: review and validate evidence]
+    Fanout --> Security[Security agent: review and validate evidence]
+    Fanout --> Tests[Test-gap agent: review and validate evidence]
+    Keenable[Keenable reference guidance] -.-> Quality
+    Keenable -.-> Security
+    Quality --> Aggregate[Aggregator: wait for all three, merge and prioritize]
+    Security --> Aggregate
+    Tests --> Aggregate
+    Aggregate --> Enabled{Evaluation enabled?}
+    Enabled -->|Every eligible source PR review| Judge[Performance evaluator: separate model request]
+    Snapshot -. Source evidence .-> Judge
+    Context[PR diff, context and requirements] -. Untrusted evidence .-> Judge
+    Prompt[Versioned Principal Engineer rubric] -.-> Judge
+    Judge --> Assessment[Four scores, verdict and evidence summary]
+    Assessment --> Report[Combined review and evaluation report]
+    Judge -->|Execution failure: retain review and diagnostics| Report
+    Enabled -->|Local default: evaluation off| Report
+    Report --> Publish[PR bot comment and Markdown / JSON artifacts]
 ```
 
 LangGraph runs independent specialist nodes and waits at an explicit join barrier.
-The orchestrator uses deterministic Python logic; it makes no additional model
-request. Concurrency is configurable from one to three.
+The aggregator uses deterministic Python logic; it makes no additional model
+request. The evaluator runs after aggregation as a separate model request and
+returns four 1–5 scores, an advisory verdict, and an evidence summary. PR reviews
+enable evaluation automatically; local runs opt in with `--evaluate`. Evaluator
+failures preserve the review and record diagnostics rather than inventing scores.
+PRs without supported source changes skip both review and evaluation.
+Specialist concurrency is configurable from one to three.
 
 ## Modules and folder objectives
 
@@ -70,12 +78,15 @@ request. Concurrency is configurable from one to three.
 | `coding_review/config.py` | Immutable validated settings |
 | `coding_review/service.py` | Review use case, run identity, timestamps, and source hash |
 | `coding_review/domain.py` | Findings, agent results, severity, and shared state |
-| `coding_review/graph.py` | Specialist nodes, fan-out, and completion barrier |
+| `coding_review/graph.py` | Parallel specialists, join barrier, aggregator, and optional evaluator |
 | `coding_review/sources.py` | Local source selection, exclusions, and size limits |
 | `coding_review/agents/prompts.py` | Shared policy and specialist instructions |
 | `coding_review/agents/context.py` | Exact source strings with explicit line coordinates |
 | `coding_review/agents/knowledge.py` | Optional Keenable retrieval and enrichment metadata |
 | `coding_review/agents/reviewer.py` | Specialist invocation, validation, timing, and failures |
+| `coding_review/agents/aggregator.py` | Fan-in synthesis, priorities, and review gaps |
+| `coding_review/agents/evaluator.py` | Strict evaluation schema, judge invocation, and failure retention |
+| `coding_review/agents/evaluation_prompt.py` | Versioned Principal Engineer evaluation rubric |
 | `coding_review/agents/evidence.py` | Exact evidence verification and unambiguous correction |
 | `coding_review/backends/` | Fireworks, OpenAI API, and Codex CLI adapters |
 | `coding_review/reporting/` | Aggregation, rendering, and atomic report writing |

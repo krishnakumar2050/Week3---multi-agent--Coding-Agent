@@ -35,6 +35,11 @@ def build_parser():
     parser.add_argument("--format", choices=["markdown", "json"], default="markdown")
     parser.add_argument("--max-bytes", type=int, default=120_000)
     parser.add_argument(
+        "--evaluate",
+        action="store_true",
+        help="Judge the aggregated review with the evaluation rubric",
+    )
+    parser.add_argument(
         "--max-concurrency", type=int, default=3, help="Concurrent specialist calls (1–3)"
     )
     parser.add_argument(
@@ -59,6 +64,7 @@ def build_parser():
 def run(args) -> int:
     config = ReviewConfig(
         backend=args.backend,
+        evaluate_review=args.evaluate,
         model=args.model,
         timeout=args.timeout,
         max_bytes=args.max_bytes,
@@ -81,6 +87,11 @@ def run(args) -> int:
     report = review_repository(repository, config, files=files)
     write_report(report, destination, args.format)
     print(f"Review {report['status']}: {len(report['findings'])} findings. Report: {destination}")
+    if report.get("evaluation"):
+        print("Review evaluation: " + report["evaluation"]["overall_verdict"])
+    if report.get("evaluation_execution", {}).get("status") == "failed":
+        print("Review evaluation failed; see report diagnostics.", file=sys.stderr)
+        return 2
     if report["status"] == "incomplete":
         for agent in report["agents"]:
             if agent.get("error"):

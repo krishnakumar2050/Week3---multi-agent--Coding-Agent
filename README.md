@@ -11,6 +11,9 @@ Three specialist reviewers examine one bounded source snapshot: correctness and 
 
 - [Omni-Notes Android — comprehensive prioritized findings](reports/omni-notes/review-report-omni-notes.md)
 - [Omni-Notes — raw findings and execution provenance](reports/omni-notes/review-report-omni-notes.json)
+- [Omni-Notes — automatic performance evaluation and live scores](reports/omni-notes/2026-11-02-automatic-evaluation/README.md)
+- [Omni-Notes — automatic PR workflow installation and activation](reports/omni-notes/2026-11-01-workflow-installation.md)
+- [Omni-Notes sample PR #1 — detection results and reviewer gaps](reports/omni-notes/2026-11-01-sample-pr-1/evaluation-summary.md)
 - [Expense Tracker mobile app — prioritized findings](reports/expense-tracker/review-report-expense-tracker.md)
 - [Expense Tracker — full three-agent report](reports/expense-tracker/review-report-expense-tracker-raw.md)
 - [Expense Tracker — JSON results and provenance](reports/expense-tracker/review-report-expense-tracker.json)
@@ -94,6 +97,9 @@ coding_review/
   agents/
     prompts.py               Three specialist responsibilities and shared policy
     reviewer.py              Specialist invocation, validation, timing
+    aggregator.py            Fan-in synthesis and review gaps
+    evaluator.py             Strict-schema post-review performance judge
+    evaluation_prompt.py     Versioned evaluation rubric and instructions
     evidence.py              Strict verification and unambiguous citation repair
     context.py               Line-addressed source snapshots for model prompts
   backends/
@@ -112,20 +118,26 @@ coding_review/
 
 ```mermaid
 flowchart TD
-    CLI[CLI or library caller] --> Service[Review service]
-    Service --> Snapshot[Bounded source snapshot]
-    Service --> Graph[LangGraph workflow]
-    Graph --> Quality[Bugs and anti-patterns]
-    Graph --> Security[Security]
-    Graph --> Tests[Test gaps]
-    Quality --> Backend[Backend protocol: Fireworks, Codex, OpenAI]
-    Security --> Backend
-    Tests --> Backend
-    Quality --> Join[Aggregator agent: join and synthesize]
-    Security --> Join
-    Tests --> Join
-    Join --> Report[Priorities, shared findings, review gaps and provenance]
-    Report --> Writer[Atomic Markdown or JSON writer]
+    Entry[CLI / Python API / GitHub PR] --> Snapshot[Bounded immutable source snapshot]
+    Snapshot --> Fanout[LangGraph parallel fan-out]
+    Fanout --> Quality[Quality agent: review and validate evidence]
+    Fanout --> Security[Security agent: review and validate evidence]
+    Fanout --> Tests[Test-gap agent: review and validate evidence]
+    Keenable[Keenable reference guidance] -.-> Quality
+    Keenable -.-> Security
+    Quality --> Aggregate[Aggregator: wait for all three, merge and prioritize]
+    Security --> Aggregate
+    Tests --> Aggregate
+    Aggregate --> Enabled{Evaluation enabled?}
+    Enabled -->|Every eligible source PR review| Judge[Performance evaluator: separate model request]
+    Snapshot -. Source evidence .-> Judge
+    Context[PR diff, context and requirements] -. Untrusted evidence .-> Judge
+    Prompt[Versioned Principal Engineer rubric] -.-> Judge
+    Judge --> Assessment[Four scores, verdict and evidence summary]
+    Assessment --> Report[Combined review and evaluation report]
+    Judge -->|Execution failure: retain review and diagnostics| Report
+    Enabled -->|Local default: evaluation off| Report
+    Report --> Publish[PR bot comment and Markdown / JSON artifacts]
 ```
 
 Use the library independently of CLI or output storage:
@@ -282,3 +294,41 @@ Security findings must explain concrete attacker control, preconditions, impact,
 and supported framework/CWE mappings. Missing backend implementation is not
 proof of missing authorization or rate limits. Ordinary crash bugs belong to
 quality unless an exploitable security impact is established.
+
+## Omni-Notes automatic PR review
+
+The GitHub workflow template now uses trusted-base `pull_request_target` events
+and `--scope changed --max-bytes 300000` so large Android repositories can be
+reviewed within a bounded budget. Reports contain complete changed files, not
+only changed lines, and disclose omitted unchanged/deleted files. Vendored engine
+updates require deployment to the target repository's default branch. See
+[integration setup](integrations/github/README.md). GitHub Actions requires its
+own repository secret; macOS Keychain credentials are not available in CI.
+
+## Automatic review performance evaluation
+
+PR reviews now run a fourth, separate structured-output model invocation after
+quality/security/test-gap fan-out and aggregation. The versioned system prompt
+is `coding_review/agents/evaluation_prompt.py`. It assesses bug accuracy,
+security, actionability and false positives, each scored 1–5 (higher is better).
+The exact four-field judgment is written as `evaluation.json`, included in
+`report.json`, and displayed near the top of the bot comment. Execution status,
+prompt version/hash, model provenance and timing live separately in
+`evaluation-status.json`. All are included in the existing Actions artifact.
+
+The judge receives numbered PR-head source, available bounded changed-file
+patches, PR context and the full review. PR text/reviews/search results are
+untrusted data. Missing patches and omitted context must be disclosed. Source
+citations do not prove correctness; scores are model judgments, not measured
+precision/recall or an exhaustive audit. Prompt instructions require all three
+evidence-summary sections before scoring. Scores and PASS consistency are
+validated. FAIL/NEEDS_REVISION are advisory; evaluator execution failure fails
+the workflow while preserving and publishing the review without invented scores.
+No-source PRs explicitly skip evaluation without model calls.
+
+The default evaluator uses a separate invocation of the same Fireworks model.
+Set the repository Actions variable `FIREWORKS_EVALUATOR_MODEL` to use another
+model and reduce correlated self-judgment; this does not establish independence
+or eliminate judge bias. Evaluation adds model latency/token cost. Local CLI
+runs opt in with `--evaluate`; PR reviews always enable it. A library caller can
+set `ReviewConfig(evaluate_review=True)` and provide evaluation context/backend.

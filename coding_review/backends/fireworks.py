@@ -53,7 +53,12 @@ class FireworksStructuredReviewer:
         payload = [
             {
                 "role": "system",
-                "content": "Return only JSON matching this schema. Keep findings concise and return at most 10 actionable findings.\n"
+                "content": "Return only JSON matching this schema.\n"
+                + (
+                    "Keep findings concise and return at most 10 actionable findings.\n"
+                    if self.schema.__name__ == "Review"
+                    else ""
+                )
                 + json.dumps(schema),
             }
         ]

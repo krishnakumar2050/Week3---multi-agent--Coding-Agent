@@ -1,6 +1,6 @@
 # Pull request to review report: execution flow
 
-Updated: 25 October 2026. Includes Keenable enrichment for Agent 1.
+Diagram updated: 2 November 2026. Includes parallel specialists, Keenable guidance, aggregation, and post-review evaluation.
 
 ## Sequence
 
@@ -9,41 +9,64 @@ sequenceDiagram
     actor Developer
     participant Actions as GitHub Actions
     participant Integration as GitHub integration
-    participant Service as Review service
     participant Graph as LangGraph
-    participant Quality as Agent 1
+    participant Quality as Quality agent
+    participant Security as Security agent
+    participant Tests as Test-gap agent
     participant Keenable as Keenable AI
-    participant Others as Agents 2 and 3
-    participant Model as Fireworks / MiniMax
-    participant Report as Aggregator agent
+    participant Model as Review model
+    participant Aggregate as Aggregator
+    participant Judge as Performance evaluator
+    participant JudgeModel as Evaluation model
 
-    Developer->>Actions: Open PR or push a commit
-    Actions->>Actions: Check eligibility and install trusted engine
-    Actions->>Integration: Start review
-    Integration->>Integration: Retrieve immutable PR-head source
-    Integration->>Service: Submit bounded snapshot
-    Service->>Graph: Invoke specialist graph
+    Developer->>Actions: Open or update eligible PR
+    Actions->>Actions: Install trusted default-branch engine
+    Actions->>Integration: Review immutable PR head
+    Integration->>Integration: Retrieve bounded changed files and PR patches
+    Integration->>Graph: Source snapshot and PR context
     par Quality review
-        Graph->>Quality: Source and quality instructions
-        Quality->>Keenable: Generic anti-pattern searches
-        Keenable-->>Quality: Snippets and source URLs
-        Quality->>Model: Source plus untrusted guidance
-        Model-->>Quality: Structured findings
-        Quality->>Quality: Validate schema and repository citations
-    and Security and test-gap reviews
-        Graph->>Others: Source and specialist instructions
-        Others->>Model: Source-based review requests
-        Model-->>Others: Structured findings
-        Others->>Others: Validate schema and repository citations
+        Graph->>Quality: Source and specialist policy
+        Quality->>Keenable: Generic anti-pattern queries
+        Keenable-->>Quality: Untrusted reference guidance
+        Quality->>Model: Structured review request
+        Model-->>Quality: Findings
+        Quality->>Quality: Validate schema and source citations
+        Quality-->>Graph: Validated result or failure
+    and Security review
+        Graph->>Security: Source and specialist policy
+        Security->>Keenable: OWASP / CWE / Android MASVS queries
+        Keenable-->>Security: Official reference guidance
+        Security->>Model: Structured review request
+        Model-->>Security: Findings
+        Security->>Security: Validate schema and source citations
+        Security-->>Graph: Validated result or failure
+    and Test-gap review
+        Graph->>Tests: Source and specialist policy
+        Tests->>Model: Structured review request
+        Model-->>Tests: Findings
+        Tests->>Tests: Validate schema and source citations
+        Tests-->>Graph: Validated result or failure
     end
-    Quality-->>Graph: Findings and enrichment metadata
-    Others-->>Graph: Findings and execution metadata
-    Graph->>Report: Aggregate after all specialists finish
-    Report-->>Integration: Prioritized Markdown and JSON
+    Graph->>Aggregate: Join all three specialist results
+    Aggregate-->>Graph: Prioritized review and synthesis
+    Graph->>Judge: Source, PR diff/context, aggregated review
+    Judge->>JudgeModel: Versioned rubric and strict output schema
+    JudgeModel-->>Judge: Four scores, verdict and evidence summary
+    Judge->>Judge: Validate scores, sections and verdict consistency
+    alt Evaluation succeeds
+        Judge-->>Graph: Judgment and model provenance
+    else Evaluator request or validation fails
+        Judge-->>Graph: Failure diagnostics; original review retained
+    end
+    Graph-->>Integration: Combined report and evaluation status
     Integration->>Integration: Confirm PR head is unchanged
-    Integration->>Developer: Create or update bot comment
-    Actions->>Actions: Upload full report artifacts
+    Integration->>Developer: Publish or update review and evaluation comment
+    Actions->>Actions: Upload report and evaluation JSON artifacts
 ```
+
+The evaluation model is a separate invocation; it may use the same model as the
+reviewers or the configured `FIREWORKS_EVALUATOR_MODEL`. Scores are advisory model
+judgments. This sequence covers eligible source PRs; no-source PRs skip inference.
 
 ## 1. GitHub receives the event
 
@@ -155,6 +178,24 @@ step does not invoke an LLM. The aggregator adds a synthesis summary, up to
 five ranked priorities, shared-finding counts, completed/failed/missing agent
 lists, and consolidated limitations to the JSON report. Markdown presents the
 summary, priorities, and review gaps before the detailed evidence.
+
+## 9.5. The performance evaluator judges the review
+
+Every eligible PR source review invokes `agents/evaluator.py` after aggregation.
+The versioned Principal Engineer rubric scores accuracy, security, actionability,
+and false positives on a 1–5 scale. The judge sees numbered source, bounded
+available PR patches/context, and the review as untrusted evidence. It returns
+an exact-schema judgment with three evidence-summary sections and an advisory
+PASS, NEEDS_REVISION, or FAIL verdict. Strict schema validation rejects invalid
+scores and inconsistent PASS results. Failures preserve the original review,
+record diagnostics, and fail the workflow without manufacturing scores.
+
+`evaluation.json` holds only the requested judgment schema;
+`evaluation-status.json` holds provenance, prompt hash/version, status and timing.
+The bot comment presents the assessment before findings. The evaluator defaults
+to a separate invocation of the reviewer model; `FIREWORKS_EVALUATOR_MODEL` selects
+another model. These scores are model judgments, not empirical precision/recall.
+No-source PRs skip review and evaluation without inference calls.
 
 ## 10. Reports are written
 

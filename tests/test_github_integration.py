@@ -165,3 +165,92 @@ def test_fork_and_stale_commits_are_rejected_before_snapshot(tmp_path):
         run_review(Fork(), 3, SHA, tmp_path, backend=FakeBackend())
     with pytest.raises(ValueError, match="head changed"):
         run_review(FakeClient(), 3, "b" * 40, tmp_path, backend=FakeBackend())
+
+
+def test_changed_snapshot_ignores_large_unchanged_files():
+    def transport(request):
+        if "/git/trees/" in request.url.path:
+            return httpx.Response(
+                200,
+                json={"tree": [tree_entry("large.java", "x" * 1000), tree_entry("changed.java")]},
+            )
+        assert request.url.path.endswith("changed.java")
+        return httpx.Response(200, json={"encoding": "base64", "content": "cGFzcw=="})
+
+    client = GitHubClient("owner/repo", "fake", transport=httpx.MockTransport(transport))
+    try:
+        assert client.source_snapshot(SHA, 100, {"changed.java"}) == {"changed.java": "pass"}
+    finally:
+        client.close()
+
+
+def test_changed_paths_filter_and_head_race():
+    heads = [SHA, SHA]
+
+    def transport(request):
+        if request.url.path.endswith("/files"):
+            return httpx.Response(
+                200,
+                json=[
+                    {"filename": "app.java", "status": "modified"},
+                    {"filename": "renamed.kt", "status": "renamed"},
+                    {"filename": "gone.java", "status": "removed"},
+                    {"filename": "README.md", "status": "modified"},
+                    {"filename": ".github/engine.py", "status": "added"},
+                ],
+            )
+        return httpx.Response(200, json={"head": {"sha": heads.pop(0)}, "changed_files": 5})
+
+    client = GitHubClient("owner/repo", "fake", transport=httpx.MockTransport(transport))
+    try:
+        assert client.changed_source_paths(1, SHA) == {"app.java", "renamed.kt"}
+        heads[:] = [SHA, "b" * 40]
+        with pytest.raises(ValueError, match="head changed"):
+            client.changed_source_paths(1, SHA)
+    finally:
+        client.close()
+
+
+def test_changed_paths_reject_api_limit():
+    client = GitHubClient(
+        "owner/repo",
+        "fake",
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, json={"head": {"sha": SHA}, "changed_files": 3000})
+        ),
+    )
+    try:
+        with pytest.raises(ValueError, match="too many files"):
+            client.changed_source_paths(1, SHA)
+    finally:
+        client.close()
+
+
+def test_docs_only_review_skips_models_and_reports_scope(tmp_path):
+    class Docs(FakeClient):
+        def changed_source_paths(self, number, sha):
+            return set()
+
+        def source_snapshot(self, *args, **kwargs):
+            pytest.fail("No source blobs should be read")
+
+    report = run_review(Docs(), 3, SHA, tmp_path, scope="changed")
+    assert report["status"] == "skipped"
+    assert report["agents"] == []
+    assert "Changed supported files" in comment_body(report)
+    assert "no model was called" in report["coverage_note"]
+
+
+def test_changed_review_passes_immutable_paths(tmp_path):
+    class Changed(FakeClient):
+        def changed_source_paths(self, number, sha):
+            assert sha == SHA
+            return {"app.py"}
+
+        def source_snapshot(self, sha, max_bytes, selected_paths=None):
+            assert selected_paths == {"app.py"} and sha == SHA
+            return {"app.py": "pass"}
+
+    report = run_review(Changed(), 3, SHA, tmp_path, backend=FakeBackend(), scope="changed")
+    assert report["status"] == "complete"
+    assert "Unchanged files and deleted files are not reviewed" in report["github"]["scope"]

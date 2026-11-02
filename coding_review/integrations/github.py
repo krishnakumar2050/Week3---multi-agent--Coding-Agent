@@ -12,6 +12,7 @@ from urllib.parse import quote
 import httpx
 
 from coding_review.config import ReviewConfig
+from coding_review.domain import RANK
 from coding_review.exceptions import ConfigurationError
 from coding_review.reporting.rendering import markdown
 from coding_review.reporting.writer import write_report
@@ -50,7 +51,51 @@ class GitHubClient:
     def pull_request(self, number):
         return self.request("GET", f"pulls/{number}")
 
-    def source_snapshot(self, sha: str, max_bytes: int):
+    def changed_source_paths(self, number, expected_sha):
+        """List changed source paths; fail instead of accepting a truncated PR file list."""
+        pr = self.pull_request(number)
+        if pr["head"]["sha"] != expected_sha:
+            raise ValueError("PR head changed before listing changed files")
+        if pr.get("changed_files", 0) >= 3000:
+            raise ValueError("PR has too many files to establish complete changed-file scope")
+        paths = set()
+        self.evaluation_changes = []
+        remaining_patch_bytes = 60000
+        for page in range(1, 31):
+            entries = self.request(
+                "GET", f"pulls/{number}/files", params={"per_page": 100, "page": page}
+            )
+            for entry in entries:
+                path = PurePosixPath(entry["filename"])
+                if path.is_absolute() or ".." in path.parts:
+                    raise ValueError("Invalid changed source path")
+                if (
+                    entry["status"] != "removed"
+                    and path.suffix in EXTENSIONS
+                    and not any(part.startswith(".") or part in EXCLUDED for part in path.parts)
+                ):
+                    paths.add(path.as_posix())
+                    patch = entry.get("patch") or ""
+                    encoded = patch.encode("utf-8")
+                    retained = encoded[:remaining_patch_bytes].decode("utf-8", errors="ignore")
+                    remaining_patch_bytes -= len(retained.encode("utf-8"))
+                    self.evaluation_changes.append(
+                        {
+                            "file": path.as_posix(),
+                            "status": entry["status"],
+                            "patch": retained,
+                            "patch_missing_or_truncated": not patch or len(retained) != len(patch),
+                        }
+                    )
+            if len(entries) < 100:
+                break
+        else:
+            raise ValueError("PR file listing reached GitHub's pagination limit")
+        if self.pull_request(number)["head"]["sha"] != expected_sha:
+            raise ValueError("PR head changed while listing changed files")
+        return paths
+
+    def source_snapshot(self, sha: str, max_bytes: int, selected_paths=None):
         if not re.fullmatch(r"[a-fA-F0-9]{40}", sha):
             raise ValueError("Expected a full PR head commit SHA")
         tree = self.request("GET", f"git/trees/{sha}", params={"recursive": "1"})
@@ -71,6 +116,8 @@ class GitHubClient:
                 or any(part.startswith(".") or part in EXCLUDED for part in path.parts)
             ):
                 continue
+            if selected_paths is not None and path.as_posix() not in selected_paths:
+                continue
             size = entry.get("size")
             if not isinstance(size, int) or size > max_bytes - total:
                 raise ValueError("PR source snapshot exceeds byte budget")
@@ -83,7 +130,7 @@ class GitHubClient:
             if total > max_bytes:
                 raise ValueError("PR source snapshot exceeds byte budget")
             files[path.as_posix()] = content.decode("utf-8")
-        if not files:
+        if not files and selected_paths is None:
             raise ValueError("No supported source files found in the PR snapshot")
         return files
 
@@ -116,6 +163,9 @@ def require_same_repository(pr, repository):
 def comment_body(report: dict) -> str:
     provenance = report["github"]
     intro = f"{MARKER}\n## Automated multi-agent code review\n\nReviewed commit `{provenance['head_sha']}`.\n\n"
+    intro += (
+        "Scope: " + html.escape(provenance["scope"], quote=False).replace("@", "&#64;") + "\n\n"
+    )
     # Escape HTML and mention syntax from untrusted model/source content.
     content = html.escape(markdown(report), quote=False).replace("@", "&#64;")
     maximum = 55_000 - len(intro)
@@ -126,25 +176,85 @@ def comment_body(report: dict) -> str:
     return intro + content
 
 
-def run_review(client, number, expected_sha, output: Path, max_bytes=120_000, backend=None):
+def run_review(
+    client,
+    number,
+    expected_sha,
+    output: Path,
+    max_bytes=120_000,
+    backend=None,
+    scope="full",
+    evaluate=True,
+):
+    if max_bytes <= 0:
+        raise ConfigurationError("Snapshot byte budget must be positive")
     pr = client.pull_request(number)
     require_same_repository(pr, client.repository)
     if pr["head"]["sha"] != expected_sha:
         raise ValueError("PR head changed before review; wait for the latest workflow run")
-    snapshot = client.source_snapshot(expected_sha, max_bytes)
-    report = review_repository(
-        Path("."),
-        ReviewConfig(backend="fireworks", max_bytes=max_bytes),
-        backend=backend,
-        files=snapshot,
-    )
+    if scope not in {"full", "changed"}:
+        raise ConfigurationError("Review scope must be full or changed")
+    if scope == "changed":
+        paths = client.changed_source_paths(number, expected_sha)
+        snapshot = (
+            client.source_snapshot(expected_sha, max_bytes, selected_paths=paths) if paths else {}
+        )
+    else:
+        snapshot = client.source_snapshot(expected_sha, max_bytes)
+    if snapshot:
+        report = review_repository(
+            Path("."),
+            ReviewConfig(backend="fireworks", max_bytes=max_bytes, evaluate_review=evaluate),
+            backend=backend,
+            files=snapshot,
+            evaluation_context={
+                "pull_request": number,
+                "head_sha": expected_sha,
+                "base_sha": pr.get("base", {}).get("sha"),
+                "title": (pr.get("title") or "")[:1000],
+                "description_and_claimed_requirements": (pr.get("body") or "")[:12000],
+                "description_truncated": len(pr.get("body") or "") > 12000,
+                "scope": scope,
+                "diffs": getattr(client, "evaluation_changes", []),
+                "limitations": [
+                    "Only provided source and available bounded patches are in scope; unchanged dependencies and callers may be absent.",
+                    "PR claims are untrusted context, not established ground truth. No reference labels or test execution evidence supplied.",
+                    "A missing or truncated patch limits regression assessment; disclose provisional scoring when essential context is absent.",
+                ],
+            },
+        )
+    else:
+        report = {
+            "status": "skipped",
+            "files_reviewed": [],
+            "findings": [],
+            "agents": [],
+            "counts": {severity: 0 for severity in RANK},
+            "actual_models": [],
+            "coverage_note": "No supported changed source files to review; no model was called.",
+            "evaluation_execution": {
+                "status": "skipped",
+                "reason": "No supported changed source; no review to evaluate.",
+            },
+        }
     report["repository"] = f"https://github.com/{client.repository}"
     report["github"] = {
         "repository": client.repository,
         "pull_request": number,
         "head_sha": expected_sha,
-        "scope": "Full supported source snapshot at the PR head; not limited to changed lines",
+        "scope": (
+            "Changed supported files at the immutable PR head; full file contents, not just changed lines. "
+            "Unchanged files and deleted files are not reviewed."
+            if scope == "changed"
+            else "Full supported source snapshot at the PR head; not limited to changed lines"
+        ),
     }
+    if report.get("evaluation"):
+        write_report(report["evaluation"], output / "evaluation.json", "json")
+    else:
+        (output / "evaluation.json").unlink(missing_ok=True)
+    if report.get("evaluation_execution"):
+        write_report(report["evaluation_execution"], output / "evaluation-status.json", "json")
     write_report(report, output / "report.json", "json")
     write_report(report, output / "report.md")
     return report
@@ -154,6 +264,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode", choices=["review", "publish"])
     parser.add_argument("--output", type=Path, default=Path("review-output"))
+    parser.add_argument("--scope", choices=["full", "changed"], default="full")
+    parser.add_argument("--max-bytes", type=int, default=120_000)
     args = parser.parse_args()
     event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
     number = int(event["number"])
@@ -163,8 +275,18 @@ def main():
     try:
         if args.mode == "review":
             args.output.mkdir(parents=True, exist_ok=True)
-            report = run_review(client, number, expected_sha, args.output)
-            if report["status"] != "complete":
+            report = run_review(
+                client,
+                number,
+                expected_sha,
+                args.output,
+                max_bytes=args.max_bytes,
+                scope=args.scope,
+            )
+            if (
+                report["status"] not in {"complete", "skipped"}
+                or report.get("evaluation_execution", {}).get("status") == "failed"
+            ):
                 raise SystemExit(2)
         else:
             report = json.loads((args.output / "report.json").read_text())
